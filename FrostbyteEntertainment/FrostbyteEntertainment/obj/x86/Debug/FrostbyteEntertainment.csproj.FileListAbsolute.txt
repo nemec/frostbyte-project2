@@ -5,3 +5,10 @@ C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\F
 C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\FrostbyteEntertainment.exe
 C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\FrostbyteEntertainment.pdb
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\Content\Text.xnb
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\FrostbyteEntertainment.exe
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\FrostbyteEntertainment.pdb
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\FrostbyteEntertainment.exe
+F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\obj\x86\Debug\FrostbyteEntertainment.pdb

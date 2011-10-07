@@ -7,8 +7,8 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\Content\Text.xnb</Output>
-      <Time>2011-10-06T08:51:56.9423293-05:00</Time>
+      <Output>F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\Content\Text.xnb</Output>
+      <Time>2011-10-07T00:20:16-05:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
@@ -16,10 +16,10 @@
       <TargetProfile>HiDef</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainmentContent\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainment\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainmentContent\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainmentContent\</RootDirectory>
+      <LoggerRootDirectory>F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\</LoggerRootDirectory>
+      <IntermediateDirectory>F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainmentContent\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainment\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
