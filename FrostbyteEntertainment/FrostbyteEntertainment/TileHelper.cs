@@ -360,6 +360,38 @@ namespace Frostbyte
         {
             return new XElement("Level");
         }
+
+        public static bool operator ==(LevelObject a, LevelObject b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+            return a.Type == b.Type && a.Theme == b.Theme && a.Traversable == b.Traversable && a.Orientation == b.Orientation && a.FloorType == b.FloorType && a.GridCell.X == b.GridCell.X && a.GridCell.Y == b.GridCell.Y && a.InstanceName == b.InstanceName;
+        }
+        public static bool operator !=(LevelObject a, LevelObject b)
+        {
+            return !(a==b);
+        }
+
+        public override int GetHashCode()
+        {
+            return Type.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj as LevelObject != null)
+                return this == (obj as LevelObject);
+            else
+                return false;
+        }
     }
 
     public class LevelPart : LevelObject
