@@ -126,7 +126,7 @@ namespace Frostbyte
         /// <summary>
         /// Check for collision with background and move enemy out of collision with background until no collisions exist
         /// </summary>
-        protected void checkBackgroundCollisions();
+        protected void checkBackgroundCollisions() {}
         #endregion Methods
 
         #region Draw
