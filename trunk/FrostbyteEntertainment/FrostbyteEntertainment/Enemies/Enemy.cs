@@ -15,8 +15,6 @@ namespace Frostbyte.Enemies
 
         //State
         public float health;
-        protected float speed;
-        protected Vector2 direction;
         
         //Elemental Properties
         protected enum elementTypes { Earth, Lightning, Water, Fire, Neutral };
@@ -26,9 +24,19 @@ namespace Frostbyte.Enemies
         protected enum movementTypes { Charge, PulseCharge, Ram, StealthCharge, StealthCamp, StealthRetreat, Retreat, TeaseRetreat, Swap, Freeze };
         protected movementTypes currentMovementType = 0;
         protected TimeSpan movementStartTime;
-        bool isRamming, isCharging, isStealth, isFrozen, isAttacking  = false;
+        protected bool isRamming, isCharging, isStealth, isFrozen, isAttacking = false;
+        protected Vector2 direction;
 
         #endregion Variables
+
+        public Enemy(string name, Actor actor, float speed, int _health)
+            : base(name, actor) 
+        {
+            UpdateBehavior = update;
+            (This.Game.CurrentLevel as FrostbyteLevel).enemies.Add(this);
+            Speed = speed;
+            health = _health;
+        }
 
         public void update()
         {
@@ -37,6 +45,10 @@ namespace Frostbyte.Enemies
             updateAttack();
         }
 
+        private void checkBackgroundCollisions()
+        {
+            //throw new NotImplementedException();
+        }
         protected abstract void updateMovement();
         protected abstract void updateAttack();
 
@@ -46,81 +58,131 @@ namespace Frostbyte.Enemies
         /// <summary>
         /// Update enemy position directly toward target for given duration
         /// </summary>
-        private void charge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
+        protected bool charge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
         {
-
+            return true;
         }
 
         /// <summary>
         /// Update enemy position directly toward target with variation of speed (sinusoidal) for given duration
         /// </summary>
-        private void pulseCharge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
+        protected bool pulseCharge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
         {
-
+            return true;
         }
 
         /// <summary>
-        /// Charge but do not update direction for length of charge
+        /// Charge but do not update direction for length of charge - complete
         /// </summary>
-        private void ram(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
+        protected bool ram(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
         {
+            // check this stuff before committing to the ram
+            double distToP1 = (P1Coord.X - Pos.X) * (P1Coord.X - Pos.X) + (P1Coord.Y - Pos.Y) * (P1Coord.Y - Pos.Y);
+            double distToP2 = (P2Coord.X - Pos.X) * (P2Coord.X - Pos.X) + (P2Coord.Y - Pos.Y) * (P2Coord.Y - Pos.Y);
+            float ramSpeed = Speed * speedMultiplier;
 
+            if ( !isRamming && (distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
+            {
+                // charge P1
+                direction = P1Coord - Pos;
+                isRamming = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            else if (!isRamming && (distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
+            {
+                // charge P2
+                direction = P1Coord - Pos;
+                isRamming = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            if (isRamming)
+            {
+                // Snapshot current gameTime
+                
+
+                if (This.gameTime.TotalGameTime <= movementStartTime + duration)
+                {
+                    direction.Normalize();
+                    Pos += direction * ramSpeed;
+                }
+                else
+                {
+                    isRamming = false;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
         /// Hide and follow player until certain distance from player
         /// </summary>
-        private void stealthCharge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
+        protected bool stealthCharge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
         {
-
+            return true;
         }
 
         /// <summary>
         /// Be Invisible and still until certain distance from player
         /// </summary>
-        private void stealthCamp(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
+        protected bool stealthCamp(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
         {
-
+            return true;
         }
 
         /// <summary>
         /// Be Invisible and move away until x seconds have passed
         /// </summary>
-        private void stealthRetreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float safeDistance, float speedMultiplier)
+        protected bool stealthRetreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float safeDistance, float speedMultiplier)
         {
-
+            return true;
         }
 
         /// <summary>
         /// Move away until x seconds have passed or you are y distance away
         /// </summary>
-        private void retreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float safeDistance, float speedMultiplier)
+        protected bool retreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float safeDistance, float speedMultiplier)
         {
-
+            return true;
         }
 
         /// <summary>
         /// Move away when x distance from target until y seconds have passed or z distance from player
         /// </summary>
-        private void teaseRetreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float safeDistance, float speedMultiplier)
+        protected bool teaseRetreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float safeDistance, float speedMultiplier)
         {
-
+            return true;
         }
 
         /// <summary>
         /// Stop moving for x seconds
         /// </summary>
-        private void freeze(TimeSpan duration)
+        protected bool freeze(TimeSpan duration)
         {
+            if (!isFrozen)
+            {
+                movementStartTime = This.gameTime.TotalGameTime;
+                isFrozen = true;
+            }
 
+            else if (This.gameTime.TotalGameTime >= movementStartTime + duration)
+            {
+                isFrozen = false;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
         /// Switch Position with the target
         /// </summary>
-        private void swap(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
+        protected bool swap(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
         {
-
+            return true;
         }
 
         #endregion AI Movements

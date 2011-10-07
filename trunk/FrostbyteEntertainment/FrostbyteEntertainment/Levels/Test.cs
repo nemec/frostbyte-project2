@@ -15,7 +15,7 @@ namespace Frostbyte.Levels
 
             LevelFunctions.Spawn(delegate()
             {
-                return new FerociousEnemy("e1", new Actor(new DummyAnimation("e1")));
+                return new FerociousEnemy("e1", new Actor(new DummyAnimation("e1")), 5f, 1);
             }, 10, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             LevelFunctions.Spawn(delegate()
@@ -146,10 +146,19 @@ namespace Frostbyte.Levels
         }
     }
 
-    internal class FerociousEnemy : Enemy
+    internal class FerociousEnemy : Frostbyte.Enemies.Enemy
     {
-        internal FerociousEnemy(string name, Actor actor)
-            : base(name, actor)
+        #region Variables
+
+        bool changeState = false;
+        TimeSpan idleTime = new TimeSpan(0, 0, 1);
+        TimeSpan movementStartTime = new TimeSpan(0, 0, 1);
+
+
+        #endregion Variables
+
+        internal FerociousEnemy(string name, Actor actor, float speed, int health)
+            : base(name, actor, speed, health)
         {
             float height = This.Game.GraphicsDevice.Viewport.Height;
             float width = This.Game.GraphicsDevice.Viewport.Width;
@@ -177,6 +186,23 @@ namespace Frostbyte.Levels
                 basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
                 This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
             }
+        }
+
+        protected override void updateMovement()
+        {
+            Sprite Player1 = This.Game.CurrentLevel.GetSpritesByType("Mage")[0];
+         //   Sprite Player2 = This.Game.CurrentLevel.GetSpritesByType("Mage")[1];
+
+            if (!changeState)
+                changeState = ram(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 1), 1000f, 1.1f);
+            else
+                changeState = !freeze(idleTime);
+            
+        }
+
+        protected override void updateAttack()
+        {
+           // throw new NotImplementedException();
         }
     }
 }
