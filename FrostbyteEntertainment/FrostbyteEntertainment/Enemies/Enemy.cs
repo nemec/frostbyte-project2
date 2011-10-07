@@ -231,6 +231,7 @@ namespace Frostbyte.Enemies
                 else
                 {
                     isCharging = false;
+                    mVisible = true;
                     return true;
                 }
             }
@@ -318,6 +319,7 @@ namespace Frostbyte.Enemies
                 else
                 {
                     isCharging = false;
+                    mVisible = true;
                     return true;
                 }
             }
