@@ -56,11 +56,58 @@ namespace Frostbyte.Enemies
         //These are only to update position of enemy
         
         /// <summary>
-        /// Update enemy position directly toward target for given duration
+        /// Update enemy position directly toward target for given duration - complete
         /// </summary>
-        protected bool charge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
+        protected bool charge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
         {
-            return true;
+            double distToP1 = (P1Coord.X - Pos.X) * (P1Coord.X - Pos.X) + (P1Coord.Y - Pos.Y) * (P1Coord.Y - Pos.Y);
+            double distToP2 = (P2Coord.X - Pos.X) * (P2Coord.X - Pos.X) + (P2Coord.Y - Pos.Y) * (P2Coord.Y - Pos.Y);
+            float chargeSpeed = Speed * speedMultiplier;
+            int playerToCharge = 0;
+
+
+            // choose which player to charge
+            if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
+            {
+                // charge P1
+                playerToCharge = 1;
+                isCharging = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            else if ((distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
+            {
+                // charge P2
+                playerToCharge = 2;
+                isCharging = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            if (isCharging)
+            {
+                if (This.gameTime.TotalGameTime <= movementStartTime + duration)
+                {
+                    if (playerToCharge == 1)
+                    {
+                        direction = P1Coord - Pos;
+                        direction.Normalize();
+                        Pos += direction * chargeSpeed;
+                    }
+                    else if (playerToCharge == 2)
+                    {
+                        direction = P1Coord - Pos;
+                        direction.Normalize();
+                        Pos += direction * chargeSpeed;
+                    }
+                }
+                else
+                {
+                    isCharging = false;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -118,23 +165,105 @@ namespace Frostbyte.Enemies
         }
 
         /// <summary>
-        /// Hide and follow player until certain distance from player
+        /// Hide and follow player until certain distance from player - complete
         /// </summary>
-        protected bool stealthCharge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
+        protected bool stealthCharge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float visibleDistance, float speedMultiplier)
         {
-            return true;
+            double distToP1 = (P1Coord.X - Pos.X) * (P1Coord.X - Pos.X) + (P1Coord.Y - Pos.Y) * (P1Coord.Y - Pos.Y);
+            double distToP2 = (P2Coord.X - Pos.X) * (P2Coord.X - Pos.X) + (P2Coord.Y - Pos.Y) * (P2Coord.Y - Pos.Y);
+            float chargeSpeed = Speed * speedMultiplier;
+            int playerToCharge = 0;
+
+            // choose which player to charge
+            if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
+            {
+                // charge P1
+                playerToCharge = 1;
+                isCharging = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+             
+                // decide whether or not to stealth
+                if (distToP1 <= visibleDistance * visibleDistance)
+                {
+                    mVisible = true;
+                }
+                else
+                {
+                    mVisible = false;
+                }
+            }
+
+            else if ((distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
+            {
+                // charge P2
+                playerToCharge = 2;
+                isCharging = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+
+                // decide whether or not to stealth
+                if (distToP2 <= visibleDistance * visibleDistance)
+                {
+                    mVisible = true;
+                }
+                else
+                {
+                    mVisible = false;
+                }
+            }
+
+            if (isCharging)
+            {
+                if (This.gameTime.TotalGameTime <= movementStartTime + duration)
+                {
+                    if (playerToCharge == 1)
+                    {
+                        direction = P1Coord - Pos;
+                        direction.Normalize();
+                        Pos += direction * chargeSpeed;
+                    }
+                    else if (playerToCharge == 2)
+                    {
+                        direction = P1Coord - Pos;
+                        direction.Normalize();
+                        Pos += direction * chargeSpeed;
+                    }
+                }
+                else
+                {
+                    isCharging = false;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
-        /// Be Invisible and still until certain distance from player
+        /// Be Invisible and still until certain distance from player - complete
         /// </summary>
         protected bool stealthCamp(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
         {
-            return true;
+            double distToP1 = (P1Coord.X - Pos.X) * (P1Coord.X - Pos.X) + (P1Coord.Y - Pos.Y) * (P1Coord.Y - Pos.Y);
+            double distToP2 = (P2Coord.X - Pos.X) * (P2Coord.X - Pos.X) + (P2Coord.Y - Pos.Y) * (P2Coord.Y - Pos.Y);
+
+            if (aggroDistance * aggroDistance >= distToP1 /*|| aggroDistance <= distToP2*/)
+            {
+                isFrozen = false;
+                mVisible = true;
+            }
+
+            else if ( aggroDistance * aggroDistance < distToP1 )
+            {
+                isFrozen = true;
+                mVisible = false;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
-        /// Be Invisible and move away until x seconds have passed
+        /// Be Invisible and move away until x seconds have passed or you are y distance away
         /// </summary>
         protected bool stealthRetreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float safeDistance, float speedMultiplier)
         {
@@ -146,7 +275,54 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool retreat(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float safeDistance, float speedMultiplier)
         {
-            return true;
+            double distToP1 = (P1Coord.X - Pos.X) * (P1Coord.X - Pos.X) + (P1Coord.Y - Pos.Y) * (P1Coord.Y - Pos.Y);
+            double distToP2 = (P2Coord.X - Pos.X) * (P2Coord.X - Pos.X) + (P2Coord.Y - Pos.Y) * (P2Coord.Y - Pos.Y);
+            float fleeSpeed = Speed * speedMultiplier;
+            int playerToFlee = 0;
+
+
+            // choose which player to run from
+            if ((distToP1 <= distToP2) && (distToP1 <= safeDistance * safeDistance))
+            {
+                // charge P1
+                playerToFlee = 1;
+                isCharging = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            else if ((distToP2 < distToP1) && (distToP2 <= safeDistance * safeDistance))
+            {
+                // charge P2
+                playerToFlee = 2;
+                isCharging = true;
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            if (isCharging)
+            {
+                if (This.gameTime.TotalGameTime <= movementStartTime + duration)
+                {
+                    if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
+                    {
+                        direction = P1Coord - Pos;
+                        direction.Normalize();
+                        Pos -= direction * fleeSpeed;
+                    }
+                    else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
+                    {
+                        direction = P1Coord - Pos;      // SHOULD BE P2Coord - Pos
+                        direction.Normalize();
+                        Pos -= direction * fleeSpeed;
+                    }
+                }
+                else
+                {
+                    isCharging = false;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
