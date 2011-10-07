@@ -12,6 +12,7 @@ using System.Windows.Shapes;
 using System.Collections.ObjectModel;
 using Frostbyte;
 using System.IO;
+using System.Xml.Linq;
 
 namespace LevelEditor
 {
@@ -209,6 +210,16 @@ namespace LevelEditor
         void SaveMap_MouseUp(object sender, MouseButtonEventArgs e)
         {
             //open save box and then create all the crap that needs to get saved
+            List<LevelObject> objs = TileMap.GenerateSaveObjects();
+
+            XDocument doc = new XDocument(new XElement("Level"));
+            foreach (LevelObject l in objs)
+            {
+                doc.Add(l.ToXML());
+            }
+
+            TileMap.Save("test.xml", doc);
+
         }
 
         void LoadGrid(TileList<Frostbyte.Tile> t)
