@@ -37,7 +37,7 @@ namespace Frostbyte.Levels
 
         internal static void Update()
         {
-            
+
         }
     }
 

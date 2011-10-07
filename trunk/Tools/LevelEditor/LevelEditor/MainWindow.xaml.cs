@@ -41,6 +41,9 @@ namespace LevelEditor
 
         public Vector GridCell = new Vector(-1, -1);
 
+        public Point StartCell { get; set; }
+        public Point EndCell { get; set; }
+
         public int Cellsize = 64;
 
         public Tile SelectedTile { get; set; }
@@ -70,13 +73,13 @@ namespace LevelEditor
                     Active=true
                 },
 
-                new Tile(){
-                    Name="Wall_Left",
-                    Traversable=false,
-                    Type=TileTypes.SideWall,
-                    Orientation = Orientations.Right,
-                    Active=true
-                },
+                //new Tile(){
+                //    Name="Wall_Left",
+                //    Traversable=false,
+                //    Type=TileTypes.SideWall,
+                //    Orientation = Orientations.Right,
+                //    Active=true
+                //},
 
                 new Tile(){
                     Name="Wall_Right",
@@ -86,45 +89,45 @@ namespace LevelEditor
                     Active=true
                 },
 
-                new Tile(){
-                    Name="Wall_Bottom",
-                    Traversable=false,
-                    Type=TileTypes.Bottom,
-                    Active=true
-                },
+                //new Tile(){
+                //    Name="Wall_Bottom",
+                //    Traversable=false,
+                //    Type=TileTypes.Bottom,
+                //    Active=true
+                //},
 
                 new Tile(){
-                    Name="Corner_TL",
+                    Name="Corner",
                     Traversable=false,
                     Type=TileTypes.Corner,
                     Orientation=Orientations.Right,
                     Active=true
                 },
 
-                new Tile(){
-                    Name="Corner_TR",
-                    Traversable=false,
-                    Type=TileTypes.Corner,
-                    Orientation=Orientations.Down,
-                    Active=true
-                },
+                //new Tile(){
+                //    Name="Corner_TR",
+                //    Traversable=false,
+                //    Type=TileTypes.Corner,
+                //    Orientation=Orientations.Down,
+                //    Active=true
+                //},
 
-                new Tile(){
-                    Name="Corner_BR",
-                    Traversable=false,
-                    Type=TileTypes.Corner,
-                    Orientation=Orientations.Up,
-                    Active=true
-                }
-                ,
+                //new Tile(){
+                //    Name="Corner_BR",
+                //    Traversable=false,
+                //    Type=TileTypes.Corner,
+                //    Orientation=Orientations.Up,
+                //    Active=true
+                //}
+                //,
 
-                new Tile(){
-                    Name="Corner_BL",
-                    Traversable=false,
-                    Type=TileTypes.Corner,
-                    Orientation = Orientations.Up_Right,
-                    Active=true
-                }
+                //new Tile(){
+                //    Name="Corner_BL",
+                //    Traversable=false,
+                //    Type=TileTypes.Corner,
+                //    Orientation = Orientations.Up_Right,
+                //    Active=true
+                //}
             };
             ObservableCollection<Tile> rooms = new ObservableCollection<Tile>()
             {
@@ -170,12 +173,13 @@ namespace LevelEditor
                 }
             };
             var stuff = new ObservableCollection<TileGroup>(){
+                
+                new TileGroup(rooms){
+                    GroupName="Rooms"
+                },
                 new TileGroup(tiles){
                     GroupName="Tiles"
                 },
-                new TileGroup(rooms){
-                    GroupName="Rooms"
-                }
             };
 
             //clears selected items
@@ -231,7 +235,7 @@ namespace LevelEditor
                 Level.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(Cellsize) });
             }
             Level.Width = Level.RowDefinitions.Count * Cellsize;
-            Level.Height = Level.ColumnDefinitions.Count * Cellsize ;
+            Level.Height = Level.ColumnDefinitions.Count * Cellsize;
         }
 
         void Level_MouseUp(object sender, MouseButtonEventArgs e)
@@ -258,10 +262,13 @@ namespace LevelEditor
                 {
                     Moving = true;
                     if (!SelectedTile.IsSpecialObject)
-                        AddTile(GetCell(e.GetPosition(Level)));
+                    {
+                        EndCell = e.GetPosition(Level);
+                        AddTile(GetCell(EndCell));
+                    }
                     else
                     {
-                        // fill all of it
+                        //do something for special objects when dragging
                     }
                 }
             }
@@ -285,7 +292,8 @@ namespace LevelEditor
                 {
                     if (SelectedObject == null)
                     {
-                        GridCell = GetCell(e.GetPosition(Level));
+                        StartCell = e.GetPosition(Level);
+                        GridCell = GetCell(StartCell);
                         Index2D i = new Index2D(GridCell.X, GridCell.Y);
                         // fill the pieces
                         if (SelectedTile.Name == "Room")
@@ -313,15 +321,32 @@ namespace LevelEditor
                         {
                             SelectedObject = new Floor(i)
                             {
+                                Type = TileTypes.Floor,
                                 FloorType = SelectedTile.FloorType,
                             };
                         }
                     }
                     else//here we complete things for the object
                     {
-                        GridCell=GetCell(e.GetPosition(Level));
+                        EndCell = e.GetPosition(Level);
+                        GridCell = GetCell(EndCell);
+
                         SelectedObject.EndCell = new Index2D(GridCell.X, GridCell.Y);
 
+                        //determine orientation
+                        Point change = EndCell - (Vector)StartCell;
+                        Index2D diff = new Index2D(change.X, change.Y);
+                        if (SelectedObject.Type == TileTypes.Wall)
+                        {
+                            if (diff.MagX > diff.MagY)
+                            {
+                                SelectedObject.Type = diff.Y >= 0 ? TileTypes.Wall : TileTypes.Bottom;
+                            }
+                            else
+                            {
+                                SelectedObject.Orientation = diff.X >= 0 ? Orientations.Right : Orientations.Left;
+                            }
+                        }
                         //determine what it is
                         List<Tile> tiles = ToListTile(TileMap.Add(SelectedObject));
 
@@ -345,7 +370,8 @@ namespace LevelEditor
                 {
                     if (SelectedTile != null)
                     {
-                        GridCell = GetCell(e.GetPosition(Level));
+                        StartCell = e.GetPosition(Level);
+                        GridCell = GetCell(StartCell);
                         FirstClick = true;
                         AddTile(GridCell);
                     }
@@ -381,6 +407,7 @@ namespace LevelEditor
                 {
                     GridCell = newpt;
                 }
+
                 //deterimine which coord changed more
                 Vector diff = newpt - GridCell;
 
@@ -397,8 +424,39 @@ namespace LevelEditor
 
                     //draw the selecteditem
                     Tile toadd = Tile.DeepCopy(SelectedTile);
-                    if(toadd.GridCell==null)
-                    toadd.GridCell = new Index2D(GridCell.X, GridCell.Y);
+
+                    //orient it
+                    Point p = EndCell - (Vector)StartCell;
+                    Index2D orientation = new Index2D(p.X, p.Y);
+                    //if x is greater
+                    //if (orientation.X > 0)
+                    //{
+                    //    SelectedTile.Orientation = orientation.Y > 0 ? Orientations.Up_Right : orientation.Y < 0 ? Orientations.Down_Right : Orientations.Right;
+                    //}
+                    //else if (orientation.X < 0)
+                    //{
+                    //    SelectedTile.Orientation = orientation.Y > 0 ? Orientations.Up_Left : orientation.Y < 0 ? Orientations.Down_Left : Orientations.Left;
+                    //}
+                    //else 
+                    //{
+                    //    SelectedTile.Orientation = orientation.Y > 0 ? Orientations.Up : Orientations.Down;
+                    //}
+                    if (orientation.X > 0 && orientation.Y < 0)
+                    {
+                        SelectedTile.Orientation = Orientations.Up_Right;
+                    }
+                    else if (orientation.MagX > orientation.MagY)
+                    {
+                        SelectedTile.Orientation = orientation.X > 0 ? Orientations.Right : Orientations.Left;
+                    }
+                    else
+                    {
+                        SelectedTile.Orientation = orientation.Y < 0 ? Orientations.Up : Orientations.Down;
+                    }
+
+
+                    if (toadd.GridCell == null)
+                        toadd.GridCell = new Index2D(GridCell.X, GridCell.Y);
 
                     //set the cell
                     int y = (int)GridCell.Y;
@@ -509,11 +567,11 @@ namespace LevelEditor
                 {
                     return new ScaleTransform(-1, -1);
                 }
-                if (o == Orientations.Up)
+                else if (o == Orientations.Up)
                 {
                     return new ScaleTransform(1, -1);
                 }
-                if (o == Orientations.Right)
+                else if (o == Orientations.Right)
                 {
                     return new ScaleTransform(-1, 1);
                 }

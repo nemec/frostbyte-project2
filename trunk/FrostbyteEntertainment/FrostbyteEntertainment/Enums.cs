@@ -85,7 +85,7 @@ namespace Frostbyte
     }
 
     /// <summary>
-    /// Whether or not the floor is Themed or not
+    /// Whether or not the floor is Themed or not (I know it's repetitive but I couldn't think of a better way atm) \todo See if we can get rid of this
     /// </summary>
     public enum FloorTypes
     {

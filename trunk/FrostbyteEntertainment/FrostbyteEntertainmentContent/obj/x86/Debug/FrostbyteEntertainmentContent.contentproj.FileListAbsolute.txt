@@ -1,2 +1,1 @@
-C:\Users\Vincent\Desktop\Game 2\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainmentContent\obj\x86\Debug\ResolveAssemblyReference.cache
-F:\Elemental Game\FrostbyteEntertainment\FrostbyteEntertainmentContent\obj\x86\Debug\ResolveAssemblyReference.cache
+H:\FrostByte\frostbyte-entertainment\FrostbyteEntertainment\FrostbyteEntertainmentContent\obj\x86\Debug\ResolveAssemblyReference.cache

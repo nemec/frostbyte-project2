@@ -47,6 +47,21 @@ namespace Frostbyte
         public int X { get; set; }
         public int Y { get; set; }
 
+        public int MagX
+        {
+            get
+            {
+                return Math.Abs(X);
+            }
+        }
+        public int MagY
+        {
+            get
+            {
+                return Math.Abs(Y);
+            }
+        }
+
         public static Index2D Parse(string s)
         {
             string[] ss = s.Split(new char[] { ',' });
@@ -58,17 +73,27 @@ namespace Frostbyte
         {
             return String.Format("{0},{1}", X, Y);
         }
+
+        public static Index2D operator +(Index2D a, Index2D i)
+        {
+            return new Index2D(a.X + i.X, a.Y + i.Y);
+        }
+        public static Index2D operator -(Index2D a, Index2D i)
+        {
+            return new Index2D(a.X - i.X, a.Y - i.Y);
+        }
     }
 
     public class Wall : LevelPart
     {
-        public Wall(Index2D start, Index2D end, TileTypes t, Element theme, bool move = false)
+        public Wall(Index2D start, Index2D end, Orientations or, TileTypes t, Element theme = Element.Earth, bool move = false)
         {
             StartCell = start;
             EndCell = end;
             Type = t;
             Theme = theme;
             Traversable = move;
+            Orientation = or;
         }
 
         public Wall(Index2D start)
@@ -105,6 +130,7 @@ namespace Frostbyte
                 return new Wall(
                     Index2D.Parse(elem.Attribute("StartCell").Value),
                     Index2D.Parse(elem.Attribute("EndCell").Value),
+                    (Orientations)Enum.Parse(typeof(Orientations), elem.Attribute("Orientation").Value),
                     (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
                     (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
                     bool.Parse(elem.Attribute("Collision").Value)
@@ -135,6 +161,19 @@ namespace Frostbyte
         public Floor(Index2D start)
         {
             StartCell = start;
+        }
+
+        public Floor(Room r)
+        {
+            Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
+            Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
+            StartCell = new Index2D(start.X + 1, start.Y + 1);
+            EndCell = new Index2D(end.X - 1, end.Y - 1);
+            Type = r.Type;
+            Theme = r.Theme;
+            Traversable = r.FloorType == FloorTypes.Themed ? true : false;
+            FloorType = r.FloorType;
+            Type = r.FloorType == FloorTypes.Themed ? TileTypes.Floor : r.FloorType == FloorTypes.Lava ? TileTypes.Lava : TileTypes.Water;
         }
 
         public override XElement ToXML()
