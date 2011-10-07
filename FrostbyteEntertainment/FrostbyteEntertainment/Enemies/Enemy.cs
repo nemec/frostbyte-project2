@@ -30,11 +30,6 @@ namespace Frostbyte.Enemies
 
         #endregion Variables
 
-        Enemy(string name, Actor actor) : base(name, actor) 
-        {
-            
-        }
-
         public void update()
         {
             updateMovement();
@@ -42,10 +37,6 @@ namespace Frostbyte.Enemies
             updateAttack();
         }
 
-        private void checkBackgroundCollisions()
-        {
-            throw new NotImplementedException();
-        }
         protected abstract void updateMovement();
         protected abstract void updateAttack();
 
@@ -69,45 +60,11 @@ namespace Frostbyte.Enemies
         }
 
         /// <summary>
-        /// Charge but do not update direction for length of charge - complete
+        /// Charge but do not update direction for length of charge
         /// </summary>
         private void ram(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
         {
-            // check this stuff before committing to the ram
-            double distToP1 = Math.Sqrt((P1Coord.X - Pos.X) * (P1Coord.X - Pos.X) + (P1Coord.Y - Pos.Y) * (P1Coord.Y - Pos.Y));
-            double distToP2 = Math.Sqrt((P2Coord.X - Pos.X) * (P2Coord.X - Pos.X) + (P2Coord.Y - Pos.Y) * (P2Coord.Y - Pos.Y));
-            float ramSpeed = Speed * speedMultiplier;
-            float rise = 0;
-            float run = 0;
-            
-            if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance))
-            {
-                // charge P1
-                rise = P1Coord.Y - Pos.Y;
-                run = P1Coord.X - Pos.X;
-                isRamming = true;
-            }
-            
-            else if ((distToP2 < distToP1) && (distToP2 <= aggroDistance))
-            {
-                // charge P2
-                rise = P2Coord.Y - Pos.Y;
-                run = P2Coord.X - Pos.X;
-                isRamming = true;
-            }
 
-            if (isRamming)
-            {
-                // Snapshot current gameTime
-                TimeSpan beginRamTime = This.gameTime.TotalGameTime;
-
-                while (beginRamTime <= beginRamTime + duration)
-                {
-                    Pos += new Vector2(ramSpeed * run, ramSpeed * rise);
-                }
-
-                isRamming = false;
-            }
         }
 
         /// <summary>
