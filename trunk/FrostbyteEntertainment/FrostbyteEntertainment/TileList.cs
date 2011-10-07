@@ -470,6 +470,7 @@ namespace Frostbyte
 
         public bool Remove(T elem, int x, int y)
         {
+            LevelParts.Remove(elem);
             mTiles[y][x] = new T();
             return true;
         }
@@ -538,62 +539,59 @@ namespace Frostbyte
             if (obj.GetType() == typeof(Room))
             {
                 Room r = obj as Room;
-                if (Remove(r))
+
+                //we're going to be getting them a lot otherwise
+                Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
+                Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
+                List<T> t;
+                Remove(new BorderWalls(r), out t, true);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
                 {
-                    //we're going to be getting them a lot otherwise
-                    Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
-                    Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
-                    List<T> t;
-                    Remove(new BorderWalls(r), out t, true);
+                    tiles.Add(t[i]);
+                }
 
-                    //for some reson foreach doesn't work here
-                    for (int i = 0; i < t.Count; i++)
-                    {
-                        tiles.Remove(t[i]);
-                    }
+                t = new List<T>();
+                Remove(new Floor(r), out t, true);
 
-                    t = new List<T>();
-                    Remove(new Floor(r), out t, true);
-
-                    //for some reson foreach doesn't work here
-                    for (int i = 0; i < t.Count; i++)
-                    {
-                        tiles.Remove(t[i]);
-                    }
-
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Add(t[i]);
                 }
             }
             else if (obj.GetType() == typeof(BorderWalls))
             {
                 List<T> t;
-                Remove(obj as BorderWalls, out t);
+                Remove(obj as BorderWalls, out t, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
                 {
-                    tiles.Remove(t[i]);
+                    tiles.Add(t[i]);
                 }
             }
             else if (obj.GetType() == typeof(Wall))
             {
                 List<T> t;
-                Remove(obj as Wall, out t);
+                Remove(obj as Wall, out t, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
                 {
-                    tiles.Remove(t[i]);
+                    tiles.Add(t[i]);
                 }
             }
             else if (obj.GetType() == typeof(Floor))
             {
                 List<T> t;
-                Remove(obj as Floor, out t);
+                Remove(obj as Floor, out t, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
                 {
-                    tiles.Remove(t[i]);
+                    tiles.Add(t[i]);
                 }
             }
             return tiles;
@@ -624,7 +622,7 @@ namespace Frostbyte
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
                 {
-                    tiles.Remove(ts[i]);
+                    tiles.Add(ts[i]);
                 }
 
                 //place right wall
@@ -633,7 +631,7 @@ namespace Frostbyte
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
                 {
-                    tiles.Remove(ts[i]);
+                    tiles.Add(ts[i]);
                 }
 
                 //place Top wall
@@ -642,7 +640,7 @@ namespace Frostbyte
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
                 {
-                    tiles.Remove(ts[i]);
+                    tiles.Add(ts[i]);
                 }
 
                 //place Top wall
@@ -651,7 +649,7 @@ namespace Frostbyte
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
                 {
-                    tiles.Remove(ts[i]);
+                    tiles.Add(ts[i]);
                 }
 
                 //place corners
@@ -664,8 +662,8 @@ namespace Frostbyte
                     Orientation = Orientations.Right,
                     GridCell = start,
                 };
-                tiles.Remove(t);
-                Remove(t, t.GridCell.X, t.GridCell.Y);
+                tiles.Add(t);
+                Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //TR
                 t = new T()
@@ -676,8 +674,8 @@ namespace Frostbyte
                     Orientation = Orientations.Down,
                     GridCell = new Index2D(end.X, start.Y)
                 };
-                tiles.Remove(t);
-                Remove(t, t.GridCell.X, t.GridCell.Y);
+                tiles.Add(t);
+                Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //BL
                 t = new T()
@@ -688,8 +686,8 @@ namespace Frostbyte
                     Orientation = Orientations.Up_Right,
                     GridCell = new Index2D(start.X, end.Y)
                 };
-                tiles.Remove(t);
-                Remove(t, t.GridCell.X, t.GridCell.Y);
+                tiles.Add(t);
+                Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //BR
                 t = new T()
@@ -700,8 +698,8 @@ namespace Frostbyte
                     Orientation = Orientations.Up,
                     GridCell = new Index2D(end.X, end.Y)
                 };
-                tiles.Remove(t);
-                Remove(t, t.GridCell.X, t.GridCell.Y);
+                tiles.Add(t);
+                Add(t, t.GridCell.X, t.GridCell.Y);
             }
             Tiles = tiles;
         }
@@ -740,8 +738,8 @@ namespace Frostbyte
                                 Orientation = Orientations.Left,
                                 GridCell = new Index2D(end.X, y)
                             };
-                            tiles.Remove(t);
-                            Remove(t, t.GridCell.X, t.GridCell.Y);
+                            tiles.Add(t);
+                            Add(t, t.GridCell.X, t.GridCell.Y);
                         }
                     }
                     //left wall
@@ -758,8 +756,8 @@ namespace Frostbyte
                                 Orientation = Orientations.Right,
                                 GridCell = new Index2D(start.X, y)
                             };
-                            tiles.Remove(t);
-                            Remove(t, t.GridCell.X, t.GridCell.Y);
+                            tiles.Add(t);
+                            Add(t, t.GridCell.X, t.GridCell.Y);
                         }
                     }
                 }
@@ -777,8 +775,8 @@ namespace Frostbyte
                             Orientation = diff.Y >= 0 ? Orientations.Down : Orientations.Up,
                             GridCell = new Index2D(x, start.Y)
                         };
-                        tiles.Remove(t);
-                        Remove(t, t.GridCell.X, t.GridCell.Y);
+                        tiles.Add(t);
+                        Add(t, t.GridCell.X, t.GridCell.Y);
                     }
                 }
                 else if (w.Type == TileTypes.Bottom || (diff.MagX > diff.MagY && w.Type == TileTypes.Bottom))
@@ -794,8 +792,8 @@ namespace Frostbyte
                             Orientation = diff.Y < 0 ? Orientations.Down : Orientations.Up,
                             GridCell = new Index2D(x, end.Y)
                         };
-                        tiles.Remove(t);
-                        Remove(t, t.GridCell.X, t.GridCell.Y);
+                        tiles.Add(t);
+                        Add(t, t.GridCell.X, t.GridCell.Y);
                     }
                 }
             }
@@ -824,7 +822,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Remove Bottom
-                        T tile = new T()
+                        T t = new T()
                         {
                             Type = f.Type,
                             FloorType = f.FloorType,
@@ -833,8 +831,8 @@ namespace Frostbyte
                             Orientation = Orientations.Down,
                             GridCell = new Index2D(x, y)
                         };
-                        tiles.Remove(tile);
-                        Remove(tile, tile.GridCell.X, tile.GridCell.Y);
+                        tiles.Add(t);
+                        Add(t, t.GridCell.X, t.GridCell.Y);
                     }
                 }
             }
@@ -888,7 +886,24 @@ namespace Frostbyte
 
         public TileList<T> Duplicate()
         {
-            return this.MemberwiseClone() as TileList<T>;
+            TileList<T> n = new TileList<T>();
+            n.LevelParts = new List<LevelObject>(this.LevelParts);
+            n.mTiles = new List<List<T>>();
+            int ycount = mTiles.Count;
+            if (ycount > 0)
+            {
+                int xcount = mTiles[0].Count;
+                for (int y = 0; y < ycount; y++)
+                {
+                    n.mTiles.Add(new List<T>());
+                    for (int x = 0; x < xcount; x++)
+                    {
+                        n.mTiles[y].Add(mTiles[y][x]);
+                    }
+                }
+            }
+
+            return n;
         }
 
         /// <summary>
@@ -903,6 +918,7 @@ namespace Frostbyte
             foreach (LevelPart lo in LevelParts)
             {
                 List<T> removed = copy.Remove(lo);
+                objs.Add(lo);
                 foreach (T tile in removed)
                 {
                     Index2D cell = tile.GridCell;
@@ -913,16 +929,21 @@ namespace Frostbyte
                 }
             }
             int ycount = mTiles.Count;
-            int xcount = mTiles[0].Count;
-            for (int y = 0; y < ycount; y++)
+            if (ycount > 0)
             {
-                for (int x = 0; x < xcount; x++)
+                int xcount = mTiles[0].Count;
+                for (int y = 0; y < ycount; y++)
                 {
-                    T tile = copy[y][x];
-                    //this means it's a tile we care about
-                    if (tile.Type != TileTypes.DEFAULT)
+                    for (int x = 0; x < xcount; x++)
                     {
-                        /// \todo complete this!!!!!
+                        T tileFromCopy = copy[y][x];
+                        T tileFromUs = this[y][x];
+                        //this means it's a tile we care about
+                        if (tileFromCopy.Type!=TileTypes.DEFAULT)
+                        {
+                            /// \todo complete this!!!!!
+                            objs.Add(tileFromUs);
+                        }
                     }
                 }
             }

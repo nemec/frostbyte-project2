@@ -98,9 +98,17 @@ namespace LevelEditor
                 //},
 
                 new Tile(){
-                    Name="Corner",
+                    Name="Convex_Corner",
                     Traversable=false,
                     Type=TileTypes.Corner,
+                    Orientation=Orientations.Right,
+                    Active=true
+                },
+                
+                new Tile(){
+                    Name="Concave_Corner",
+                    Traversable=false,
+                    Type=TileTypes.ConvexCorner,
                     Orientation=Orientations.Right,
                     Active=true
                 },
@@ -215,7 +223,7 @@ namespace LevelEditor
             XDocument doc = new XDocument(new XElement("Level"));
             foreach (LevelObject l in objs)
             {
-                doc.Add(l.ToXML());
+                doc.Root.Add(l.ToXML());
             }
 
             TileMap.Save("test.xml", doc);
@@ -258,6 +266,10 @@ namespace LevelEditor
                 {
                     elem.Tiles.SelectedIndex = -1;
                 }
+                SelectedObject = null;
+                SelectedTile = null;
+                StartCell = new Point(-1,-1);
+                EndCell = new Point(-1,-1);
                 ClearTile = true;
                 CancelSelection = false;
             }
@@ -373,6 +385,13 @@ namespace LevelEditor
                 }
                 else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
                 {
+                    if (ClearTile)
+                    {
+                        GridCell = GetCell(e.GetPosition(Level));
+                        RemoveTile(GridCell);
+                        FirstClick = true;
+                    }
+                    CancelSelection = true;
                 }
             }
             else
@@ -618,6 +637,9 @@ namespace LevelEditor
                         break;
                     case TileTypes.Corner:
                         file = "corner.png";
+                        break;
+                    case TileTypes.ConvexCorner:
+                        file = "convex-coner.png";
                         break;
                     case TileTypes.Floor:
                         file = "floor.png";

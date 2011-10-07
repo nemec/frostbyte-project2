@@ -62,6 +62,9 @@ namespace Frostbyte
         /// A corner (may be tl, tr, bl, br) \todo mabe distinguish between types of corners (determined by orientation)
         /// </summary>
         Corner,
+        /// A corner (may be tl, tr, bl, br) \todo mabe distinguish between types of corners (determined by orientation)
+        /// </summary>
+        ConvexCorner,
         /// <summary>
         /// This is for floor tiles
         /// </summary>
