@@ -95,6 +95,124 @@ namespace Frostbyte
         }
 
         /// <summary>
+        /// Adds the Wall to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="w">Wall to add</param>
+        /// <returns>Success</returns>
+        internal bool Add(Wall w)
+        {
+            LevelParts.Add(w);
+            return true;
+        }
+
+        /// <summary>
+        /// Adds the Floor to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="f">Floor to add</param>
+        /// <returns>Success</returns>
+        internal bool Add(Floor f)
+        {
+            LevelParts.Add(f);
+            return true;
+        }
+
+        /// <summary>
+        /// Adds a FrostByte.Tile to the grid and to ObjectList
+        /// </summary>
+        /// <param name="r">Room to add</param>
+        /// <returns>Success</returns>
+        internal bool Add(T r)
+        {
+            if (r as LevelObject != null)
+            {
+                //determine what it is
+                if (r as Tile != null)
+                {
+                    Tile t = r as Tile;
+                    Add(r, r.GridCell.X, r.GridCell.Y);
+                    LevelParts.Add(t);
+                    return true;
+                }
+            }
+            //it's a level editor tile
+            return false;
+        }
+
+        /// <summary>
+        /// Determines what an object is and adds it to the level
+        /// </summary>
+        /// <param name="obj">Object we want to split and add</param>
+        internal List<T> Add(LevelPart obj)
+        {
+            List<T> tiles = new List<T>();
+            //deterime what it is
+            if (obj.GetType() == typeof(Room))
+            {
+                Room r = obj as Room;
+                if (Add(r))
+                {
+                    //we're going to be getting them a lot otherwise
+                    Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
+                    Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
+                    List<T> t;
+                    Add(new BorderWalls(r), out t, true);
+
+                    //for some reson foreach doesn't work here
+                    for (int i = 0; i < t.Count; i++)
+                    {
+                        tiles.Add(t[i]);
+                    }
+
+                    t = new List<T>();
+                    Add(new Floor(r), out t, true);
+
+                    //for some reson foreach doesn't work here
+                    for (int i = 0; i < t.Count; i++)
+                    {
+                        tiles.Add(t[i]);
+                    }
+
+                }
+            }
+            else if (obj.GetType() == typeof(BorderWalls))
+            {
+                List<T> t;
+                Add(obj as BorderWalls, out t);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Add(t[i]);
+                }
+            }
+            else if (obj.GetType() == typeof(Wall))
+            {
+                List<T> t;
+                Add(obj as Wall, out t);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Add(t[i]);
+                }
+            }
+            else if (obj.GetType() == typeof(Floor))
+            {
+                List<T> t;
+                Add(obj as Floor, out t);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Add(t[i]);
+                }
+            }
+            return tiles;
+        }
+
+        #region Magic Adds
+
+        /// <summary>
         /// Adds the Walls to ListObjects and adds all relevant cells to the grid
         /// </summary>
         /// <param name="w">Walls to add</param>
@@ -110,7 +228,6 @@ namespace Frostbyte
             List<T> tiles = new List<T>();
             if (dontAdd || Add(w))
             {
-                /// \todo find some better logic here
                 List<T> ts;
                 //place Left wall
                 Add(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
@@ -198,17 +315,6 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
             }
             Tiles = tiles;
-        }
-
-        /// <summary>
-        /// Adds the Wall to ListObjects and adds all relevant cells to the grid
-        /// </summary>
-        /// <param name="w">Wall to add</param>
-        /// <returns>Success</returns>
-        internal bool Add(Wall w)
-        {
-            LevelParts.Add(w);
-            return true;
         }
 
         /// <summary>
@@ -312,17 +418,6 @@ namespace Frostbyte
         /// Adds the Floor to ListObjects and adds all relevant cells to the grid
         /// </summary>
         /// <param name="f">Floor to add</param>
-        /// <returns>Success</returns>
-        internal bool Add(Floor f)
-        {
-            LevelParts.Add(f);
-            return true;
-        }
-
-        /// <summary>
-        /// Adds the Floor to ListObjects and adds all relevant cells to the grid
-        /// </summary>
-        /// <param name="f">Floor to add</param>
         /// <param name="dontAdd">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
         internal bool Add(Floor f, out List<T> Tiles, bool dontAdd = false)
@@ -357,100 +452,7 @@ namespace Frostbyte
             Tiles = tiles;
             return true;
         }
-
-        /// <summary>
-        /// Adds a FrostByte.Tile to the grid and to ObjectList
-        /// </summary>
-        /// <param name="r">Room to add</param>
-        /// <returns>Success</returns>
-        internal bool Add(T r)
-        {
-            if (r as LevelObject != null)
-            {
-                //determine what it is
-                if (r as Tile != null)
-                {
-                    Tile t = r as Tile;
-                    Add(r, r.GridCell.X, r.GridCell.Y);
-                    LevelParts.Add(t);
-                    return true;
-                }
-            }
-            //it's a level editor tile
-            return false;
-        }
-
-        /// <summary>
-        /// Determines what an object is and adds it to the level
-        /// </summary>
-        /// <param name="obj">Object we want to split and add</param>
-        internal List<T> Add(LevelPart obj)
-        {
-            List<T> tiles = new List<T>();
-            //deterime what it is
-            if (obj.GetType() == typeof(Room))
-            {
-                Room r = obj as Room;
-                if (Add(r))
-                {
-                    //we're going to be getting them a lot otherwise
-                    Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
-                    Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
-                    List<T> t;
-                    Add(new BorderWalls(r), out t, true);
-
-                    //for some reson foreach doesn't work here
-                    for (int i = 0; i < t.Count; i++)
-                    {
-                        tiles.Add(t[i]);
-                    }
-
-                    t = new List<T>();
-                    Add(new Floor(r), out t, true);
-
-                    //for some reson foreach doesn't work here
-                    for (int i = 0; i < t.Count; i++)
-                    {
-                        tiles.Add(t[i]);
-                    }
-
-                }
-            }
-            else if (obj.GetType() == typeof(BorderWalls))
-            {
-                List<T> t;
-                Add(obj as BorderWalls, out t);
-
-                //for some reson foreach doesn't work here
-                for (int i = 0; i < t.Count; i++)
-                {
-                    tiles.Add(t[i]);
-                }
-            }
-            else if (obj.GetType() == typeof(Wall))
-            {
-                List<T> t;
-                Add(obj as Wall, out t);
-
-                //for some reson foreach doesn't work here
-                for (int i = 0; i < t.Count; i++)
-                {
-                    tiles.Add(t[i]);
-                }
-            }
-            else if (obj.GetType() == typeof(Floor))
-            {
-                List<T> t;
-                Add(obj as Floor, out t);
-
-                //for some reson foreach doesn't work here
-                for (int i = 0; i < t.Count; i++)
-                {
-                    tiles.Add(t[i]);
-                }
-            }
-            return tiles;
-        }
+        #endregion Magic Adds
         #endregion Adds
 
         #region RemoveItems
@@ -471,6 +473,375 @@ namespace Frostbyte
             mTiles[y][x] = new T();
             return true;
         }
+
+        /// <summary>
+        /// Removes the Room to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="r">Room to add</param>
+        /// <returns>Success</returns>
+        internal bool Remove(Room r)
+        {
+            LevelParts.Remove(r);
+            //add tiles to the list
+            return true;
+        }
+
+        /// <summary>
+        /// Removes the Walls to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="r">Walls to add</param>
+        /// <param name="Tiles">List of tiles generated by the borderawlls</param>
+        /// <returns>Success</returns>
+        private bool Remove(BorderWalls w)
+        {
+            try
+            {
+                LevelParts.Remove(w);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Removes the Wall to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="w">Wall to add</param>
+        /// <returns>Success</returns>
+        internal bool Remove(Wall w)
+        {
+            LevelParts.Remove(w);
+            return true;
+        }
+
+        /// <summary>
+        /// Removes the Floor to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="f">Floor to add</param>
+        /// <returns>Success</returns>
+        internal bool Remove(Floor f)
+        {
+            LevelParts.Remove(f);
+            return true;
+        }
+
+        /// <summary>
+        /// Determines what an object is and adds it to the level
+        /// </summary>
+        /// <param name="obj">Object we want to split and add</param>
+        internal List<T> Remove(LevelPart obj)
+        {
+            List<T> tiles = new List<T>();
+            //deterime what it is
+            if (obj.GetType() == typeof(Room))
+            {
+                Room r = obj as Room;
+                if (Remove(r))
+                {
+                    //we're going to be getting them a lot otherwise
+                    Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
+                    Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
+                    List<T> t;
+                    Remove(new BorderWalls(r), out t, true);
+
+                    //for some reson foreach doesn't work here
+                    for (int i = 0; i < t.Count; i++)
+                    {
+                        tiles.Remove(t[i]);
+                    }
+
+                    t = new List<T>();
+                    Remove(new Floor(r), out t, true);
+
+                    //for some reson foreach doesn't work here
+                    for (int i = 0; i < t.Count; i++)
+                    {
+                        tiles.Remove(t[i]);
+                    }
+
+                }
+            }
+            else if (obj.GetType() == typeof(BorderWalls))
+            {
+                List<T> t;
+                Remove(obj as BorderWalls, out t);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Remove(t[i]);
+                }
+            }
+            else if (obj.GetType() == typeof(Wall))
+            {
+                List<T> t;
+                Remove(obj as Wall, out t);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Remove(t[i]);
+                }
+            }
+            else if (obj.GetType() == typeof(Floor))
+            {
+                List<T> t;
+                Remove(obj as Floor, out t);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < t.Count; i++)
+                {
+                    tiles.Remove(t[i]);
+                }
+            }
+            return tiles;
+        }
+
+        #region Magic Removes
+
+        /// <summary>
+        /// Removes the Walls to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="w">Walls to add</param>
+        /// <param name="Tiles">Listof tiles generated by the borderawlls</param>
+        /// <param name="dontRemove">True means the item added will not be added to the list of Levelobjects</param>
+        /// <returns>Success</returns>
+        private void Remove(BorderWalls w, out List<T> Tiles, bool dontRemove = false)
+        {
+            //we're going to be getting them a lot otherwise
+            Index2D start = new Index2D(Math.Min(w.StartCell.X, w.EndCell.X), Math.Min(w.StartCell.Y, w.EndCell.Y));
+            Index2D end = new Index2D(Math.Max(w.StartCell.X, w.EndCell.X), Math.Max(w.StartCell.Y, w.EndCell.Y));
+
+            List<T> tiles = new List<T>();
+            if (dontRemove || Remove(w))
+            {
+                List<T> ts;
+                //place Left wall
+                Remove(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    tiles.Remove(ts[i]);
+                }
+
+                //place right wall
+                Remove(new Wall(new Index2D(end.X, start.Y + 1), new Index2D(end.X, end.Y - 1), Orientations.Left, TileTypes.SideWall, w.Theme), out ts, true);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    tiles.Remove(ts[i]);
+                }
+
+                //place Top wall
+                Remove(new Wall(new Index2D(start.X + 1, start.Y), new Index2D(end.X - 1, start.Y), Orientations.Down, TileTypes.Wall, w.Theme), out ts, true);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    tiles.Remove(ts[i]);
+                }
+
+                //place Top wall
+                Remove(new Wall(new Index2D(start.X + 1, end.Y), new Index2D(end.X - 1, end.Y), Orientations.Down, TileTypes.Bottom, w.Theme), out ts, true);
+
+                //for some reson foreach doesn't work here
+                for (int i = 0; i < ts.Count; i++)
+                {
+                    tiles.Remove(ts[i]);
+                }
+
+                //place corners
+                //TL
+                T t = new T()
+                {
+                    Type = TileTypes.Corner,
+                    Theme = w.Theme,
+                    Traversable = false,
+                    Orientation = Orientations.Right,
+                    GridCell = start,
+                };
+                tiles.Remove(t);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
+
+                //TR
+                t = new T()
+                {
+                    Type = TileTypes.Corner,
+                    Theme = w.Theme,
+                    Traversable = false,
+                    Orientation = Orientations.Down,
+                    GridCell = new Index2D(end.X, start.Y)
+                };
+                tiles.Remove(t);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
+
+                //BL
+                t = new T()
+                {
+                    Type = TileTypes.Corner,
+                    Theme = w.Theme,
+                    Traversable = false,
+                    Orientation = Orientations.Up_Right,
+                    GridCell = new Index2D(start.X, end.Y)
+                };
+                tiles.Remove(t);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
+
+                //BR
+                t = new T()
+                {
+                    Type = TileTypes.Corner,
+                    Theme = w.Theme,
+                    Traversable = false,
+                    Orientation = Orientations.Up,
+                    GridCell = new Index2D(end.X, end.Y)
+                };
+                tiles.Remove(t);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
+            }
+            Tiles = tiles;
+        }
+
+        /// <summary>
+        /// Removes the Wall to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="w">Wall to add</param>
+        /// <param name="dontRemove">True means the item added will not be added to the list of Levelobjects</param>
+        /// <returns>Success</returns>
+        internal bool Remove(Wall w, out List<T> Tiles, bool dontRemove = false)
+        {
+            List<T> tiles = new List<T>();
+            //we're going to be getting them a lot otherwise
+            Index2D start = new Index2D(Math.Min(w.StartCell.X, w.EndCell.X), Math.Min(w.StartCell.Y, w.EndCell.Y));
+            Index2D end = new Index2D(Math.Max(w.StartCell.X, w.EndCell.X), Math.Max(w.StartCell.Y, w.EndCell.Y));
+            Index2D diff = end - start;
+            if (dontRemove || Remove(w))
+            {
+                //add tiles to the list
+                if (w.Type == TileTypes.SideWall || diff.MagX < diff.MagY)
+                {
+                    //place on side
+
+                    //Rt wall
+                    if (w.Orientation == Orientations.Left || diff.X < 0)
+                    {
+                        for (int y = start.Y; y <= end.Y; y++)
+                        {
+                            //Remove Right
+                            T t = new T()
+                            {
+                                Type = TileTypes.SideWall,
+                                Theme = w.Theme,
+                                Traversable = false,
+                                Orientation = Orientations.Left,
+                                GridCell = new Index2D(end.X, y)
+                            };
+                            tiles.Remove(t);
+                            Remove(t, t.GridCell.X, t.GridCell.Y);
+                        }
+                    }
+                    //left wall
+                    else if (w.Orientation == Orientations.Right || diff.X > 0)
+                    {
+                        for (int y = start.Y; y <= end.Y; y++)
+                        {
+                            //Remove left
+                            T t = new T()
+                            {
+                                Type = TileTypes.SideWall,
+                                Theme = w.Theme,
+                                Traversable = false,
+                                Orientation = Orientations.Right,
+                                GridCell = new Index2D(start.X, y)
+                            };
+                            tiles.Remove(t);
+                            Remove(t, t.GridCell.X, t.GridCell.Y);
+                        }
+                    }
+                }
+                else if (w.Type == TileTypes.Wall || (diff.MagX > diff.MagY && w.Type == TileTypes.Wall))
+                {
+                    //Place top
+                    for (int x = start.X; x <= end.X; x++)
+                    {
+                        //Remove Top
+                        T t = new T()
+                        {
+                            Type = TileTypes.Wall,
+                            Theme = w.Theme,
+                            Traversable = false,
+                            Orientation = diff.Y >= 0 ? Orientations.Down : Orientations.Up,
+                            GridCell = new Index2D(x, start.Y)
+                        };
+                        tiles.Remove(t);
+                        Remove(t, t.GridCell.X, t.GridCell.Y);
+                    }
+                }
+                else if (w.Type == TileTypes.Bottom || (diff.MagX > diff.MagY && w.Type == TileTypes.Bottom))
+                {
+                    for (int x = start.X; x <= end.X; x++)
+                    {
+                        //Remove Bottom
+                        T t = new T()
+                        {
+                            Type = TileTypes.Wall,
+                            Theme = w.Theme,
+                            Traversable = false,
+                            Orientation = diff.Y < 0 ? Orientations.Down : Orientations.Up,
+                            GridCell = new Index2D(x, end.Y)
+                        };
+                        tiles.Remove(t);
+                        Remove(t, t.GridCell.X, t.GridCell.Y);
+                    }
+                }
+            }
+            Tiles = tiles;
+            return true;
+        }
+
+        /// <summary>
+        /// Removes the Floor to ListObjects and adds all relevant cells to the grid
+        /// </summary>
+        /// <param name="f">Floor to add</param>
+        /// <param name="dontRemove">True means the item added will not be added to the list of Levelobjects</param>
+        /// <returns>Success</returns>
+        internal bool Remove(Floor f, out List<T> Tiles, bool dontRemove = false)
+        {
+            List<T> tiles = new List<T>();
+            //we're going to be getting them a lot otherwise
+            Index2D start = new Index2D(Math.Min(f.StartCell.X, f.EndCell.X), Math.Min(f.StartCell.Y, f.EndCell.Y));
+            Index2D end = new Index2D(Math.Max(f.StartCell.X, f.EndCell.X), Math.Max(f.StartCell.Y, f.EndCell.Y));
+            if (dontRemove || Remove(f))
+            {
+                //add tiles to the list
+                //place floor
+                for (int y = start.Y; y <= end.Y; y++)
+                {
+                    for (int x = start.X; x <= end.X; x++)
+                    {
+                        //Remove Bottom
+                        T tile = new T()
+                        {
+                            Type = f.Type,
+                            FloorType = f.FloorType,
+                            Theme = f.Theme,
+                            Traversable = f.Traversable,
+                            Orientation = Orientations.Down,
+                            GridCell = new Index2D(x, y)
+                        };
+                        tiles.Remove(tile);
+                        Remove(tile, tile.GridCell.X, tile.GridCell.Y);
+                    }
+                }
+            }
+            Tiles = tiles;
+            return true;
+        }
+        #endregion Magic Removes
         #endregion RemoveItems
 
         internal bool TryGetValue(int x, int y, out T value)
@@ -498,6 +869,11 @@ namespace Frostbyte
             mTiles.Clear();
         }
 
+        /// <summary>
+        /// Indexer into the list[]
+        /// </summary>
+        /// <param name="i">element</param>
+        /// <returns>the list at that index</returns>
         public List<T> this[int i]
         {
             get
@@ -510,9 +886,48 @@ namespace Frostbyte
             }
         }
 
-        public List<List<T>> CopyValue()
+        public TileList<T> Duplicate()
         {
-            return new List<List<T>>(mTiles);
+            return this.MemberwiseClone() as TileList<T>;
+        }
+
+        /// <summary>
+        /// creates all the rooms, tiles, etc that would be needed to generate the level
+        /// </summary>
+        /// <returns></returns>
+        public List<LevelObject> GenerateSaveObjects()
+        {
+            List<LevelObject> objs = new List<LevelObject>();
+            TileList<T> copy = Duplicate();
+            //remove from copy all the tiles that match our current objects
+            foreach (LevelPart lo in LevelParts)
+            {
+                List<T> removed = copy.Remove(lo);
+                foreach (T tile in removed)
+                {
+                    Index2D cell = tile.GridCell;
+                    if (mTiles[cell.Y][cell.X] == tile)
+                    {
+                        copy.Remove(tile);
+                    }
+                }
+            }
+            int ycount = mTiles.Count;
+            int xcount = mTiles[0].Count;
+            for (int y = 0; y < ycount; y++)
+            {
+                for (int x = 0; x < xcount; x++)
+                {
+                    T tile = copy[y][x];
+                    //this means it's a tile we care about
+                    if (tile.Type != TileTypes.DEFAULT)
+                    {
+                        /// \todo complete this!!!!!
+                    }
+                }
+            }
+
+            return objs;
         }
 
         /// <summary>
