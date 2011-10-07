@@ -15,15 +15,6 @@ namespace Frostbyte
         }
     }
 
-    internal abstract class Enemy : Sprite
-    {
-        internal Enemy(string name, Actor actor)
-            : base(name, actor)
-        {
-            (This.Game.CurrentLevel as FrostbyteLevel).enemies.Add(this);
-        }
-    }
-
     internal abstract class Obstacle : Sprite
     {
         internal Obstacle(string name, Actor actor)
