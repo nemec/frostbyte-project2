@@ -110,7 +110,14 @@ namespace Frostbyte.Characters
                     target.mVisible = true;
                     target.CenterOn(currentTarget);
                 }
-                #endregion
+                #endregion Targeting
+
+                #region Movement
+
+                Pos.X += controller.Movement.X * 3;
+                Pos.Y -= controller.Movement.Y * 3;
+
+                #endregion Movement
             }
         }
 
