@@ -83,14 +83,24 @@ namespace Frostbyte
             return new Index2D(a.X - i.X, a.Y - i.Y);
         }
 
-        public static bool operator ==(Index2D a, Index2D i)
+        public static bool operator ==(Index2D a, Index2D b)
         {
-            return a.X == i.X && a.Y == i.Y;
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+            return a.X == b.X && a.Y == b.Y;
         }
 
         public static bool operator !=(Index2D a, Index2D i)
         {
-            return !(a==i);
+            return !(a == i);
         }
 
         public override int GetHashCode()
@@ -151,14 +161,14 @@ namespace Frostbyte
             try
             {
 #endif
-                return new Wall(
-                    Index2D.Parse(elem.Attribute("StartCell").Value),
-                    Index2D.Parse(elem.Attribute("EndCell").Value),
-                    (Orientations)Enum.Parse(typeof(Orientations), elem.Attribute("Orientation").Value),
-                    (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
-                    (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                    bool.Parse(elem.Attribute("Collision").Value)
-                    );
+            return new Wall(
+                Index2D.Parse(elem.Attribute("StartCell").Value),
+                Index2D.Parse(elem.Attribute("EndCell").Value),
+                (Orientations)Enum.Parse(typeof(Orientations), elem.Attribute("Orientation").Value),
+                (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
+                (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
+                bool.Parse(elem.Attribute("Collision").Value)
+                );
 #if DEBUG1
             }
             catch (Exception e)
@@ -222,13 +232,13 @@ namespace Frostbyte
             try
             {
 #endif
-                return new Floor(
-                    Index2D.Parse(elem.Attribute("StartCell").Value),
-                    Index2D.Parse(elem.Attribute("EndCell").Value),
-                    (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
-                    (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                    bool.Parse(elem.Attribute("Collision").Value)
-                    );
+            return new Floor(
+                Index2D.Parse(elem.Attribute("StartCell").Value),
+                Index2D.Parse(elem.Attribute("EndCell").Value),
+                (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
+                (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
+                bool.Parse(elem.Attribute("Collision").Value)
+                );
 #if DEBUG1
             }
             catch (Exception e)
@@ -288,13 +298,13 @@ namespace Frostbyte
             try
             {
 #endif
-                return new BorderWalls(
-                    Index2D.Parse(elem.Attribute("StartCell").Value),
-                    Index2D.Parse(elem.Attribute("EndCell").Value),
-                    (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
-                    (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                    bool.Parse(elem.Attribute("Collision").Value)
-                    );
+            return new BorderWalls(
+                Index2D.Parse(elem.Attribute("StartCell").Value),
+                Index2D.Parse(elem.Attribute("EndCell").Value),
+                (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
+                (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
+                bool.Parse(elem.Attribute("Collision").Value)
+                );
 #if DEBUG1
             }
             catch (Exception e)
@@ -344,30 +354,30 @@ namespace Frostbyte
             try
             {
 #endif
-                if (elem.Attribute("FloorType") != null && elem.Attribute("Collision") != null)
-                    return new Room(
-                        Index2D.Parse(elem.Attribute("StartCell").Value),
-                        Index2D.Parse(elem.Attribute("EndCell").Value),
-                        //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
-                        (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                        (FloorTypes)Enum.Parse(typeof(FloorTypes), elem.Attribute("FloorType").Value),
-                        bool.Parse(elem.Attribute("Collision").Value)
-                    );
-                else if (elem.Attribute("FloorType") != null)
-                    return new Room(
-                        Index2D.Parse(elem.Attribute("StartCell").Value),
-                        Index2D.Parse(elem.Attribute("EndCell").Value),
-                        //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
-                        (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                        (FloorTypes)Enum.Parse(typeof(FloorTypes), elem.Attribute("FloorType").Value)
-                    );
-                else
-                    return new Room(
-                        Index2D.Parse(elem.Attribute("StartCell").Value),
-                        Index2D.Parse(elem.Attribute("EndCell").Value),
-                        //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
-                        (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value)
-                    );
+            if (elem.Attribute("FloorType") != null && elem.Attribute("Collision") != null)
+                return new Room(
+                    Index2D.Parse(elem.Attribute("StartCell").Value),
+                    Index2D.Parse(elem.Attribute("EndCell").Value),
+                    //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
+                    (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
+                    (FloorTypes)Enum.Parse(typeof(FloorTypes), elem.Attribute("FloorType").Value),
+                    bool.Parse(elem.Attribute("Collision").Value)
+                );
+            else if (elem.Attribute("FloorType") != null)
+                return new Room(
+                    Index2D.Parse(elem.Attribute("StartCell").Value),
+                    Index2D.Parse(elem.Attribute("EndCell").Value),
+                    //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
+                    (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
+                    (FloorTypes)Enum.Parse(typeof(FloorTypes), elem.Attribute("FloorType").Value)
+                );
+            else
+                return new Room(
+                    Index2D.Parse(elem.Attribute("StartCell").Value),
+                    Index2D.Parse(elem.Attribute("EndCell").Value),
+                    //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
+                    (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value)
+                );
 
 #if DEBUG1
             }
