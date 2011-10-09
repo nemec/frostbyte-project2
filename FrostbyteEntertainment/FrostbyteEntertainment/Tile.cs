@@ -35,7 +35,7 @@ namespace Frostbyte
 
         public static Tile Parse(XElement elem)
         {
-#if DEBUG
+#if DEBUG1
             try
             {
 #endif
@@ -56,11 +56,11 @@ namespace Frostbyte
                     }
                     else if (attr.Name == "Theme")
                     {
-                        t.Theme = (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value);
+                        t.Theme = (Element)Enum.Parse(typeof(Element), attr.Value);
                     }
                     else if (attr.Name == "Orientation")
                     {
-                        t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), elem.Attribute("Theme").Value);
+                        t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), attr.Value);
                     }
                     else if (attr.Name == "GridCell")
                     {
@@ -68,15 +68,16 @@ namespace Frostbyte
                     }
                 }
                 return t;
-#if DEBUG
+#if DEBUG1
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.GetBaseException().Message);
                 return null;
             }
-        }
 #endif
+
+        }
     }
 }
 

@@ -41,6 +41,8 @@ namespace LevelEditor
         {
             This.mainWindow.SelectedTile = Tiles.SelectedValue as Tile;
             This.mainWindow.ClearTile = false;
+            This.mainWindow.StartCell = new Point(-1, -1);
+            This.mainWindow.EndCell = new Point(-1, -1);
         }
     }
 }

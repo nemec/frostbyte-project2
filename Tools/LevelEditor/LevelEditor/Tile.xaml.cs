@@ -121,7 +121,7 @@ namespace LevelEditor
 
         public bool IsSpecialObject { get; set; }
 
-        public bool Active { get;set; }
+        public bool Active { get; set; }
 
         public bool InMenu { get; set; }
 
@@ -154,10 +154,11 @@ namespace LevelEditor
             Active = other.Active;
             InMenu = other.InMenu;
             DataContext = other;
-            
+
         }
 
-        public Tile(Frostbyte.Tile t):this()
+        public Tile(Frostbyte.Tile t)
+            : this()
         {
             InitializeComponent();
             this.t = t;
@@ -194,50 +195,49 @@ namespace LevelEditor
 
         public Tile Parse(XElement elem)
         {
-#if DEBUG
+#if DEBUG1
             try
             {
 #endif
-                Tile t = new Tile();
-                foreach (XAttribute attr in elem.Attributes())
+            Tile t = new Tile();
+            foreach (XAttribute attr in elem.Attributes())
+            {
+                if (attr.Name == "Type")
                 {
-                    if (attr.Name == "Type")
-                    {
-                        t.Type = (TileTypes)Enum.Parse(typeof(TileTypes), attr.Value);
-                    }
-                    else if (attr.Name == "InstanceName")
-                    {
-                        t.InstanceName = attr.Value;
-                    }
-                    else if (attr.Name == "Collision")
-                    {
-                        t.Traversable = bool.Parse(attr.Value);
-                    }
-                    else if (attr.Name == "Theme")
-                    {
-                        t.Theme = (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value);
-                    }
-                    else if (attr.Name == "Orientation")
-                    {
-                        t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), elem.Attribute("Theme").Value);
-                    }
-                    else if (attr.Name == "GridCell")
-                    {
-                        Index2D i = Index2D.Parse(attr.Value);
-                        Grid.SetColumn(this, i.X);
-                        Grid.SetRow(this, i.Y);
-                    }
+                    t.Type = (TileTypes)Enum.Parse(typeof(TileTypes), attr.Value);
                 }
-                return t;
-#if DEBUG
+                else if (attr.Name == "InstanceName")
+                {
+                    t.InstanceName = attr.Value;
+                }
+                else if (attr.Name == "Collision")
+                {
+                    t.Traversable = bool.Parse(attr.Value);
+                }
+                else if (attr.Name == "Theme")
+                {
+                    t.Theme = (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value);
+                }
+                else if (attr.Name == "Orientation")
+                {
+                    t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), elem.Attribute("Theme").Value);
+                }
+                else if (attr.Name == "GridCell")
+                {
+                    t.GridCell= Index2D.Parse(attr.Value);
+                }
+            }
+            return t;
+#if DEBUG1
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.GetBaseException().Message);
                 return null;
             }
-        }
 #endif
+        }
+
     }
 }
 

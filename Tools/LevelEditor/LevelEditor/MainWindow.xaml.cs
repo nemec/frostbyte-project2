@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using Frostbyte;
 using System.IO;
 using System.Xml.Linq;
+using Microsoft.Win32;
 
 namespace LevelEditor
 {
@@ -49,7 +50,7 @@ namespace LevelEditor
 
         public Tile SelectedTile { get; set; }
 
-        public static Frostbyte.TileList<Frostbyte.Tile> TileMap = new TileList<Frostbyte.Tile>();
+        public static Frostbyte.TileList TileMap = new TileList();
 
         public MainWindow()
         {
@@ -208,7 +209,21 @@ namespace LevelEditor
 
 
             SaveMap.MouseUp += new MouseButtonEventHandler(SaveMap_MouseUp);
-            SaveMap.MouseDown += new MouseButtonEventHandler(SaveMap_MouseDown);
+            LoadLevel.MouseUp += new MouseButtonEventHandler(LoadLevel_MouseUp);
+
+        }
+
+
+        void LoadLevel_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            OpenFileDialog d = new OpenFileDialog();
+            d.FileName = "Level#";
+            d.DefaultExt = ".xml";
+            d.Filter = "Level files (.xml)|*.xml";
+            if (d.ShowDialog() == true)
+            {
+                LoadGrid(new TileList(XDocument.Load(d.FileName)));
+            }
         }
 
         void SaveMap_MouseDown(object sender, MouseButtonEventArgs e)
@@ -217,20 +232,27 @@ namespace LevelEditor
         }
         void SaveMap_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            //open save box and then create all the crap that needs to get saved
-            List<LevelObject> objs = TileMap.GenerateSaveObjects();
-
-            XDocument doc = new XDocument(new XElement("Level"));
-            foreach (LevelObject l in objs)
+            SaveFileDialog d = new SaveFileDialog();
+            d.FileName = "Level#";
+            d.DefaultExt = ".xml";
+            d.Filter = "Level files (.xml)|*.xml";
+            if (d.ShowDialog() == true)
             {
-                doc.Root.Add(l.ToXML());
-            }
+                //open save box and then create all the crap that needs to get saved
+                List<LevelObject> objs = TileMap.GenerateSaveObjects();
 
-            TileMap.Save("test.xml", doc);
+                XDocument doc = new XDocument(new XElement("Level"));
+                foreach (LevelObject l in objs)
+                {
+                    doc.Root.Add(l.ToXML());
+                }
+
+                TileMap.Save(d.FileName, doc);
+            }
 
         }
 
-        void LoadGrid(TileList<Frostbyte.Tile> tm)
+        void LoadGrid(TileList tm)
         {
             TileMap = tm;
             var l = tm.Data;
@@ -239,11 +261,14 @@ namespace LevelEditor
             {
                 foreach (var tile in list)
                 {
-                    Tile t = new Tile(tile);
-                    Grid.SetColumn(t, tile.GridCell.X);
-                    Grid.SetRow(t, tile.GridCell.Y);
+                    if (tile.Type != TileTypes.DEFAULT)
+                    {
+                        Tile t = new Tile(tile);
+                        Grid.SetColumn(t, tile.GridCell.X);
+                        Grid.SetRow(t, tile.GridCell.Y);
 
-                    Level.Children.Add(t);
+                        Level.Children.Add(t);
+                    }
                 }
             }
         }
@@ -275,8 +300,8 @@ namespace LevelEditor
                 }
                 SelectedObject = null;
                 SelectedTile = null;
-                StartCell = new Point(-1,-1);
-                EndCell = new Point(-1,-1);
+                StartCell = new Point(-1, -1);
+                EndCell = new Point(-1, -1);
                 ClearTile = true;
                 CancelSelection = false;
             }

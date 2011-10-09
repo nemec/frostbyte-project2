@@ -71,7 +71,7 @@ namespace Frostbyte
 
         internal void CenterOn(Sprite target)
         {
-            Pos = target.Pos + target.GetAnimation().AnimationPeg - GetAnimation().AnimationPeg;
+            Pos = target.Center;
         }
 
         internal override List<CollisionObject> GetCollision()
