@@ -107,6 +107,7 @@ namespace Frostbyte
         Earth = 0,
         Lightning,
         Water,
-        Fire
+        Fire,
+        Normal
     }
 }

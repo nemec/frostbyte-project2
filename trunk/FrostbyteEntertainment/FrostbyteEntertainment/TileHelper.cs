@@ -82,6 +82,29 @@ namespace Frostbyte
         {
             return new Index2D(a.X - i.X, a.Y - i.Y);
         }
+
+        public static bool operator ==(Index2D a, Index2D i)
+        {
+            return a.X == i.X && a.Y == i.Y;
+        }
+
+        public static bool operator !=(Index2D a, Index2D i)
+        {
+            return !(a==i);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj as Index2D != null)
+                return this == (obj as Index2D);
+            else
+                return false;
+        }
     }
 
     public class Wall : LevelPart
@@ -116,6 +139,7 @@ namespace Frostbyte
             e.SetAttributeValue("Type", Type);
             e.SetAttributeValue("StartCell", StartCell);
             e.SetAttributeValue("EndCell", EndCell);
+            e.SetAttributeValue("Orientation", Orientation);
             e.SetAttributeValue("Collision", Traversable);
             e.SetAttributeValue("Theme", Theme);
             return e;
@@ -123,7 +147,7 @@ namespace Frostbyte
 
         public static Wall Parse(XElement elem)
         {
-#if DEBUG
+#if DEBUG1
             try
             {
 #endif
@@ -135,15 +159,20 @@ namespace Frostbyte
                     (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
                     bool.Parse(elem.Attribute("Collision").Value)
                     );
-#if DEBUG
+#if DEBUG1
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.GetBaseException().Message);
                 return null;
             }
-        }
 #endif
+        }
+
+        public override LevelPart AsLevelPart()
+        {
+            return this;
+        }
     }
 
     public class Floor : LevelPart
@@ -189,7 +218,7 @@ namespace Frostbyte
 
         public static Floor Parse(XElement elem)
         {
-#if DEBUG
+#if DEBUG1
             try
             {
 #endif
@@ -200,16 +229,22 @@ namespace Frostbyte
                     (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
                     bool.Parse(elem.Attribute("Collision").Value)
                     );
-#if DEBUG
+#if DEBUG1
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.GetBaseException().Message);
                 return null;
             }
-        }
 #endif
+        }
+
+        public override LevelPart AsLevelPart()
+        {
+            return this;
+        }
     }
+
 
     public class BorderWalls : LevelPart
     {
@@ -249,7 +284,7 @@ namespace Frostbyte
 
         public static BorderWalls Parse(XElement elem)
         {
-#if DEBUG
+#if DEBUG1
             try
             {
 #endif
@@ -260,15 +295,20 @@ namespace Frostbyte
                     (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
                     bool.Parse(elem.Attribute("Collision").Value)
                     );
-#if DEBUG
+#if DEBUG1
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.GetBaseException().Message);
                 return null;
             }
-        }
 #endif
+        }
+
+        public override LevelPart AsLevelPart()
+        {
+            return this;
+        }
     }
 
     public class Room : LevelPart
@@ -300,7 +340,7 @@ namespace Frostbyte
 
         public static Room Parse(XElement elem)
         {
-#if DEBUG
+#if DEBUG1
             try
             {
 #endif
@@ -329,15 +369,20 @@ namespace Frostbyte
                         (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value)
                     );
 
-#if DEBUG
+#if DEBUG1
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.GetBaseException().Message);
                 return null;
             }
-        }
 #endif
+        }
+
+        public override LevelPart AsLevelPart()
+        {
+            return this;
+        }
     }
 
     public class LevelObject
@@ -377,7 +422,7 @@ namespace Frostbyte
         }
         public static bool operator !=(LevelObject a, LevelObject b)
         {
-            return !(a==b);
+            return !(a == b);
         }
 
         public override int GetHashCode()
@@ -394,7 +439,7 @@ namespace Frostbyte
         }
     }
 
-    public class LevelPart : LevelObject
+    public abstract class LevelPart : LevelObject
     {
         public Index2D StartCell
         {
@@ -409,5 +454,7 @@ namespace Frostbyte
         }
 
         public Index2D EndCell { get; set; }
+
+        public abstract LevelPart AsLevelPart();
     }
 }

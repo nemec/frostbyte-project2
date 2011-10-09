@@ -17,14 +17,16 @@ namespace Frostbyte.Enemies
         public float health;
         
         //Elemental Properties
-        protected enum elementTypes { Earth, Lightning, Water, Fire, Neutral };
-        protected elementTypes elementType;
+        protected Element elementType = Element.DEFAULT;
 
         //Movement
         protected enum movementTypes { Charge, PulseCharge, Ram, StealthCharge, StealthCamp, StealthRetreat, Retreat, TeaseRetreat, Swap, Freeze };
         protected movementTypes currentMovementType = 0;
         protected TimeSpan movementStartTime;
-        protected bool isRamming, isCharging, isStealth, isFrozen, isAttacking = false;
+        /// <summary>
+        /// \todo make this into an enum with bits or w/e it's called (Dan knows)
+        /// </summary>
+        protected bool isRamming, isCharging, isStealth=false, isFrozen, isAttacking = false;
         protected Vector2 direction;
 
         #endregion Variables
@@ -45,10 +47,11 @@ namespace Frostbyte.Enemies
             updateAttack();
         }
 
-        private void checkBackgroundCollisions()
-        {
-            //throw new NotImplementedException();
-        }
+        /// \todo what is this for?
+        //private override void checkBackgroundCollisions()
+        //{
+        //    //throw new NotImplementedException();
+        //}
         protected abstract void updateMovement();
         protected abstract void updateAttack();
 

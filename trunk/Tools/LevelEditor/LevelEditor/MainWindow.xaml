@@ -28,6 +28,7 @@
 				<ColumnDefinition Width="10"/>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="10"/>
 				<ColumnDefinition Width="1*"/>
 			</Grid.ColumnDefinitions>
 			<TextBlock Text="Grid Dimensions:" HorizontalAlignment="Left"/>
@@ -39,11 +40,21 @@
         				<GradientStop Color="#FF1BB60E" Offset="1"/>
         			</RadialGradientBrush>
         		</Border.Background>
-        		<TextBlock Text="Save map"/>
+        		<TextBlock Text="Save Level"/>
         	</Border>
+			<Border x:Name="LoadLevel" BorderBrush="Black" BorderThickness="1" CornerRadius="1" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5" Grid.Column="5">
+				<Border.Background>
+					<RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
+						<GradientStop Color="#FF25F214"/>
+						<GradientStop Color="#FF1BB60E" Offset="1"/>
+					</RadialGradientBrush>
+				</Border.Background>
+				<TextBlock Text="Load Level"/>
+			</Border>
+			<CheckBox x:Name="ShowGrid" Content="Show Grid" Grid.Column="10" IsChecked="True"  />
 		</Grid>
 		<ScrollViewer Grid.Row="1" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
-			<Grid x:Name="Level" ShowGridLines="True" Grid.IsSharedSizeScope="True" Background="#FF000139" Height="475.04" Width="652" >
+			<Grid x:Name="Level" ShowGridLines="{Binding IsChecked, ElementName=ShowGrid}" Background="#FF000139" Height="475.04" Width="652" >
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
 					<ColumnDefinition/>

@@ -152,7 +152,6 @@ namespace Frostbyte.Levels
 
         bool changeState = false;
         TimeSpan idleTime = new TimeSpan(0, 0, 0);
-        TimeSpan movementStartTime = new TimeSpan(0, 0, 1);
 
 
         #endregion Variables
@@ -160,6 +159,8 @@ namespace Frostbyte.Levels
         internal FerociousEnemy(string name, Actor actor, float speed, int health)
             : base(name, actor, speed, health)
         {
+            //moved here because it was hiding parent variable
+            movementStartTime = new TimeSpan(0, 0, 1);
             float height = This.Game.GraphicsDevice.Viewport.Height;
             float width = This.Game.GraphicsDevice.Viewport.Width;
             basicEffect.View = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, -10),

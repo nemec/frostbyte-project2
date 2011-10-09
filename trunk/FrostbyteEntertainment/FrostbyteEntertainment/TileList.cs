@@ -10,31 +10,59 @@ namespace Frostbyte
     /// Wraper class for our dictionary that allows us to most efficiently obtain data from the dictionary
     /// Shared with The Level Editor
     /// </summary>
-    public partial class TileList<T> where T : LevelObject, new()
+    public partial class TileList
     {
         /// <summary>
         /// Dict of the form [y,x]=Tile
         /// </summary>
-        List<List<T>> mTiles = new List<List<T>>();
+        List<List<Tile>> mTiles = new List<List<Tile>>();
 
         /// <summary>
         /// All data that the level file contains in order from the file (for saving again)
         /// </summary>
         List<LevelObject> LevelParts = new List<LevelObject>();
 
-        public Tuple<List<LevelObject>, List<List<T>>> Data
+        public Tuple<List<LevelObject>, List<List<Tile>>> Data
         {
             get
             {
-                return new Tuple<List<LevelObject>, List<List<T>>>(LevelParts, mTiles);
+                return new Tuple<List<LevelObject>, List<List<Tile>>>(LevelParts, mTiles);
             }
         }
 
         Index2D cache_key = new Index2D(-1, -1);
-        T cache_value;
+        Tile cache_value;
 
         internal TileList()
         {
+
+        }
+
+        public TileList(XDocument doc)
+        {
+            foreach (var elem in doc.Root.Descendants())
+            {
+                if (elem.Name == "Room")
+                {
+                    Add(Room.Parse(elem).AsLevelPart());
+                }
+                else if (elem.Name == "Walls")
+                {
+                    Add(BorderWalls.Parse(elem).AsLevelPart());
+                }
+                else if (elem.Name == "Wall")
+                {
+                    Add(Wall.Parse(elem).AsLevelPart());
+                }
+                else if (elem.Name == "Floor")
+                {
+                    Add(Floor.Parse(elem).AsLevelPart());
+                }
+                else if (elem.Name == "Tile")
+                {
+                    Add(Tile.Parse(elem));
+                }
+            }
 
         }
 
@@ -46,19 +74,22 @@ namespace Frostbyte
         /// <param name="x">The X grid location</param>
         /// <param name="y">The Y gird location</param>
         /// <returns></returns>
-        internal bool Add(T t, int x, int y)
+        internal bool Add(Tile t, int x, int y)
         {
+            int gridwidth=x;
+            if(mTiles.Count>0)
+                gridwidth = Math.Max(x, mTiles[0].Count-1);
             //fills grid
             while (mTiles.Count < y + 1)
             {
-                mTiles.Add(new List<T>());
+                mTiles.Add(new List<Tile>());
             }
             foreach (var row in mTiles)
-                while (row.Count < x + 1)
+                while (row.Count < gridwidth + 1)
                 {
-                    row.Add(new T());
+                    row.Add(new Tile());
                 }
-
+            Remove(t);
             mTiles[y][x] = t;
             return true;
         }
@@ -121,7 +152,7 @@ namespace Frostbyte
         /// </summary>
         /// <param name="r">Room to add</param>
         /// <returns>Success</returns>
-        internal bool Add(T r)
+        internal bool Add(Tile r)
         {
             if (r as LevelObject != null)
             {
@@ -142,9 +173,9 @@ namespace Frostbyte
         /// Determines what an object is and adds it to the level
         /// </summary>
         /// <param name="obj">Object we want to split and add</param>
-        internal List<T> Add(LevelPart obj, bool dontAdd = false)
+        internal List<Tile> Add(LevelPart obj, bool dontAdd = false)
         {
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             //deterime what it is
             if (obj.GetType() == typeof(Room))
             {
@@ -154,7 +185,7 @@ namespace Frostbyte
                     //we're going to be getting them a lot otherwise
                     Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
                     Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
-                    List<T> t;
+                    List<Tile> t;
                     Add(new BorderWalls(r), out t, true);
 
                     //for some reson foreach doesn't work here
@@ -163,7 +194,7 @@ namespace Frostbyte
                         tiles.Add(t[i]);
                     }
 
-                    t = new List<T>();
+                    t = new List<Tile>();
                     Add(new Floor(r), out t, true);
 
                     //for some reson foreach doesn't work here
@@ -176,7 +207,7 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(BorderWalls))
             {
-                List<T> t;
+                List<Tile> t;
                 Add(obj as BorderWalls, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
@@ -187,7 +218,7 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(Wall))
             {
-                List<T> t;
+                List<Tile> t;
                 Add(obj as Wall, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
@@ -198,7 +229,7 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(Floor))
             {
-                List<T> t;
+                List<Tile> t;
                 Add(obj as Floor, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
@@ -219,16 +250,16 @@ namespace Frostbyte
         /// <param name="Tiles">Listof tiles generated by the borderawlls</param>
         /// <param name="dontAdd">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
-        private void Add(BorderWalls w, out List<T> Tiles, bool dontAdd = false)
+        private void Add(BorderWalls w, out List<Tile> Tiles, bool dontAdd = false)
         {
             //we're going to be getting them a lot otherwise
             Index2D start = new Index2D(Math.Min(w.StartCell.X, w.EndCell.X), Math.Min(w.StartCell.Y, w.EndCell.Y));
             Index2D end = new Index2D(Math.Max(w.StartCell.X, w.EndCell.X), Math.Max(w.StartCell.Y, w.EndCell.Y));
 
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             if (dontAdd || Add(w))
             {
-                List<T> ts;
+                List<Tile> ts;
                 //place Left wall
                 Add(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
 
@@ -267,7 +298,7 @@ namespace Frostbyte
 
                 //place corners
                 //TL
-                T t = new T()
+                Tile t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -279,7 +310,7 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //TR
-                t = new T()
+                t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -291,7 +322,7 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //BL
-                t = new T()
+                t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -303,7 +334,7 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //BR
-                t = new T()
+                t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -323,9 +354,9 @@ namespace Frostbyte
         /// <param name="w">Wall to add</param>
         /// <param name="dontAdd">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
-        internal bool Add(Wall w, out List<T> Tiles, bool dontAdd = false)
+        internal bool Add(Wall w, out List<Tile> Tiles, bool dontAdd = false)
         {
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             //we're going to be getting them a lot otherwise
             Index2D start = new Index2D(Math.Min(w.StartCell.X, w.EndCell.X), Math.Min(w.StartCell.Y, w.EndCell.Y));
             Index2D end = new Index2D(Math.Max(w.StartCell.X, w.EndCell.X), Math.Max(w.StartCell.Y, w.EndCell.Y));
@@ -343,7 +374,7 @@ namespace Frostbyte
                         for (int y = start.Y; y <= end.Y; y++)
                         {
                             //Add Right
-                            T t = new T()
+                            Tile t = new Tile()
                             {
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
@@ -361,7 +392,7 @@ namespace Frostbyte
                         for (int y = start.Y; y <= end.Y; y++)
                         {
                             //Add left
-                            T t = new T()
+                            Tile t = new Tile()
                             {
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
@@ -380,7 +411,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Add Top
-                        T t = new T()
+                        Tile t = new Tile()
                         {
                             Type = TileTypes.Wall,
                             Theme = w.Theme,
@@ -397,7 +428,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Add Bottom
-                        T t = new T()
+                        Tile t = new Tile()
                         {
                             Type = TileTypes.Wall,
                             Theme = w.Theme,
@@ -420,9 +451,9 @@ namespace Frostbyte
         /// <param name="f">Floor to add</param>
         /// <param name="dontAdd">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
-        internal bool Add(Floor f, out List<T> Tiles, bool dontAdd = false)
+        internal bool Add(Floor f, out List<Tile> Tiles, bool dontAdd = false)
         {
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             //we're going to be getting them a lot otherwise
             Index2D start = new Index2D(Math.Min(f.StartCell.X, f.EndCell.X), Math.Min(f.StartCell.Y, f.EndCell.Y));
             Index2D end = new Index2D(Math.Max(f.StartCell.X, f.EndCell.X), Math.Max(f.StartCell.Y, f.EndCell.Y));
@@ -435,7 +466,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Add Bottom
-                        T tile = new T()
+                        Tile tile = new Tile()
                         {
                             Type = f.Type,
                             FloorType = f.FloorType,
@@ -456,22 +487,20 @@ namespace Frostbyte
         #endregion Adds
 
         #region RemoveItems
-        public bool Remove(T elem)
+        public bool Remove(Tile elem)
         {
             Tile t = elem as Tile;
             if (t != null)
             {
-                mTiles[t.GridCell.Y][t.GridCell.X] = new T();
-                LevelParts.Remove(t);
-                return true;
+                Remove(t, t.GridCell.X, t.GridCell.Y);
             }
             return false;
         }
 
-        public bool Remove(T elem, int x, int y)
+        public bool Remove(Tile elem, int x, int y)
         {
-            LevelParts.Remove(elem);
-            mTiles[y][x] = new T();
+            LevelParts.RemoveAll(delegate(LevelObject lo) { return lo.GetType()==typeof(Tile)? lo.GridCell == elem.GridCell:false; });
+            mTiles[y][x] = new Tile();
             return true;
         }
 
@@ -532,9 +561,9 @@ namespace Frostbyte
         /// Determines what an object is and adds it to the level
         /// </summary>
         /// <param name="obj">Object we want to split and add</param>
-        internal List<T> Remove(LevelPart obj)
+        internal List<Tile> Remove(LevelPart obj)
         {
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             //deterime what it is
             if (obj.GetType() == typeof(Room))
             {
@@ -543,7 +572,7 @@ namespace Frostbyte
                 //we're going to be getting them a lot otherwise
                 Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
                 Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
-                List<T> t;
+                List<Tile> t;
                 Remove(new BorderWalls(r), out t, true);
 
                 //for some reson foreach doesn't work here
@@ -552,7 +581,7 @@ namespace Frostbyte
                     tiles.Add(t[i]);
                 }
 
-                t = new List<T>();
+                t = new List<Tile>();
                 Remove(new Floor(r), out t, true);
 
                 //for some reson foreach doesn't work here
@@ -563,7 +592,7 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(BorderWalls))
             {
-                List<T> t;
+                List<Tile> t;
                 Remove(obj as BorderWalls, out t, true);
 
                 //for some reson foreach doesn't work here
@@ -574,7 +603,7 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(Wall))
             {
-                List<T> t;
+                List<Tile> t;
                 Remove(obj as Wall, out t, true);
 
                 //for some reson foreach doesn't work here
@@ -585,7 +614,7 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(Floor))
             {
-                List<T> t;
+                List<Tile> t;
                 Remove(obj as Floor, out t, true);
 
                 //for some reson foreach doesn't work here
@@ -606,16 +635,16 @@ namespace Frostbyte
         /// <param name="Tiles">Listof tiles generated by the borderawlls</param>
         /// <param name="dontRemove">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
-        private void Remove(BorderWalls w, out List<T> Tiles, bool dontRemove = false)
+        private void Remove(BorderWalls w, out List<Tile> Tiles, bool dontRemove = false)
         {
             //we're going to be getting them a lot otherwise
             Index2D start = new Index2D(Math.Min(w.StartCell.X, w.EndCell.X), Math.Min(w.StartCell.Y, w.EndCell.Y));
             Index2D end = new Index2D(Math.Max(w.StartCell.X, w.EndCell.X), Math.Max(w.StartCell.Y, w.EndCell.Y));
 
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             if (dontRemove || Remove(w))
             {
-                List<T> ts;
+                List<Tile> ts;
                 //place Left wall
                 Remove(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
 
@@ -654,7 +683,7 @@ namespace Frostbyte
 
                 //place corners
                 //TL
-                T t = new T()
+                Tile t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -666,7 +695,7 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //TR
-                t = new T()
+                t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -678,7 +707,7 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //BL
-                t = new T()
+                t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -690,7 +719,7 @@ namespace Frostbyte
                 Add(t, t.GridCell.X, t.GridCell.Y);
 
                 //BR
-                t = new T()
+                t = new Tile()
                 {
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
@@ -710,9 +739,9 @@ namespace Frostbyte
         /// <param name="w">Wall to add</param>
         /// <param name="dontRemove">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
-        internal bool Remove(Wall w, out List<T> Tiles, bool dontRemove = false)
+        internal bool Remove(Wall w, out List<Tile> Tiles, bool dontRemove = false)
         {
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             //we're going to be getting them a lot otherwise
             Index2D start = new Index2D(Math.Min(w.StartCell.X, w.EndCell.X), Math.Min(w.StartCell.Y, w.EndCell.Y));
             Index2D end = new Index2D(Math.Max(w.StartCell.X, w.EndCell.X), Math.Max(w.StartCell.Y, w.EndCell.Y));
@@ -730,7 +759,7 @@ namespace Frostbyte
                         for (int y = start.Y; y <= end.Y; y++)
                         {
                             //Remove Right
-                            T t = new T()
+                            Tile t = new Tile()
                             {
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
@@ -748,7 +777,7 @@ namespace Frostbyte
                         for (int y = start.Y; y <= end.Y; y++)
                         {
                             //Remove left
-                            T t = new T()
+                            Tile t = new Tile()
                             {
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
@@ -767,7 +796,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Remove Top
-                        T t = new T()
+                        Tile t = new Tile()
                         {
                             Type = TileTypes.Wall,
                             Theme = w.Theme,
@@ -784,7 +813,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Remove Bottom
-                        T t = new T()
+                        Tile t = new Tile()
                         {
                             Type = TileTypes.Wall,
                             Theme = w.Theme,
@@ -807,9 +836,9 @@ namespace Frostbyte
         /// <param name="f">Floor to add</param>
         /// <param name="dontRemove">True means the item added will not be added to the list of Levelobjects</param>
         /// <returns>Success</returns>
-        internal bool Remove(Floor f, out List<T> Tiles, bool dontRemove = false)
+        internal bool Remove(Floor f, out List<Tile> Tiles, bool dontRemove = false)
         {
-            List<T> tiles = new List<T>();
+            List<Tile> tiles = new List<Tile>();
             //we're going to be getting them a lot otherwise
             Index2D start = new Index2D(Math.Min(f.StartCell.X, f.EndCell.X), Math.Min(f.StartCell.Y, f.EndCell.Y));
             Index2D end = new Index2D(Math.Max(f.StartCell.X, f.EndCell.X), Math.Max(f.StartCell.Y, f.EndCell.Y));
@@ -822,7 +851,7 @@ namespace Frostbyte
                     for (int x = start.X; x <= end.X; x++)
                     {
                         //Remove Bottom
-                        T t = new T()
+                        Tile t = new Tile()
                         {
                             Type = f.Type,
                             FloorType = f.FloorType,
@@ -842,7 +871,7 @@ namespace Frostbyte
         #endregion Magic Removes
         #endregion RemoveItems
 
-        internal bool TryGetValue(int x, int y, out T value)
+        internal bool TryGetValue(int x, int y, out Tile value)
         {
             if (cache_key.X == x && cache_key.Y == y)
             {
@@ -858,7 +887,7 @@ namespace Frostbyte
                 return true;
             }
 
-            value = new T();
+            value = new Tile();
             return false;
         }
 
@@ -872,7 +901,7 @@ namespace Frostbyte
         /// </summary>
         /// <param name="i">element</param>
         /// <returns>the list at that index</returns>
-        public List<T> this[int i]
+        public List<Tile> this[int i]
         {
             get
             {
@@ -884,18 +913,18 @@ namespace Frostbyte
             }
         }
 
-        public TileList<T> Duplicate()
+        public TileList Duplicate()
         {
-            TileList<T> n = new TileList<T>();
+            TileList n = new TileList();
             n.LevelParts = new List<LevelObject>(this.LevelParts);
-            n.mTiles = new List<List<T>>();
+            n.mTiles = new List<List<Tile>>();
             int ycount = mTiles.Count;
             if (ycount > 0)
             {
                 int xcount = mTiles[0].Count;
                 for (int y = 0; y < ycount; y++)
                 {
-                    n.mTiles.Add(new List<T>());
+                    n.mTiles.Add(new List<Tile>());
                     for (int x = 0; x < xcount; x++)
                     {
                         n.mTiles[y].Add(mTiles[y][x]);
@@ -913,33 +942,33 @@ namespace Frostbyte
         public List<LevelObject> GenerateSaveObjects(Element theme = Element.Earth)
         {
             List<LevelObject> objs = new List<LevelObject>();
-            TileList<T> copy = Duplicate();
+            TileList copy = Duplicate();
             //remove from copy all the tiles that match our current objects
             foreach (var lo in LevelParts)
             {
                 if (lo as LevelPart != null)
                 {
-                    List<T> removed = copy.Remove(lo as LevelPart);
+                    List<Tile> removed = copy.Add(lo as LevelPart);
                     objs.Add(lo);
-                    foreach (T tile in removed)
-                    {
-                        Index2D cell = tile.GridCell;
-                        if (mTiles[cell.Y][cell.X] == tile)
-                        {
-                            copy.Remove(tile);
-                        }
-                    }
+                    //foreach (Tile tile in removed)
+                    //{
+                    //    Index2D cell = tile.GridCell;
+                    //    if (mTiles[cell.Y][cell.X] == tile)
+                    //    {
+                    //        copy.Add(tile);
+                    //    }
+                    //}
                 }
-                else if (lo as T != null)
+                else if (lo as Tile != null)
                 {
-                    T tile = lo as T;
+                    Tile tile = lo as Tile;
                     if (tile.Theme == Element.DEFAULT)
                         tile.Theme = theme;
                     objs.Add(lo);
                     Index2D cell = tile.GridCell;
                     if (mTiles[cell.Y][cell.X] == tile)
                     {
-                        copy.Remove(tile);
+                        copy.Add(tile);
                     }
                 }
             }
@@ -951,10 +980,10 @@ namespace Frostbyte
                 {
                     for (int x = 0; x < xcount; x++)
                     {
-                        T tileFromCopy = copy[y][x];
-                        T tileFromUs = this[y][x];
+                        Tile tileFromCopy = copy[y][x];
+                        Tile tileFromUs = this[y][x];
                         //this means it's a tile we care about
-                        if (tileFromCopy.Type != TileTypes.DEFAULT)
+                        if (tileFromCopy != tileFromUs)
                         {
                             if (tileFromUs.Theme == Element.DEFAULT)
                                 tileFromUs.Theme = theme;
@@ -993,7 +1022,7 @@ namespace Frostbyte
         /// </summary>
         /// <param name="filename">Name of the file to load</param>
         /// <returns>The object created</returns>
-        public static TileList<T> Load(string filename)
+        public static TileList Load(string filename)
         {
             return Parse(XDocument.Load(filename));
         }
@@ -1003,10 +1032,10 @@ namespace Frostbyte
         /// </summary>
         /// <param name="doc"></param>
         /// <returns></returns>
-        public static TileList<T> Parse(XDocument doc)
+        public static TileList Parse(XDocument doc)
         {
             //load data
-            TileList<T> tl = new TileList<T>();
+            TileList tl = new TileList();
 
 
             return tl;
