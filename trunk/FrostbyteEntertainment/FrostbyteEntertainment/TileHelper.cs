@@ -289,7 +289,7 @@ namespace Frostbyte
 
         public override XElement ToXML()
         {
-            XElement e = new XElement("Walls");
+            XElement e = new XElement("Room");
             e.SetAttributeValue("Type", Type);
             e.SetAttributeValue("StartCell", StartCell);
             e.SetAttributeValue("EndCell", EndCell);

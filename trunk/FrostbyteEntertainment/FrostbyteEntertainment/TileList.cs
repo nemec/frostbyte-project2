@@ -142,14 +142,14 @@ namespace Frostbyte
         /// Determines what an object is and adds it to the level
         /// </summary>
         /// <param name="obj">Object we want to split and add</param>
-        internal List<T> Add(LevelPart obj)
+        internal List<T> Add(LevelPart obj, bool dontAdd = false)
         {
             List<T> tiles = new List<T>();
             //deterime what it is
             if (obj.GetType() == typeof(Room))
             {
                 Room r = obj as Room;
-                if (Add(r))
+                if (dontAdd || Add(r))
                 {
                     //we're going to be getting them a lot otherwise
                     Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
@@ -177,7 +177,7 @@ namespace Frostbyte
             else if (obj.GetType() == typeof(BorderWalls))
             {
                 List<T> t;
-                Add(obj as BorderWalls, out t);
+                Add(obj as BorderWalls, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -188,7 +188,7 @@ namespace Frostbyte
             else if (obj.GetType() == typeof(Wall))
             {
                 List<T> t;
-                Add(obj as Wall, out t);
+                Add(obj as Wall, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -199,7 +199,7 @@ namespace Frostbyte
             else if (obj.GetType() == typeof(Floor))
             {
                 List<T> t;
-                Add(obj as Floor, out t);
+                Add(obj as Floor, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -910,17 +910,32 @@ namespace Frostbyte
         /// creates all the rooms, tiles, etc that would be needed to generate the level
         /// </summary>
         /// <returns></returns>
-        public List<LevelObject> GenerateSaveObjects()
+        public List<LevelObject> GenerateSaveObjects(Element theme = Element.Earth)
         {
             List<LevelObject> objs = new List<LevelObject>();
             TileList<T> copy = Duplicate();
             //remove from copy all the tiles that match our current objects
-            foreach (LevelPart lo in LevelParts)
+            foreach (var lo in LevelParts)
             {
-                List<T> removed = copy.Remove(lo);
-                objs.Add(lo);
-                foreach (T tile in removed)
+                if (lo as LevelPart != null)
                 {
+                    List<T> removed = copy.Remove(lo as LevelPart);
+                    objs.Add(lo);
+                    foreach (T tile in removed)
+                    {
+                        Index2D cell = tile.GridCell;
+                        if (mTiles[cell.Y][cell.X] == tile)
+                        {
+                            copy.Remove(tile);
+                        }
+                    }
+                }
+                else if (lo as T != null)
+                {
+                    T tile = lo as T;
+                    if (tile.Theme == Element.DEFAULT)
+                        tile.Theme = theme;
+                    objs.Add(lo);
                     Index2D cell = tile.GridCell;
                     if (mTiles[cell.Y][cell.X] == tile)
                     {
@@ -939,9 +954,10 @@ namespace Frostbyte
                         T tileFromCopy = copy[y][x];
                         T tileFromUs = this[y][x];
                         //this means it's a tile we care about
-                        if (tileFromCopy.Type!=TileTypes.DEFAULT)
+                        if (tileFromCopy.Type != TileTypes.DEFAULT)
                         {
-                            /// \todo complete this!!!!!
+                            if (tileFromUs.Theme == Element.DEFAULT)
+                                tileFromUs.Theme = theme;
                             objs.Add(tileFromUs);
                         }
                     }

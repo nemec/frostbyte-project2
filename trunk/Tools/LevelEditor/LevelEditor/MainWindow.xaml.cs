@@ -230,14 +230,21 @@ namespace LevelEditor
 
         }
 
-        void LoadGrid(TileList<Frostbyte.Tile> t)
+        void LoadGrid(TileList<Frostbyte.Tile> tm)
         {
-            TileMap = t;
-            var l = t.Data;
+            TileMap = tm;
+            var l = tm.Data;
             var tiles = l.Item2;
             foreach (var list in tiles)
             {
+                foreach (var tile in list)
+                {
+                    Tile t = new Tile(tile);
+                    Grid.SetColumn(t, tile.GridCell.X);
+                    Grid.SetRow(t, tile.GridCell.Y);
 
+                    Level.Children.Add(t);
+                }
             }
         }
 
