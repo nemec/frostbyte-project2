@@ -99,7 +99,7 @@ namespace LevelEditor
                 //},
 
                 new Tile(){
-                    Name="Convex_Corner",
+                    Name="Concave_Corner",
                     Traversable=false,
                     Type=TileTypes.Corner,
                     Orientation=Orientations.Right,
@@ -107,7 +107,7 @@ namespace LevelEditor
                 },
                 
                 new Tile(){
-                    Name="Concave_Corner",
+                    Name="Convex_Corner",
                     Traversable=false,
                     Type=TileTypes.ConvexCorner,
                     Orientation=Orientations.Right,
@@ -216,6 +216,7 @@ namespace LevelEditor
 
         void LoadLevel_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            ClearSelection();
             OpenFileDialog d = new OpenFileDialog();
             d.FileName = "Level#";
             d.DefaultExt = ".xml";
@@ -232,6 +233,7 @@ namespace LevelEditor
         }
         void SaveMap_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            ClearSelection();
             SaveFileDialog d = new SaveFileDialog();
             d.FileName = "Level#";
             d.DefaultExt = ".xml";
@@ -293,20 +295,25 @@ namespace LevelEditor
         {
             if (CancelSelection && e.MouseDevice.RightButton == MouseButtonState.Released)
             {
-                //clear selections
-                foreach (TileGroup elem in Objects.Items)
-                {
-                    elem.Tiles.SelectedIndex = -1;
-                }
-                SelectedObject = null;
-                SelectedTile = null;
-                StartCell = new Point(-1, -1);
-                EndCell = new Point(-1, -1);
-                ClearTile = true;
-                CancelSelection = false;
+                ClearSelection();
             }
 
             Moving = false;
+        }
+
+        private void ClearSelection()
+        {
+            //clear selections
+            foreach (TileGroup elem in Objects.Items)
+            {
+                elem.Tiles.SelectedIndex = -1;
+            }
+            SelectedObject = null;
+            SelectedTile = null;
+            StartCell = new Point(-1, -1);
+            EndCell = new Point(-1, -1);
+            ClearTile = true;
+            CancelSelection = false;
         }
 
         void Level_MouseMove(object sender, MouseEventArgs e)
@@ -490,29 +497,19 @@ namespace LevelEditor
                     //orient it
                     Point p = EndCell - (Vector)StartCell;
                     Index2D orientation = new Index2D(p.X, p.Y);
-                    //if x is greater
-                    //if (orientation.X > 0)
-                    //{
-                    //    SelectedTile.Orientation = orientation.Y > 0 ? Orientations.Up_Right : orientation.Y < 0 ? Orientations.Down_Right : Orientations.Right;
-                    //}
-                    //else if (orientation.X < 0)
-                    //{
-                    //    SelectedTile.Orientation = orientation.Y > 0 ? Orientations.Up_Left : orientation.Y < 0 ? Orientations.Down_Left : Orientations.Left;
-                    //}
-                    //else 
-                    //{
-                    //    SelectedTile.Orientation = orientation.Y > 0 ? Orientations.Up : Orientations.Down;
-                    //}
                     if (orientation.X > 0 && orientation.Y < 0)
                     {
+                        toadd.Orientation = Orientations.Up_Right;
                         SelectedTile.Orientation = Orientations.Up_Right;
                     }
                     else if (orientation.MagX > orientation.MagY)
                     {
+                        toadd.Orientation = orientation.X > 0 ? Orientations.Right : Orientations.Left;
                         SelectedTile.Orientation = orientation.X > 0 ? Orientations.Right : Orientations.Left;
                     }
                     else
                     {
+                        toadd.Orientation = orientation.Y < 0 ? Orientations.Up : Orientations.Down;
                         SelectedTile.Orientation = orientation.Y < 0 ? Orientations.Up : Orientations.Down;
                     }
 
