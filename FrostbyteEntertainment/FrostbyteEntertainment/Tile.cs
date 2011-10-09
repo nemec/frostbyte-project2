@@ -24,6 +24,7 @@ namespace Frostbyte
         {
             XElement e = new XElement("Tile");
             e.SetAttributeValue("Type", Type);
+            if(InstanceName!=null)
             e.SetAttributeValue("InstanceName", InstanceName);
             e.SetAttributeValue("Collision", Traversable);
             e.SetAttributeValue("Theme", Theme);

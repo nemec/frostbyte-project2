@@ -147,7 +147,6 @@ namespace LevelEditor
             other.Active = true;
             other.InMenu = false;
             Type = other.Type;
-            InstanceName = "InsertName";
             Traversable = other.Traversable;
             FloorType = other.FloorType;
             Theme = other.Theme;
