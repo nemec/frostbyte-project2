@@ -102,7 +102,7 @@ namespace LevelEditor
                     Name="Concave_Corner",
                     Traversable=false,
                     Type=TileTypes.Corner,
-                    Orientation=Orientations.Right,
+                    Orientation=Orientations.Left,
                     Active=true
                 },
                 
@@ -110,7 +110,7 @@ namespace LevelEditor
                     Name="Convex_Corner",
                     Traversable=false,
                     Type=TileTypes.ConvexCorner,
-                    Orientation=Orientations.Right,
+                    Orientation=Orientations.Left,
                     Active=true
                 },
 
@@ -223,6 +223,7 @@ namespace LevelEditor
             d.Filter = "Level files (.xml)|*.xml";
             if (d.ShowDialog() == true)
             {
+                Level.Children.Clear();
                 LoadGrid(new TileList(XDocument.Load(d.FileName)));
             }
         }
@@ -287,8 +288,8 @@ namespace LevelEditor
             {
                 Level.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(Cellsize) });
             }
-            Level.Width = Level.RowDefinitions.Count * Cellsize;
-            Level.Height = Level.ColumnDefinitions.Count * Cellsize;
+            Level.Width = Level.ColumnDefinitions.Count * Cellsize;
+            Level.Height = Level.RowDefinitions.Count * Cellsize;
         }
 
         void Level_MouseUp(object sender, MouseButtonEventArgs e)
@@ -406,7 +407,7 @@ namespace LevelEditor
                             }
                             else
                             {
-                                SelectedObject.Orientation = diff.X >= 0 ? Orientations.Right : Orientations.Left;
+                                SelectedObject.Orientation = diff.X >= 0 ? Orientations.Left : Orientations.Right;
                             }
                         }
                         //determine what it is
@@ -499,18 +500,18 @@ namespace LevelEditor
                     Index2D orientation = new Index2D(p.X, p.Y);
                     if (orientation.X > 0 && orientation.Y < 0)
                     {
-                        toadd.Orientation = Orientations.Up_Right;
-                        SelectedTile.Orientation = Orientations.Up_Right;
+                        toadd.Orientation = Orientations.Up;
+                        SelectedTile.Orientation = Orientations.Up;
                     }
                     else if (orientation.MagX > orientation.MagY)
                     {
-                        toadd.Orientation = orientation.X > 0 ? Orientations.Right : Orientations.Left;
-                        SelectedTile.Orientation = orientation.X > 0 ? Orientations.Right : Orientations.Left;
+                        toadd.Orientation = orientation.X > 0 ? Orientations.Left : Orientations.Right;
+                        SelectedTile.Orientation = orientation.X > 0 ? Orientations.Left : Orientations.Right;
                     }
                     else
                     {
-                        toadd.Orientation = orientation.Y < 0 ? Orientations.Up : Orientations.Down;
-                        SelectedTile.Orientation = orientation.Y < 0 ? Orientations.Up : Orientations.Down;
+                        toadd.Orientation = orientation.Y < 0 ? Orientations.Up_Left : Orientations.Down;
+                        SelectedTile.Orientation = orientation.Y < 0 ? Orientations.Up_Left : Orientations.Down;
                     }
 
 
@@ -622,7 +623,7 @@ namespace LevelEditor
             if (value != null)
             {
                 Orientations o = (Orientations)value;
-                if (o == Orientations.Up_Right)
+                if (o == Orientations.Up_Left)
                 {
                     return new ScaleTransform(-1, -1);
                 }

@@ -439,6 +439,18 @@ namespace Frostbyte
         /// Detects OBB on OBB collision
         /// </summary>
         /// <param name="w1">This Collision data's world object</param>
+        /// <param name="c1">OBB to check</param>
+        /// <param name="w2">Other collision data's world object</param>
+        /// <param name="o">AABB circle which to check</param>
+        /// <returns>Whether a collision occurred</returns>
+        internal static bool detectCollision(WorldObject w1, Collision_OBB c1, WorldObject w2, Collision_AABB o)
+        {
+            return detectCollision(w2, o, w1, c1);
+        }
+        /// <summary>
+        /// Detects OBB on OBB collision
+        /// </summary>
+        /// <param name="w1">This Collision data's world object</param>
         /// <param name="c1">AABB to check</param>
         /// <param name="w2">Other collision data's world object</param>
         /// <param name="o">OBB circle which to check</param>
@@ -448,17 +460,6 @@ namespace Frostbyte
             return false;
         }
 
-        /// <summary>
-        /// Detects OBB on OBB collision
-        /// </summary>
-        /// <param name="w1">This Collision data's world object</param>
-        /// <param name="c1">OBB to check</param>
-        /// <param name="w2">Other collision data's world object</param>
-        /// <param name="o">AABB circle which to check</param>
-        /// <returns>Whether a collision occurred</returns>
-        internal static bool detectCollision(WorldObject w1, Collision_OBB c1, WorldObject w2, Collision_AABB o)
-        {
-            return detectCollision(w2, o, w1, c1);
-        }
+        
     }
 }
