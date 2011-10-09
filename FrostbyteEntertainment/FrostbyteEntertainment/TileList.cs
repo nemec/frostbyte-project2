@@ -76,16 +76,16 @@ namespace Frostbyte
         /// <returns></returns>
         internal bool Add(Tile t, int x, int y)
         {
-            int gridwidth=x;
-            if(mTiles.Count>0)
-                gridwidth = Math.Max(x, mTiles[0].Count-1);
+            int gridwidth = x;
+            if (mTiles.Count > 0)
+                gridwidth = Math.Max(x, mTiles[0].Count - 1);
             //fills grid
-            while (mTiles.Count < y + 1)
+            while (mTiles.Count < y+1)
             {
                 mTiles.Add(new List<Tile>());
             }
             foreach (var row in mTiles)
-                while (row.Count < gridwidth + 1)
+                while (row.Count < gridwidth+1)
                 {
                     row.Add(new Tile());
                 }
@@ -150,23 +150,13 @@ namespace Frostbyte
         /// <summary>
         /// Adds a FrostByte.Tile to the grid and to ObjectList
         /// </summary>
-        /// <param name="r">Room to add</param>
+        /// <param name="t">Room to add</param>
         /// <returns>Success</returns>
-        internal bool Add(Tile r)
+        internal bool Add(Tile t)
         {
-            if (r as LevelObject != null)
-            {
-                //determine what it is
-                if (r as Tile != null)
-                {
-                    Tile t = r as Tile;
-                    Add(r, r.GridCell.X, r.GridCell.Y);
-                    LevelParts.Add(t);
-                    return true;
-                }
-            }
-            //it's a level editor tile
-            return false;
+            Add(t, t.GridCell.X, t.GridCell.Y);
+            LevelParts.Add(t);
+            return true;
         }
 
         /// <summary>
@@ -207,8 +197,11 @@ namespace Frostbyte
             }
             else if (obj.GetType() == typeof(BorderWalls))
             {
-                List<Tile> t;
-                Add(obj as BorderWalls, out t, dontAdd);
+                List<Tile> t = new List<Tile>();
+                BorderWalls b = obj as BorderWalls;
+                /// \todo Make this instead spit out a wall
+                if (!(b.StartCell.X == b.EndCell.X || b.StartCell.Y == b.EndCell.Y))
+                    Add(b, out t, dontAdd);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -487,19 +480,14 @@ namespace Frostbyte
         #endregion Adds
 
         #region RemoveItems
-        public bool Remove(Tile elem)
+        public bool Remove(Tile t)
         {
-            Tile t = elem as Tile;
-            if (t != null)
-            {
-                Remove(t, t.GridCell.X, t.GridCell.Y);
-            }
-            return false;
+            return Remove(t, t.GridCell.X, t.GridCell.Y);
         }
 
         public bool Remove(Tile elem, int x, int y)
         {
-            LevelParts.RemoveAll(delegate(LevelObject lo) { return lo.GetType()==typeof(Tile)? lo.GridCell == elem.GridCell:false; });
+            LevelParts.RemoveAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
             mTiles[y][x] = new Tile();
             return true;
         }
@@ -692,7 +680,7 @@ namespace Frostbyte
                     GridCell = start,
                 };
                 tiles.Add(t);
-                Add(t, t.GridCell.X, t.GridCell.Y);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
 
                 //TR
                 t = new Tile()
@@ -704,7 +692,7 @@ namespace Frostbyte
                     GridCell = new Index2D(end.X, start.Y)
                 };
                 tiles.Add(t);
-                Add(t, t.GridCell.X, t.GridCell.Y);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
 
                 //BL
                 t = new Tile()
@@ -716,7 +704,7 @@ namespace Frostbyte
                     GridCell = new Index2D(start.X, end.Y)
                 };
                 tiles.Add(t);
-                Add(t, t.GridCell.X, t.GridCell.Y);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
 
                 //BR
                 t = new Tile()
@@ -728,7 +716,7 @@ namespace Frostbyte
                     GridCell = new Index2D(end.X, end.Y)
                 };
                 tiles.Add(t);
-                Add(t, t.GridCell.X, t.GridCell.Y);
+                Remove(t, t.GridCell.X, t.GridCell.Y);
             }
             Tiles = tiles;
         }
@@ -768,7 +756,7 @@ namespace Frostbyte
                                 GridCell = new Index2D(end.X, y)
                             };
                             tiles.Add(t);
-                            Add(t, t.GridCell.X, t.GridCell.Y);
+                            Remove(t, t.GridCell.X, t.GridCell.Y);
                         }
                     }
                     //left wall
@@ -786,7 +774,7 @@ namespace Frostbyte
                                 GridCell = new Index2D(start.X, y)
                             };
                             tiles.Add(t);
-                            Add(t, t.GridCell.X, t.GridCell.Y);
+                            Remove(t, t.GridCell.X, t.GridCell.Y);
                         }
                     }
                 }
@@ -805,7 +793,7 @@ namespace Frostbyte
                             GridCell = new Index2D(x, start.Y)
                         };
                         tiles.Add(t);
-                        Add(t, t.GridCell.X, t.GridCell.Y);
+                        Remove(t, t.GridCell.X, t.GridCell.Y);
                     }
                 }
                 else if (w.Type == TileTypes.Bottom || (diff.MagX > diff.MagY && w.Type == TileTypes.Bottom))
@@ -822,7 +810,7 @@ namespace Frostbyte
                             GridCell = new Index2D(x, end.Y)
                         };
                         tiles.Add(t);
-                        Add(t, t.GridCell.X, t.GridCell.Y);
+                        Remove(t, t.GridCell.X, t.GridCell.Y);
                     }
                 }
             }
@@ -861,7 +849,7 @@ namespace Frostbyte
                             GridCell = new Index2D(x, y)
                         };
                         tiles.Add(t);
-                        Add(t, t.GridCell.X, t.GridCell.Y);
+                        Remove(t, t.GridCell.X, t.GridCell.Y);
                     }
                 }
             }
@@ -987,6 +975,8 @@ namespace Frostbyte
                         {
                             if (tileFromUs.Theme == Element.DEFAULT)
                                 tileFromUs.Theme = theme;
+                            if (tileFromUs.GridCell == null)
+                                tileFromUs.GridCell = new Index2D(x, y);
                             objs.Add(tileFromUs);
                         }
                     }
