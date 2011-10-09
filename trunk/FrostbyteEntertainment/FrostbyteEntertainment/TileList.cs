@@ -254,7 +254,7 @@ namespace Frostbyte
             {
                 List<Tile> ts;
                 //place Left wall
-                Add(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
+                Add(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Left, TileTypes.SideWall, w.Theme), out ts, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
@@ -263,7 +263,7 @@ namespace Frostbyte
                 }
 
                 //place right wall
-                Add(new Wall(new Index2D(end.X, start.Y + 1), new Index2D(end.X, end.Y - 1), Orientations.Left, TileTypes.SideWall, w.Theme), out ts, true);
+                Add(new Wall(new Index2D(end.X, start.Y + 1), new Index2D(end.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
@@ -296,7 +296,7 @@ namespace Frostbyte
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
                     Traversable = false,
-                    Orientation = Orientations.Right,
+                    Orientation = Orientations.Left,
                     GridCell = start,
                 };
                 tiles.Add(t);
@@ -308,7 +308,7 @@ namespace Frostbyte
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
                     Traversable = false,
-                    Orientation = Orientations.Down,
+                    Orientation = Orientations.Right,
                     GridCell = new Index2D(end.X, start.Y)
                 };
                 tiles.Add(t);
@@ -320,7 +320,7 @@ namespace Frostbyte
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
                     Traversable = false,
-                    Orientation = Orientations.Up_Right,
+                    Orientation = Orientations.Up,
                     GridCell = new Index2D(start.X, end.Y)
                 };
                 tiles.Add(t);
@@ -332,7 +332,7 @@ namespace Frostbyte
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
                     Traversable = false,
-                    Orientation = Orientations.Up,
+                    Orientation = Orientations.Up_Left,
                     GridCell = new Index2D(end.X, end.Y)
                 };
                 tiles.Add(t);
@@ -362,7 +362,7 @@ namespace Frostbyte
                     //place on side
 
                     //Rt wall
-                    if (w.Orientation == Orientations.Left || diff.X < 0)
+                    if (w.Orientation == Orientations.Right || diff.X < 0)
                     {
                         for (int y = start.Y; y <= end.Y; y++)
                         {
@@ -372,7 +372,7 @@ namespace Frostbyte
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
                                 Traversable = false,
-                                Orientation = Orientations.Left,
+                                Orientation = Orientations.Right,
                                 GridCell = new Index2D(end.X, y)
                             };
                             tiles.Add(t);
@@ -380,7 +380,7 @@ namespace Frostbyte
                         }
                     }
                     //left wall
-                    else if (w.Orientation == Orientations.Right || diff.X > 0)
+                    else if (w.Orientation == Orientations.Left || diff.X > 0)
                     {
                         for (int y = start.Y; y <= end.Y; y++)
                         {
@@ -390,7 +390,7 @@ namespace Frostbyte
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
                                 Traversable = false,
-                                Orientation = Orientations.Right,
+                                Orientation = Orientations.Left,
                                 GridCell = new Index2D(start.X, y)
                             };
                             tiles.Add(t);
@@ -482,7 +482,10 @@ namespace Frostbyte
         #region RemoveItems
         public bool Remove(Tile t)
         {
-            return Remove(t, t.GridCell.X, t.GridCell.Y);
+            if (mTiles.Count > t.GridCell.Y && mTiles[t.GridCell.Y].Count > t.GridCell.X)
+                return Remove(t, t.GridCell.X, t.GridCell.Y);
+            else
+                return false;
         }
 
         public bool Remove(Tile elem, int x, int y)
@@ -634,7 +637,7 @@ namespace Frostbyte
             {
                 List<Tile> ts;
                 //place Left wall
-                Remove(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
+                Remove(new Wall(new Index2D(start.X, start.Y + 1), new Index2D(start.X, end.Y - 1), Orientations.Left, TileTypes.SideWall, w.Theme), out ts, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
@@ -643,7 +646,7 @@ namespace Frostbyte
                 }
 
                 //place right wall
-                Remove(new Wall(new Index2D(end.X, start.Y + 1), new Index2D(end.X, end.Y - 1), Orientations.Left, TileTypes.SideWall, w.Theme), out ts, true);
+                Remove(new Wall(new Index2D(end.X, start.Y + 1), new Index2D(end.X, end.Y - 1), Orientations.Right, TileTypes.SideWall, w.Theme), out ts, true);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < ts.Count; i++)
@@ -676,7 +679,7 @@ namespace Frostbyte
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
                     Traversable = false,
-                    Orientation = Orientations.Right,
+                    Orientation = Orientations.Left,
                     GridCell = start,
                 };
                 tiles.Add(t);
@@ -700,7 +703,7 @@ namespace Frostbyte
                     Type = TileTypes.Corner,
                     Theme = w.Theme,
                     Traversable = false,
-                    Orientation = Orientations.Up_Right,
+                    Orientation = Orientations.Up_Left,
                     GridCell = new Index2D(start.X, end.Y)
                 };
                 tiles.Add(t);
@@ -742,7 +745,7 @@ namespace Frostbyte
                     //place on side
 
                     //Rt wall
-                    if (w.Orientation == Orientations.Left || diff.X < 0)
+                    if (w.Orientation == Orientations.Right || diff.X < 0)
                     {
                         for (int y = start.Y; y <= end.Y; y++)
                         {
@@ -752,7 +755,7 @@ namespace Frostbyte
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
                                 Traversable = false,
-                                Orientation = Orientations.Left,
+                                Orientation = Orientations.Right,
                                 GridCell = new Index2D(end.X, y)
                             };
                             tiles.Add(t);
@@ -760,7 +763,7 @@ namespace Frostbyte
                         }
                     }
                     //left wall
-                    else if (w.Orientation == Orientations.Right || diff.X > 0)
+                    else if (w.Orientation == Orientations.Left || diff.X > 0)
                     {
                         for (int y = start.Y; y <= end.Y; y++)
                         {
@@ -770,7 +773,7 @@ namespace Frostbyte
                                 Type = TileTypes.SideWall,
                                 Theme = w.Theme,
                                 Traversable = false,
-                                Orientation = Orientations.Right,
+                                Orientation = Orientations.Left,
                                 GridCell = new Index2D(start.X, y)
                             };
                             tiles.Add(t);
