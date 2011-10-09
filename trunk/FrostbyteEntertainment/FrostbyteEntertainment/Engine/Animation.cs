@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Frostbyte
 {
-
+    [Serializable]
     class AnimationDoesNotExistException : Exception
     {
         private string name;
