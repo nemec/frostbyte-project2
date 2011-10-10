@@ -92,9 +92,11 @@
     <Reference Include="mscorlib">
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System">
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
@@ -107,13 +109,14 @@
     <Reference Include="System.Net">
       <Private>False</Private>
     </Reference>
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Characters\Mage.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Enemies\Enemy.cs" />
     <Compile Include="Enums.cs" />
-    <Compile Include="Frostbyte.cs" />
+    <Compile Include="FrostbyteLevel.cs" />
     <Compile Include="Engine\Actor.cs" />
     <Compile Include="Engine\Animation.cs" />
     <Compile Include="Engine\AudioManager.cs" />

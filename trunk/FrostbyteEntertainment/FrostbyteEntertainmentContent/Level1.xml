@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level>
+  <Room Type="Wall" StartCell="0,0" EndCell="2,29" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="3,29" EndCell="5,0" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="6,0" EndCell="8,29" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="9,29" EndCell="11,0" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="12,0" EndCell="14,29" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="15,29" EndCell="17,0" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="18,0" EndCell="20,29" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="21,29" EndCell="23,0" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="24,0" EndCell="26,29" Collision="false" Theme="Earth" />
+  <Room Type="Wall" StartCell="27,29" EndCell="29,0" Collision="false" Theme="Earth" />
+</Level>
