@@ -12,6 +12,8 @@ namespace Frostbyte
         internal static GameTime gameTime;
 
         internal static Cheats Cheats = new Cheats();
+
+        internal static int CellSize = 64;
     }
 
     class Cheats

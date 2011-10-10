@@ -242,9 +242,10 @@ namespace Frostbyte
 
         internal Animation GetAnimation(string name)
         {
-            if (mAnims.ContainsKey(name))
+            Animation a;
+            if (mAnims.TryGetValue(name, out a))
             {
-                return mAnims[name];
+                return a;
             }
             else
             {
@@ -254,9 +255,13 @@ namespace Frostbyte
 
         internal void RemoveAnimation(Animation anim)
         {
-            if (mAnims.ContainsKey(anim.Name))
+            try
             {
                 mAnims.Remove(anim.Name);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.GetBaseException().Message);
             }
         }
 

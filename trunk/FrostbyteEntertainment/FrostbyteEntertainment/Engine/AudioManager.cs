@@ -25,12 +25,13 @@ namespace Frostbyte
 
         internal void PlayBackgroundMusic(string name)
         {
-            if (backgroundMusic.ContainsKey(name))
+            Song s; 
+            if (backgroundMusic.TryGetValue(name,out s))
             {
                 try
                 {
                     MediaPlayer.IsRepeating = true;
-                    MediaPlayer.Play(backgroundMusic[name]);
+                    MediaPlayer.Play(s);
                 }
                 catch (InvalidOperationException)
                 {
@@ -63,9 +64,10 @@ namespace Frostbyte
 
         internal void PlaySoundEffect(string name, float volume)
         {
-            if (soundEffects.ContainsKey(name))
+            SoundEffect se;
+            if (soundEffects.TryGetValue(name,out se))
             {
-                var sound = soundEffects[name].CreateInstance();
+                var sound = se.CreateInstance();
                 sound.Volume = volume;
                 sound.Play();
             }
