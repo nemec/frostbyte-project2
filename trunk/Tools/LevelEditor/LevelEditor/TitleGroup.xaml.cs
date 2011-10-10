@@ -25,24 +25,11 @@ namespace LevelEditor
         public TileGroup()
         {
             this.InitializeComponent();
-            Tiles.SelectionChanged+=new SelectionChangedEventHandler(Tiles_SelectionChanged);
         }
-
-        public TileGroup(ObservableCollection<Tile> tiles)
+        public TileGroup(ObservableCollection<Tile> tiles):this()
         {
-            this.InitializeComponent();
-            // TODO: Complete member initialization
-            Tiles.SelectionChanged += new SelectionChangedEventHandler(Tiles_SelectionChanged);
-
             Tiles.ItemsSource = tiles;
         }
 
-        void Tiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            This.mainWindow.SelectedTile = Tiles.SelectedValue as Tile;
-            This.mainWindow.ClearTile = false;
-            This.mainWindow.StartCell = new Point(-1, -1);
-            This.mainWindow.EndCell = new Point(-1, -1);
-        }
     }
 }

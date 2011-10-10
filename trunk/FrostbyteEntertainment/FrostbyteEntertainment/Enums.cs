@@ -49,6 +49,9 @@ namespace Frostbyte
     /// </summary>
     public enum TileTypes
     {
+        /// <summary>
+        /// This is going to be used to signify an area we don't want people walking (eg the part above walls etc)
+        /// </summary>
         DEFAULT = -1,
         /// <summary>
         /// Foor Top or Side wall tiles (determined by orientation)
@@ -85,6 +88,10 @@ namespace Frostbyte
         /// For Room class (needed for editor)
         /// </summary>
         Room,
+        /// <summary>
+        /// A cell we want specifically empty
+        /// </summary>
+        Empty,
     }
 
     /// <summary>

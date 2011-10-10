@@ -91,12 +91,12 @@ namespace LevelEditor
                     Active=true
                 },
 
-                //new Tile(){
-                //    Name="Wall_Bottom",
-                //    Traversable=false,
-                //    Type=TileTypes.Bottom,
-                //    Active=true
-                //},
+                new Tile(){
+                    Name="Wall_Bottom",
+                    Traversable=false,
+                    Type=TileTypes.Bottom,
+                    Active=true
+                },
 
                 new Tile(){
                     Name="Concave_Corner",
@@ -110,6 +110,22 @@ namespace LevelEditor
                     Name="Convex_Corner",
                     Traversable=false,
                     Type=TileTypes.ConvexCorner,
+                    Orientation=Orientations.Left,
+                    Active=true
+                },
+
+                new Tile(){
+                    Name="TopGrass",
+                    Traversable=false,
+                    Type=TileTypes.DEFAULT,
+                    Orientation=Orientations.Left,
+                    Active=true
+                },
+
+                new Tile(){
+                    Name="Empty",
+                    Traversable=false,
+                    Type=TileTypes.Empty,
                     Orientation=Orientations.Left,
                     Active=true
                 },
@@ -193,10 +209,13 @@ namespace LevelEditor
             };
 
             //clears selected items
-            foreach (var tg in stuff)
-            {
-                tg.Tiles.SelectedIndex = -1;
-            }
+            //foreach (var tg in stuff)
+            //{
+            //    foreach (TreeViewItem e in tg.Tiles.Items)
+            //    {
+            //        e.IsSelected = false;
+            //    }
+            //}
 
             Objects.ItemsSource = stuff;
 
@@ -305,10 +324,13 @@ namespace LevelEditor
         private void ClearSelection()
         {
             //clear selections
-            foreach (TileGroup elem in Objects.Items)
-            {
-                elem.Tiles.SelectedIndex = -1;
-            }
+            //foreach (TileGroup elem in Objects.Items)
+            //{
+            //    foreach(TreeViewItem e in elem.Tiles.Items)
+            //    {
+            //        e.IsSelected = false;
+            //    }
+            //}
             SelectedObject = null;
             SelectedTile = null;
             StartCell = new Point(-1, -1);
@@ -663,7 +685,7 @@ namespace LevelEditor
                         file = "wall.png";
                         break;
                     case TileTypes.Bottom:
-                        file = "wall.png";
+                        file = "top-grass.png";
                         break;
                     case TileTypes.Corner:
                         file = "corner.png";
@@ -686,6 +708,9 @@ namespace LevelEditor
                     case TileTypes.Room:
                         //do some magic to show pic for the walls etc
                         file = "room.png";
+                        break;
+                    case TileTypes.Empty:
+                        file = "";
                         break;
                     default:
                         file = "error.png";
