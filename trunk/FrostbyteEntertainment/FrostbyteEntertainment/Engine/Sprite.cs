@@ -29,6 +29,8 @@ namespace Frostbyte
                     if (mActor.Animations[mActor.CurrentAnimation].NumFrames > 1) mAnimating = true;
                 }
             }
+            var anim = GetAnimation();
+            Center = new Vector2(anim.Width / 2, anim.Height / 2);
         }
 
         internal Sprite(string name, Actor actor, int collisionlist)
