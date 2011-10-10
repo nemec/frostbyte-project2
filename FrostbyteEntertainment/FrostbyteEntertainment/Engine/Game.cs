@@ -161,10 +161,10 @@ namespace Frostbyte
             graphics.PreferredBackBufferHeight = 750;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
-
+            
             //Initialize Collision Cell Size
-            Collision.CellHeight = 40;
-            Collision.CellWidth = 40;
+            Collision.CellHeight = This.CellSize;
+            Collision.CellWidth = This.CellSize;
         }
 
         /// <summary>

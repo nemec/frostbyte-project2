@@ -36,9 +36,9 @@ namespace Frostbyte
             drawPoints[4].Position = new Vector3(Corner1.X, Corner1.Y, 0f);
             drawPoints[4].Color = Color.Red;
 
-            Vector2 p1 = new Vector2(drawPoints[0].Position.X,drawPoints[0].Position.Y);
-            Vector2 p2 = new Vector2(drawPoints[1].Position.X,drawPoints[1].Position.Y);
-            Vector2 p3 = new Vector2(drawPoints[3].Position.X,drawPoints[3].Position.Y);
+            Vector2 p1 = new Vector2(drawPoints[0].Position.X, drawPoints[0].Position.Y);
+            Vector2 p2 = new Vector2(drawPoints[1].Position.X, drawPoints[1].Position.Y);
+            Vector2 p3 = new Vector2(drawPoints[3].Position.X, drawPoints[3].Position.Y);
 
             xAxis = p2 - p1;
             xAxis.Normalize();
@@ -124,17 +124,22 @@ namespace Frostbyte
                 int lowestY = highestY;
                 int highestX = (int)(worldObject.Pos.X + drawPoints[0].Position.X) / (int)Collision.CellHeight;
                 int lowestX = highestX;
+                //find the smallest
                 for (int i = 1; i < drawPoints.Length - 1; i++)
                 {
                     int y = (int)(worldObject.Pos.Y + drawPoints[i].Position.Y) / (int)Collision.CellHeight;
+                    //get the smallest y
                     if (y < lowestY)
                         lowestY = y;
+                    //get the largest y
                     else if (y > highestY)
                         highestY = y;
 
                     int x = (int)(worldObject.Pos.X + drawPoints[i].Position.X) / (int)Collision.CellWidth;
+                    //get the smallest x
                     if (x < lowestX)
                         lowestX = x;
+                    //get the largest x
                     else if (x > highestX)
                         highestX = x;
                 }
@@ -157,15 +162,24 @@ namespace Frostbyte
                             slope0to1 = (drawPoint0.Y - drawPoint1.Y) / (drawPoint0.X - drawPoint1.X);
                             //slope1to2 = (drawPoint1.Y - drawPoint2.Y) / (drawPoint1.X - drawPoint2.X);
 
-                            /*if ((slope0to1 * (i * Collision.gridCellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.gridCellHeight) && slope0to1 * (i * Collision.gridCellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.gridCellHeight)) ||
-                                (slope0to1 * (i * Collision.gridCellWidth) + (drawPoint3.Y - (slope0to1 * (drawPoint3.X))) < ((j + 1) * Collision.gridCellHeight) && slope0to1 * (i * Collision.gridCellWidth) + (drawPoint3.Y - (slope0to1 * (drawPoint3.X))) > (j * Collision.gridCellHeight)) ||
-                                (slope1to2 * (i * Collision.gridCellWidth) + (drawPoint1.Y - (slope1to2 * (drawPoint1.X))) < ((j + 1) * Collision.gridCellHeight) && slope1to2 * (i * Collision.gridCellWidth) + (drawPoint1.Y - (slope1to2 * (drawPoint1.X))) > (j * Collision.gridCellHeight)) ||
-                                (slope1to2 * (i * Collision.gridCellWidth) + (drawPoint2.Y - (slope1to2 * (drawPoint2.X))) < ((j + 1) * Collision.gridCellHeight) && slope1to2 * (i * Collision.gridCellWidth) + (drawPoint2.Y - (slope1to2 * (drawPoint2.X))) > (j * Collision.gridCellHeight)))
-                            {*/
-                            if ((slope0to1 * (i * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.CellHeight) && slope0to1 * (i * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.CellHeight)) ||
-                                (slope0to1 * ((i + 1) * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.CellHeight) && slope0to1 * ((i + 1) * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.CellHeight)) ||
-                                (((j * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X < ((i + 1) * Collision.CellWidth) && ((j * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X > (i * Collision.CellWidth)) ||
-                                ((((j + 1) * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X < ((i + 1) * Collision.CellWidth) && (((j + 1) * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X > (i * Collision.CellWidth))
+                            //beginning of the cell
+                            float p1 = slope0to1 * (i * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X)));
+                            //end of the cell
+                            float p2 = slope0to1 * ((i + 1) * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X)));
+                            //what's this?
+                            float p3 = (j * Collision.CellHeight - drawPoint0.Y) / slope0to1 + drawPoint0.X;
+                            //and this?
+                            float p4 = ((j + 1) * Collision.CellHeight - drawPoint0.Y) / slope0to1 + drawPoint0.X;
+                            if (
+                                    (p1 < ((j + 1) * Collision.CellHeight) && p1 > (j * Collision.CellHeight)) ||
+                                    (p2 < ((j + 1) * Collision.CellHeight) && p2 > (j * Collision.CellHeight)) ||
+                                    (
+                                        p3 < ((i + 1) * Collision.CellWidth) && p3 > (i * Collision.CellWidth)
+                                    )
+                                    ||
+                                    (
+                                        p4 < ((i + 1) * Collision.CellWidth) && p4 > (i * Collision.CellWidth)
+                                    )
                                 )
                             {
                                 isInGrid = true;
@@ -179,15 +193,17 @@ namespace Frostbyte
                         {
                             Vector2 location = new Vector2(i, j);
                             PreviousBuckets.Add(location);
-                            if (Collision.Buckets[worldObject.CollisionList].ContainsKey(location))
+                            var bucket = Collision.Buckets[worldObject.CollisionList];
+                            List<WorldObject> value;
+                            if (bucket.TryGetValue(location, out value))
                             {
-                                Collision.Buckets[worldObject.CollisionList][location].Add(worldObject);
+                                value.Add(worldObject);
                             }
                             else
                             {
-                                List<WorldObject> possibleCollisions = new List<WorldObject>();
-                                possibleCollisions.Add(worldObject);
-                                Collision.Buckets[worldObject.CollisionList].Add(location, possibleCollisions);
+                                value = new List<WorldObject>();
+                                value.Add(worldObject);
+                                bucket[location] = value;
                             }
                         }
                     }

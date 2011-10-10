@@ -16,7 +16,7 @@ namespace Frostbyte.Levels
 
             FrostbyteLevel l = (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel) as FrostbyteLevel;
 
-            l.TileMap = new TileList(XDocument.Load(@"H:\gamedev\frost\FrostbyteEntertainment\FrostbyteEntertainmentContent\Level1.xml"));
+            l.TileMap = new TileList(XDocument.Load(@"Content\Level1.xml"));
 
             LevelFunctions.Spawn(delegate()
             {

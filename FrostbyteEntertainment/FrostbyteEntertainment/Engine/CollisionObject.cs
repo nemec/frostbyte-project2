@@ -29,7 +29,7 @@ namespace Frostbyte
         /// </summary>
         internal List<Vector2> PreviousBuckets = new List<Vector2>();
 
-        internal Vector2 PreviousPos = new Vector2();
+        internal Vector2 PreviousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
         /// <summary>
         /// Determines which grid cells the object is in

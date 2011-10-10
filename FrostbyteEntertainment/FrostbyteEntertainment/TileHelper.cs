@@ -17,7 +17,6 @@ namespace Frostbyte
     //    XElement ToXML();
     //    //void SetParse(XElement elem);/// \todo make sure all things implementing the interface have one of these but static
     //}
-
     public partial class Index2D
     {
         /// <summary>
