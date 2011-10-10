@@ -138,6 +138,18 @@ namespace LevelEditor
             //b.Converter=new TransformConverter();
             //SetBinding(TileImage.RenderTransform,b.
             InMenu = true;
+            MouseUp += new MouseButtonEventHandler(Tile_MouseUp);
+        }
+
+        void Tile_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (InMenu)
+            {
+                This.mainWindow.SelectedTile = this;
+                This.mainWindow.ClearTile = false;
+                This.mainWindow.StartCell = new Point(-1, -1);
+                This.mainWindow.EndCell = new Point(-1, -1);
+            }
         }
 
         public Tile(Tile SelectedTile)
