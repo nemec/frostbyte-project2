@@ -14,10 +14,13 @@ namespace Frostbyte
 
         internal Camera()
         {
-            _zoom = 1.0f;
+            _zoom = 2.0f;
         }
 
-        internal float Rotation
+        /// <summary>
+        /// Not using rotation at the moment...
+        /// </summary>
+        private float Rotation
         {
             get
             {
@@ -44,7 +47,7 @@ namespace Frostbyte
 
             }
         }
-        internal Vector2 RotationPoint { get; set; }
+        private Vector2 RotationPoint { get; set; }
 
         internal Vector2 Pos { get; set; }
 
@@ -65,7 +68,8 @@ namespace Frostbyte
         {
             // To rotate around a fixed point, must translate the everything to (0,0),
             // rotate, then translate back
-            Vector3 rotationMod = new Vector3(RotationPoint.X, RotationPoint.Y, 0);
+            Vector3 rotationMod = new Vector3(RotationPoint, 0);
+
             return Matrix.CreateTranslation(new Vector3(-Pos.X, -Pos.Y, 0)) *
                 Matrix.CreateTranslation(-rotationMod) *
                 Matrix.CreateRotationZ(Rotation) *

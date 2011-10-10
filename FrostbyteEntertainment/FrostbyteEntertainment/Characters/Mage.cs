@@ -50,7 +50,7 @@ namespace Frostbyte.Characters
 
         #region Methods
         /// <summary>
-        /// Finds the closest enemey sprite to the player that's further than the current target
+        /// Finds the closest enemy sprite to the player that's further than the current target
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -61,13 +61,37 @@ namespace Frostbyte.Characters
                 list.Remove(this);
             }
             list.Sort(sortType);
+
             int next = list.IndexOf(currentTarget);
-            return list[(next + 1) % list.Count];
+            for (int x = 0; x < list.Count; x++)
+            {
+                Sprite target = list[(next + 1 + x) % list.Count];
+                if (target.mVisible)
+                {
+                    return target;
+                }
+            }
+
+            cancelTarget(); // Every sprite in list is invisible, there's nothing to target
+            return null;
+        }
+
+        private void cancelTarget()
+        {
+            target.mVisible = false;
+            currentTarget = null;
+            currentTargetAlignment = TargetAlignment.None;
         }
 
         public void Update()
         {
             controller.Update();
+
+            if (currentTarget != null && !currentTarget.mVisible)
+            {
+                cancelTarget();
+            }
+
             if (controller.IsConnected)
             {
                 #region Targeting
@@ -102,9 +126,7 @@ namespace Frostbyte.Characters
 
                 if (controller.CancelTargeting == ReleasableButtonState.Clicked)
                 {
-                    target.mVisible = false;
-                    currentTarget = null;
-                    currentTargetAlignment = TargetAlignment.None;
+                    cancelTarget();
                 }
 
                 if (currentTarget != null)

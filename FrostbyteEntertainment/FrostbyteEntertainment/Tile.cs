@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 /// \file Tile.cs This is Shared with the Level Editor
 namespace Frostbyte
 {
-    public class Tile : LevelObject
+    public partial class Tile : LevelObject
     {
         public static readonly int TileSize = 64;
 

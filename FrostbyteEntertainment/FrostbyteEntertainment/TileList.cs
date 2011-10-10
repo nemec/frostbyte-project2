@@ -864,20 +864,22 @@ namespace Frostbyte
 
         internal bool TryGetValue(int x, int y, out Tile value)
         {
-            if (cache_key.X == x && cache_key.Y == y)
+            if (y >= 0 && y < mTiles.Count && x >= 0 && x < mTiles[0].Count)
             {
-                value = cache_value;
-                return true;
-            }
+                if (cache_key.X == x && cache_key.Y == y)
+                {
+                    value = cache_value;
+                    return true;
+                }
 
-            if (mTiles[y][x] != null)
-            {
-                value = mTiles[y][x];
-                cache_key = new Index2D(x, y);
-                cache_value = value;
-                return true;
+                if (mTiles[y][x] != null)
+                {
+                    value = mTiles[y][x];
+                    cache_key = new Index2D(x, y);
+                    cache_value = value;
+                    return true;
+                }
             }
-
             value = new Tile();
             return false;
         }

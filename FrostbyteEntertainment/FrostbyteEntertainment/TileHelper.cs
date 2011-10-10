@@ -69,6 +69,7 @@ namespace Frostbyte
             int y = int.Parse(ss[1]);
             return new Index2D(x, y);
         }
+
         public override string ToString()
         {
             return String.Format("{0},{1}", X, Y);
