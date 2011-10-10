@@ -36,29 +36,27 @@ namespace Frostbyte
             drawPoints[4].Position = new Vector3(Corner1.X, Corner1.Y, 0f);
             drawPoints[4].Color = Color.Red;
 
-            //determine axes
-            Matrix original = new Matrix(
-                drawPoints[0].Position.X, drawPoints[1].Position.X, drawPoints[2].Position.X,0,
-                drawPoints[0].Position.Y, drawPoints[1].Position.Y, drawPoints[2].Position.Y,0,
-                1,1,1,0,
-                0,0,0,0
-                );
-            Matrix final = new Matrix(
-                0,1,1,0,
-                0,0,1,0,
-                1,1,1,0,
-                0,0,0,0
-                );
-            Matrix oInvert;
-            Matrix.Invert(ref original, out oInvert);
-            AxisTransform = final * oInvert;
+            Vector2 p1 = new Vector2(drawPoints[0].Position.X,drawPoints[0].Position.Y);
+            Vector2 p2 = new Vector2(drawPoints[1].Position.X,drawPoints[1].Position.Y);
+            Vector2 p3 = new Vector2(drawPoints[3].Position.X,drawPoints[3].Position.Y);
+
+            xAxis = p2 - p1;
+            xAxis.Normalize();
+
+            yAxis = p3 - p1;
+            yAxis.Normalize();
         }
 
 
         /// <summary>
-        /// Matrix that transforms points to this matrix's plane
+        /// OBB's "x axis"
         /// </summary>
-        internal Matrix? AxisTransform = null;
+        internal Vector2 xAxis;
+
+        /// <summary>
+        /// OBB's "y axis"
+        /// </summary>
+        internal Vector2 yAxis;
 
 
         /// <summary>

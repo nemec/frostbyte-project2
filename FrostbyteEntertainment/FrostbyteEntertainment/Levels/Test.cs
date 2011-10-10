@@ -11,6 +11,8 @@ namespace Frostbyte.Levels
     {
         internal static void Load()
         {
+            Collision.Lists.Add(new KeyValuePair<int, int>(3, 2));
+
             FrostbyteLevel l = (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel) as FrostbyteLevel;
 
             LevelFunctions.Spawn(delegate()
@@ -32,6 +34,10 @@ namespace Frostbyte.Levels
             mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
             l.Camera.Pos = mage.Pos - new Microsoft.Xna.Framework.Vector2(This.Game.GraphicsDevice.Viewport.Width / 2,
                 This.Game.GraphicsDevice.Viewport.Height / 2);
+
+            Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
+
+            Sprite b = new Sprite("box2", new Actor(new Animation("boxen.anim")),3);
 
         }
 
