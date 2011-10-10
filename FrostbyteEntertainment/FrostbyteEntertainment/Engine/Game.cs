@@ -163,8 +163,8 @@ namespace Frostbyte
             graphics.ApplyChanges();
 
             //Initialize Collision Cell Size
-            Collision.gridCellHeight = 40;
-            Collision.gridCellWidth = 40;
+            Collision.CellHeight = 40;
+            Collision.CellWidth = 40;
         }
 
         /// <summary>

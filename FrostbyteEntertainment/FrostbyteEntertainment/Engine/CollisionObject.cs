@@ -7,34 +7,39 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Frostbyte
 {
+        /// <summary>
+        /// Possible Collision types
+        /// </summary>
+        internal enum CollisionType { 
+            Circle=0,
+            AABB,
+            OBB,
+        }
     internal abstract class CollisionObject
     {
         /// <summary>
         /// Id that will be used to determine which CollisionObject was touched.
         /// </summary>
-        internal int id { get; set; }
+        internal int ID { get; set; }
 
-        /// <summary>
-        /// The type of CollisionObject (ex: c = circle, a = AABB, o = OBB, e = Ellipse)
-        /// </summary>
-        internal char type { get; set; }
+        internal CollisionType Type { get; set; }
 
         /// <summary>
         /// Previous bucket locations
         /// </summary>
-        internal List<Vector2> bucketLocations = new List<Vector2>();
+        internal List<Vector2> PreviousBuckets = new List<Vector2>();
 
-        internal Vector2 previousPos = new Vector2();
+        internal Vector2 PreviousPos = new Vector2();
 
         /// <summary>
         /// Determines which grid cells the object is in
         /// </summary>
-        internal abstract List<Vector2> gridLocations(WorldObject worldObject);
+        internal abstract List<Vector2> GridLocations(WorldObject worldObject);
 
         /// <summary>
         /// Add this CollisionObject to bucket.
         /// </summary>
-        internal abstract void addToBucket(WorldObject worldObject);
+        internal abstract void AddToBucket(WorldObject worldObject);
 
         /// <summary>
         /// Adds The world object to all cell contained within the four points
@@ -72,11 +77,11 @@ namespace Frostbyte
         /// </summary>
         internal VertexPositionColor[] drawPoints;
 
-        internal abstract void draw(WorldObject world, Matrix transformation);
+        internal abstract void Draw(WorldObject world, Matrix transformation);
 
         public override int GetHashCode()
         {
-            return id;
+            return ID;
         }
     }
 }

@@ -132,7 +132,7 @@ namespace Frostbyte
                     mSprites.Add(item);
                 }
                 ToAdd.Clear();
-                Collision.update();
+                Collision.Update();
                 foreach (Sprite sp in mSprites)
                 {
                     sp.DoCollisions();

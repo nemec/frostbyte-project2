@@ -9,68 +9,80 @@ namespace Frostbyte
 {
     internal class Collision_OBB : CollisionObject
     {
+
         /// <summary>
         /// Initializes a Bounding Circle.
         /// </summary>
         internal Collision_OBB(int _id, Vector2 _cornerOffset1, Vector2 _cornerOffset2, float _thickness)
         {
-            cornerOffset1 = _cornerOffset1;
-            cornerOffset2 = _cornerOffset2;
-            thickness = _thickness;
-            id = _id;
-            type = 'o';
-            previousPos = new Vector2(100017, 100017);
+            Corner1 = _cornerOffset1;
+            Corner2 = _cornerOffset2;
+            Thickness = _thickness;
+            ID = _id;
+            Type = CollisionType.OBB;
+            PreviousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
+            //determine axes
+            Vector2 dir = Corner1;
+            dir.Normalize();
+            Vector2 projx = Corner2 * Corner1 / Corner1 * Corner1 * dir;
 
             //create collision object's points for drawing
-            Vector3 normal = Vector3.Normalize(new Vector3(cornerOffset2.Y - cornerOffset1.Y, cornerOffset1.X - cornerOffset2.X,0));
+            Vector3 normal = Vector3.Normalize(new Vector3(Corner2.Y - Corner1.Y, Corner1.X - Corner2.X, 0));
             drawPoints = new VertexPositionColor[5];
-            drawPoints[0].Position = new Vector3(cornerOffset1.X, cornerOffset1.Y, 0f);
+            drawPoints[0].Position = new Vector3(Corner1.X, Corner1.Y, 0f);
             drawPoints[0].Color = Color.Yellow;
-            drawPoints[1].Position = new Vector3(cornerOffset2.X, cornerOffset2.Y, 0f);
+            drawPoints[1].Position = new Vector3(Corner2.X, Corner2.Y, 0f);
             drawPoints[1].Color = Color.Green;
-            drawPoints[2].Position = new Vector3(cornerOffset2.X + normal.X*thickness, cornerOffset2.Y + normal.Y*thickness, 0f);
+            drawPoints[2].Position = new Vector3(Corner2.X + normal.X * Thickness, Corner2.Y + normal.Y * Thickness, 0f);
             drawPoints[2].Color = Color.Red;
-            drawPoints[3].Position = new Vector3(cornerOffset1.X + normal.X * thickness, cornerOffset1.Y + normal.Y * thickness, 0f);
+            drawPoints[3].Position = new Vector3(Corner1.X + normal.X * Thickness, Corner1.Y + normal.Y * Thickness, 0f);
             drawPoints[3].Color = Color.Red;
-            drawPoints[4].Position = new Vector3(cornerOffset1.X, cornerOffset1.Y, 0f);
+            drawPoints[4].Position = new Vector3(Corner1.X, Corner1.Y, 0f);
             drawPoints[4].Color = Color.Red;
         }
+
+
+        /// <summary>
+        /// Matrix that transforms points to this matrix's plane
+        /// </summary>
+        internal Matrix ?AxisTransform = null;
+
 
         /// <summary>
         /// Offset of Corner1 from sprite anchor.
         /// </summary>
-        internal Vector2 cornerOffset1 { get; set; }
+        internal Vector2 Corner1 { get; set; }
 
         /// <summary>
         /// Offset of Corner2 from sprite anchor.
         /// </summary>
-        internal Vector2 cornerOffset2 { get; set; }
+        internal Vector2 Corner2 { get; set; }
 
         /// <summary>
         /// Thickness of box
         /// </summary>
-        internal float thickness { get; set; }
+        internal float Thickness { get; set; }
 
         /// <summary>
         /// Determines which grid cells the object is in
         /// </summary>
-        internal override List<Vector2> gridLocations(WorldObject worldObject)
+        internal override List<Vector2> GridLocations(WorldObject worldObject)
         {
-            //int bottomLeftX = (int)(parentObject.Pos.X + topLeftPointOffset.X) / (int)Collision.gridCellWidth;
-            //int bottomLeftY = (int)(parentObject.Pos.Y + bottomRightPointOffset.Y) / (int)Collision.gridCellHeight;
-            //int topRightX = (int)(parentObject.Pos.X + bottomRightPointOffset.X) / (int)Collision.gridCellWidth;
-            //int topRightY = (int)(parentObject.Pos.Y + topLeftPointOffset.Y) / (int)Collision.gridCellHeight;
+            int bottomLeftX = (int)(worldObject.Pos.X + Corner1.X) / (int)Collision.CellWidth;
+            int bottomLeftY = (int)(worldObject.Pos.Y + Corner2.Y) / (int)Collision.CellHeight;
+            int topRightX = (int)(worldObject.Pos.X + Corner2.X) / (int)Collision.CellWidth;
+            int topRightY = (int)(worldObject.Pos.Y + Corner1.Y) / (int)Collision.CellHeight;
 
             List<Vector2> gridLocations = new List<Vector2>();
-            //for (int i = bottomLeftX; i <= topRightX; i++) //cols
-            //{
-                //for (int j = bottomLeftY; j <= topRightY; j++) //rows
-                //{
-                    //Vector2 location = new Vector2(i, j);
-                    //gridLocations.Add(location);
-                //}
-            //}
+            for (int i = bottomLeftX; i <= topRightX; i++) //cols
+            {
+                for (int j = bottomLeftY; j <= topRightY; j++) //rows
+                {
+                    Vector2 location = new Vector2(i, j);
+                    gridLocations.Add(location);
+                }
+            }
 
             return gridLocations;
         }
@@ -78,11 +90,11 @@ namespace Frostbyte
         /// <summary>
         /// Add this CollisionObject to bucket.
         /// </summary>
-        internal override void addToBucket(WorldObject worldObject)
+        internal override void AddToBucket(WorldObject worldObject)
         {
-            if (previousPos == worldObject.Pos)
+            if (PreviousPos == worldObject.Pos)
             {
-                foreach (Vector2 location in bucketLocations)
+                foreach (Vector2 location in PreviousBuckets)
                 {
                     try
                     {
@@ -98,19 +110,19 @@ namespace Frostbyte
             }
             else
             {
-                int highestY = (int)(worldObject.Pos.Y + drawPoints[0].Position.Y) / (int)Collision.gridCellHeight;
+                int highestY = (int)(worldObject.Pos.Y + drawPoints[0].Position.Y) / (int)Collision.CellHeight;
                 int lowestY = highestY;
-                int highestX = (int)(worldObject.Pos.X + drawPoints[0].Position.X) / (int)Collision.gridCellHeight;
+                int highestX = (int)(worldObject.Pos.X + drawPoints[0].Position.X) / (int)Collision.CellHeight;
                 int lowestX = highestX;
                 for (int i = 1; i < drawPoints.Length - 1; i++)
                 {
-                    int y = (int)(worldObject.Pos.Y + drawPoints[i].Position.Y) / (int)Collision.gridCellHeight;
+                    int y = (int)(worldObject.Pos.Y + drawPoints[i].Position.Y) / (int)Collision.CellHeight;
                     if (y < lowestY)
                         lowestY = y;
                     else if (y > highestY)
                         highestY = y;
 
-                    int x = (int)(worldObject.Pos.X + drawPoints[i].Position.X) / (int)Collision.gridCellWidth;
+                    int x = (int)(worldObject.Pos.X + drawPoints[i].Position.X) / (int)Collision.CellWidth;
                     if (x < lowestX)
                         lowestX = x;
                     else if (x > highestX)
@@ -123,7 +135,7 @@ namespace Frostbyte
                 Vector2 drawPoint1 = new Vector2(drawPoints[1].Position.X + o1Anchor.X, drawPoints[1].Position.Y + o1Anchor.Y);
                 Vector2 drawPoint2 = new Vector2(drawPoints[2].Position.X + o1Anchor.X, drawPoints[2].Position.Y + o1Anchor.Y);
                 Vector2 drawPoint3 = new Vector2(drawPoints[3].Position.X + o1Anchor.X, drawPoints[3].Position.Y + o1Anchor.Y);
-                bucketLocations.Clear();
+                PreviousBuckets.Clear();
                 for (int i = lowestX; i <= highestX; i++) //cols
                 {
                     for (int j = lowestY; j <= highestY; j++) //rows
@@ -140,10 +152,10 @@ namespace Frostbyte
                                 (slope1to2 * (i * Collision.gridCellWidth) + (drawPoint1.Y - (slope1to2 * (drawPoint1.X))) < ((j + 1) * Collision.gridCellHeight) && slope1to2 * (i * Collision.gridCellWidth) + (drawPoint1.Y - (slope1to2 * (drawPoint1.X))) > (j * Collision.gridCellHeight)) ||
                                 (slope1to2 * (i * Collision.gridCellWidth) + (drawPoint2.Y - (slope1to2 * (drawPoint2.X))) < ((j + 1) * Collision.gridCellHeight) && slope1to2 * (i * Collision.gridCellWidth) + (drawPoint2.Y - (slope1to2 * (drawPoint2.X))) > (j * Collision.gridCellHeight)))
                             {*/
-                            if ((slope0to1 * (i * Collision.gridCellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.gridCellHeight) && slope0to1 * (i * Collision.gridCellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.gridCellHeight)) ||
-                                (slope0to1 * ((i + 1) * Collision.gridCellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.gridCellHeight) && slope0to1 * ((i + 1) * Collision.gridCellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.gridCellHeight)) ||
-                                (((j * Collision.gridCellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X < ((i + 1) * Collision.gridCellWidth) && ((j * Collision.gridCellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X > (i * Collision.gridCellWidth)) ||
-                                ((((j + 1) * Collision.gridCellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X < ((i + 1) * Collision.gridCellWidth) && (((j + 1) * Collision.gridCellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X > (i * Collision.gridCellWidth))
+                            if ((slope0to1 * (i * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.CellHeight) && slope0to1 * (i * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.CellHeight)) ||
+                                (slope0to1 * ((i + 1) * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) < ((j + 1) * Collision.CellHeight) && slope0to1 * ((i + 1) * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X))) > (j * Collision.CellHeight)) ||
+                                (((j * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X < ((i + 1) * Collision.CellWidth) && ((j * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X > (i * Collision.CellWidth)) ||
+                                ((((j + 1) * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X < ((i + 1) * Collision.CellWidth) && (((j + 1) * Collision.CellHeight) - drawPoint0.Y) / slope0to1 + drawPoint0.X > (i * Collision.CellWidth))
                                 )
                             {
                                 isInGrid = true;
@@ -156,7 +168,7 @@ namespace Frostbyte
                         if (isInGrid) //check if grid cell is colliding with box
                         {
                             Vector2 location = new Vector2(i, j);
-                            bucketLocations.Add(location);
+                            PreviousBuckets.Add(location);
                             if (Collision.Buckets[worldObject.CollisionList].ContainsKey(location))
                             {
                                 Collision.Buckets[worldObject.CollisionList][location].Add(worldObject);
@@ -170,11 +182,11 @@ namespace Frostbyte
                         }
                     }
                 }
-                previousPos = worldObject.Pos;
+                PreviousPos = worldObject.Pos;
             }
         }
 
-        internal override void draw(WorldObject world, Matrix transformation)
+        internal override void Draw(WorldObject world, Matrix transformation)
         {
             Collision.basicEffect.World = Matrix.CreateTranslation(new Vector3(world.Pos, 0)) * transformation;
 
@@ -185,5 +197,6 @@ namespace Frostbyte
                 This.Game.GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.LineStrip, drawPoints, 0, 4);
             }
         }
+
     }
 }
