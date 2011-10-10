@@ -27,7 +27,8 @@ namespace Frostbyte.Characters
         internal Mage(string name, Actor actor, PlayerIndex input)
             : base(name, actor)
         {
-            controller = new GamePadController(input);//new KeyboardController();
+            controller = new GamePadController(input);
+            keyboard = new KeyboardController();
             currentTargetAlignment = TargetAlignment.None;
             target = new Frostbyte.Levels.Target("target", new Actor(new DummyAnimation("target.anim")));
             target.mVisible = false;
@@ -41,6 +42,7 @@ namespace Frostbyte.Characters
         private Sprite currentTarget = null;
         private TargetAlignment currentTargetAlignment;
         private IController controller;
+        private IController keyboard;
         private Sprite target;
         BasicEffect basicEffect = new BasicEffect(This.Game.GraphicsDevice);
         private IComparer<Sprite> sortType;
@@ -116,6 +118,16 @@ namespace Frostbyte.Characters
 
                 Pos.X += controller.Movement.X * 3;
                 Pos.Y -= controller.Movement.Y * 3;
+
+                #endregion Movement
+            }
+            else
+            {
+                #region Movement
+
+                keyboard.Update();
+                Pos.X += keyboard.Movement.X * 3;
+                Pos.Y += keyboard.Movement.Y * 3;
 
                 #endregion Movement
             }
