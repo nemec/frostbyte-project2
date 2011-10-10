@@ -280,6 +280,9 @@ namespace Frostbyte
         /// <returns>Whether a collision occurred</returns>
         internal static bool DetectCollision(WorldObject w1, Collision_OBB c1, WorldObject w2, Collision_OBB o)
         {
+            //so, we've got to project the faces onto eachother and look for intersections
+            //we've got a matrix that transfroms the OBB's own coordinates to be 0,0 at the first corner and 0,1 for the second and 1,1 for what is being treated as drawpoints[2]
+            //(really just defines a plane because it doesn't take into account pos so we'll need to normalize pos for the checks)
 
             Vector2 TL1 = c1.Corner1+ w1.Pos;
             Vector2 BR1 = c1.Corner2 + w1.Pos;

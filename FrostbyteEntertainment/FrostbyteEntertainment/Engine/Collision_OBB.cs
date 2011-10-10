@@ -22,11 +22,6 @@ namespace Frostbyte
             Type = CollisionType.OBB;
             PreviousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
-            //determine axes
-            Vector2 dir = Corner1;
-            dir.Normalize();
-            Vector2 projx = Corner2 * Corner1 / Corner1 * Corner1 * dir;
-
             //create collision object's points for drawing
             Vector3 normal = Vector3.Normalize(new Vector3(Corner2.Y - Corner1.Y, Corner1.X - Corner2.X, 0));
             drawPoints = new VertexPositionColor[5];
@@ -40,13 +35,30 @@ namespace Frostbyte
             drawPoints[3].Color = Color.Red;
             drawPoints[4].Position = new Vector3(Corner1.X, Corner1.Y, 0f);
             drawPoints[4].Color = Color.Red;
+
+            //determine axes
+            Matrix original = new Matrix(
+                drawPoints[0].Position.X, drawPoints[1].Position.X, drawPoints[2].Position.X,0,
+                drawPoints[0].Position.Y, drawPoints[1].Position.Y, drawPoints[2].Position.Y,0,
+                1,1,1,0,
+                0,0,0,0
+                );
+            Matrix final = new Matrix(
+                0,1,1,0,
+                0,0,1,0,
+                1,1,1,0,
+                0,0,0,0
+                );
+            Matrix oInvert;
+            Matrix.Invert(ref original, out oInvert);
+            AxisTransform = final * oInvert;
         }
 
 
         /// <summary>
         /// Matrix that transforms points to this matrix's plane
         /// </summary>
-        internal Matrix ?AxisTransform = null;
+        internal Matrix? AxisTransform = null;
 
 
         /// <summary>
