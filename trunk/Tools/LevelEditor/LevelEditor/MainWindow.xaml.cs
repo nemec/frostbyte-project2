@@ -130,6 +130,14 @@ namespace LevelEditor
                     Active=true
                 },
 
+                new Tile(){
+                    Name="Rock",
+                    Traversable=false,
+                    Type=TileTypes.Stone,
+                    Orientation=Orientations.Left,
+                    Active=true
+                },
+
                 //new Tile(){
                 //    Name="Corner_TR",
                 //    Traversable=false,
@@ -709,6 +717,9 @@ namespace LevelEditor
                         //do some magic to show pic for the walls etc
                         file = "room.png";
                         break;
+                    case TileTypes.Stone:
+                        file = "rock.png";
+                            break;
                     case TileTypes.Empty:
                         file = "";
                         break;
