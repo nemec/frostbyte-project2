@@ -22,6 +22,7 @@ namespace LevelEditor
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region MapStuff
         public ObservableCollection<TileGroup> TileGroups { get; set; }
 
         public LevelPart SelectedObject { get; set; }
@@ -51,13 +52,35 @@ namespace LevelEditor
         public Tile SelectedTile { get; set; }
 
         public static Frostbyte.TileList TileMap = new TileList();
+        #endregion MapStuff
 
+        #region ControlTriggers
+        /// <summary>
+        /// Wheter we can clear tiles or not
+        /// </summary>
+        public bool ClearTile { get; set; }
+        /// <summary>
+        /// We can cancel our current selectin
+        /// </summary>
+        public bool CancelSelection { get; set; }
+        /// <summary>
+        /// This is the first left click
+        /// </summary>
+        public bool FirstClick { get; set; }
+        /// <summary>
+        /// The mouse is moving, keep drawing
+        /// </summary>
+        public bool Moving { get; set; }
+        #endregion ControlTriggers
+
+        #region Constructor
         public MainWindow()
         {
             this.InitializeComponent();
 
             This.mainWindow = this;
 
+            #region Tiles
             ObservableCollection<Tile> tiles = new ObservableCollection<Tile>(){
                 new Tile(){
                     Name="Floor",
@@ -171,6 +194,9 @@ namespace LevelEditor
                 //    Active=true
                 //}
             };
+            #endregion Tiles
+
+            #region Rooms
             ObservableCollection<Tile> rooms = new ObservableCollection<Tile>()
             {
                 new Tile()
@@ -214,6 +240,8 @@ namespace LevelEditor
                     Active=true
                 }
             };
+            #endregion Rooms
+
             var stuff = new ObservableCollection<TileGroup>(){
                 
                 new TileGroup(rooms){
@@ -224,93 +252,43 @@ namespace LevelEditor
                 },
             };
 
-            //clears selected items
-            //foreach (var tg in stuff)
-            //{
-            //    foreach (TreeViewItem e in tg.Tiles.Items)
-            //    {
-            //        e.IsSelected = false;
-            //    }
-            //}
 
             Objects.ItemsSource = stuff;
+            Grid_Size = new Vector(100, 100);
+            GridSize.DataContext = this;
 
+            #region Event Handlers
             Level.MouseDown += new MouseButtonEventHandler(Level_MouseDown);
             Level.MouseUp += new MouseButtonEventHandler(Level_MouseUp);
             Level.MouseMove += new MouseEventHandler(Level_MouseMove);
 
-            Grid_Size = new Vector(100, 100);
-            GridSize.DataContext = this;
 
+            //SaveMap.MouseUp += new MouseButtonEventHandler(SaveMap_MouseUp);
+            //LoadLevel.MouseUp += new MouseButtonEventHandler(LoadLevel_MouseUp);
 
-            SaveMap.MouseUp += new MouseButtonEventHandler(SaveMap_MouseUp);
-            LoadLevel.MouseUp += new MouseButtonEventHandler(LoadLevel_MouseUp);
-
+            #endregion Event Handlers
         }
 
-
-        void LoadLevel_MouseUp(object sender, MouseButtonEventArgs e)
+        static MainWindow()
         {
-            ClearSelection();
-            OpenFileDialog d = new OpenFileDialog();
-            d.FileName = "Level#";
-            d.DefaultExt = ".xml";
-            d.Filter = "Level files (.xml)|*.xml";
-            if (d.ShowDialog() == true)
-            {
-                Level.Children.Clear();
-                LoadGrid(new TileList(XDocument.Load(d.FileName)));
-            }
+            CommandUndo = new RoutedUICommand("Undo",
+                "Undo", typeof(MainWindow));
+            CommandUndo.InputGestures.Add(
+                new KeyGesture(Key.Z, ModifierKeys.Control));
+
+            CommandRedo = new RoutedUICommand("Redo",
+                "Redo", typeof(MainWindow));
+            CommandRedo.InputGestures.Add(
+                new KeyGesture(Key.R, ModifierKeys.Control));
+
+            CommandSaveAndExit = new RoutedUICommand("SaveAndExit",
+                "Exit", typeof(MainWindow));
+            CommandSaveAndExit.InputGestures.Add(
+                new KeyGesture(Key.Q, ModifierKeys.Control));
         }
-
-        void SaveMap_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //obsolete
-        }
-        void SaveMap_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ClearSelection();
-            SaveFileDialog d = new SaveFileDialog();
-            d.FileName = "Level#";
-            d.DefaultExt = ".xml";
-            d.Filter = "Level files (.xml)|*.xml";
-            if (d.ShowDialog() == true)
-            {
-                //open save box and then create all the crap that needs to get saved
-                List<LevelObject> objs = TileMap.GenerateSaveObjects();
-
-                XDocument doc = new XDocument(new XElement("Level"));
-                foreach (LevelObject l in objs)
-                {
-                    doc.Root.Add(l.ToXML());
-                }
-
-                TileMap.Save(d.FileName, doc);
-            }
-
-        }
-
-        void LoadGrid(TileList tm)
-        {
-            TileMap = tm;
-            var l = tm.Data;
-            var tiles = l.Item2;
-            foreach (var list in tiles)
-            {
-                foreach (var tile in list)
-                {
-                    if (tile.Type != TileTypes.DEFAULT)
-                    {
-                        Tile t = new Tile(tile);
-                        Grid.SetColumn(t, tile.GridCell.X);
-                        Grid.SetRow(t, tile.GridCell.Y);
-
-                        Level.Children.Add(t);
-                    }
-                }
-            }
-        }
-
+        #endregion Constructor
+        
+        #region Helper fns
         private void CreateGrid()
         {
             Level.RowDefinitions.Clear();
@@ -325,16 +303,6 @@ namespace LevelEditor
             }
             Level.Width = Level.ColumnDefinitions.Count * Cellsize;
             Level.Height = Level.RowDefinitions.Count * Cellsize;
-        }
-
-        void Level_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (CancelSelection && e.MouseDevice.RightButton == MouseButtonState.Released)
-            {
-                ClearSelection();
-            }
-
-            Moving = false;
         }
 
         private void ClearSelection()
@@ -355,146 +323,9 @@ namespace LevelEditor
             CancelSelection = false;
         }
 
-        void Level_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
-            {
-                if (SelectedTile != null)
-                {
-                    Moving = true;
-                    if (!SelectedTile.IsSpecialObject)
-                    {
-                        EndCell = e.GetPosition(Level);
-                        AddTile(GetCell(EndCell));
-                    }
-                    else
-                    {
-                        //do something for special objects when dragging
-                    }
-                }
-            }
-            if (ClearTile && e.MouseDevice.RightButton == MouseButtonState.Pressed)
-            {
-                RemoveTile(GetCell(e.GetPosition(Level)));
-            }
-        }
-
         private Vector GetCell(Point point)
         {
             return new Vector((int)(point.X / Cellsize), (int)(point.Y / Cellsize));
-        }
-
-        void Level_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //do some handling here for end of room that skips the rest
-            if (SelectedTile != null && SelectedTile.IsSpecialObject)
-            {
-                if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
-                {
-                    if (SelectedObject == null)
-                    {
-                        StartCell = e.GetPosition(Level);
-                        GridCell = GetCell(StartCell);
-                        Index2D i = new Index2D(GridCell.X, GridCell.Y);
-                        // fill the pieces
-                        if (SelectedTile.Name == "Room")
-                        {
-                            SelectedObject = new Room(i)
-                            {
-                                FloorType = SelectedTile.FloorType,
-                            };
-                        }
-                        else if (SelectedTile.Name == "Walls")
-                        {
-                            SelectedObject = new BorderWalls(i)
-                            {
-                                FloorType = SelectedTile.FloorType,
-                            };
-                        }
-                        else if (SelectedTile.Name == "Wall")
-                        {
-                            SelectedObject = new Wall(i)
-                            {
-                                FloorType = SelectedTile.FloorType,
-                            };
-                        }
-                        else if (SelectedTile.Name == "Floor")
-                        {
-                            SelectedObject = new Floor(i)
-                            {
-                                Type = TileTypes.Floor,
-                                FloorType = SelectedTile.FloorType,
-                            };
-                        }
-                    }
-                    else//here we complete things for the object
-                    {
-                        EndCell = e.GetPosition(Level);
-                        GridCell = GetCell(EndCell);
-
-                        SelectedObject.EndCell = new Index2D(GridCell.X, GridCell.Y);
-
-                        //determine orientation
-                        Point change = EndCell - (Vector)StartCell;
-                        Index2D diff = new Index2D(change.X, change.Y);
-                        if (SelectedObject.Type == TileTypes.Wall)
-                        {
-                            if (diff.MagX > diff.MagY)
-                            {
-                                SelectedObject.Type = diff.Y >= 0 ? TileTypes.Wall : TileTypes.Bottom;
-                            }
-                            else
-                            {
-                                SelectedObject.Orientation = diff.X >= 0 ? Orientations.Left : Orientations.Right;
-                            }
-                        }
-                        //determine what it is
-                        List<Tile> tiles = ToListTile(TileMap.Add(SelectedObject));
-
-                        foreach (Tile t in tiles)
-                        {
-                            Grid.SetColumn(t, t.GridCell.X);
-                            Grid.SetRow(t, t.GridCell.Y);
-                            This.mainWindow.Level.Children.Add(t);
-                        }
-
-                        SelectedObject = null;
-                    }
-                }
-                else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
-                {
-                    if (ClearTile)
-                    {
-                        GridCell = GetCell(e.GetPosition(Level));
-                        RemoveTile(GridCell);
-                        FirstClick = true;
-                    }
-                    CancelSelection = true;
-                }
-            }
-            else
-            {
-                if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
-                {
-                    if (SelectedTile != null)
-                    {
-                        StartCell = e.GetPosition(Level);
-                        GridCell = GetCell(StartCell);
-                        FirstClick = true;
-                        AddTile(GridCell);
-                    }
-                }
-                else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
-                {
-                    if (ClearTile)
-                    {
-                        GridCell = GetCell(e.GetPosition(Level));
-                        RemoveTile(GridCell);
-                        FirstClick = true;
-                    }
-                    CancelSelection = true;
-                }
-            }
         }
 
         private List<Tile> ToListTile(List<Frostbyte.Tile> list)
@@ -634,22 +465,321 @@ namespace LevelEditor
             }
         }
 
-        /// <summary>
-        /// Wheter we can clear tiles or not
-        /// </summary>
-        public bool ClearTile { get; set; }
-        /// <summary>
-        /// We can cancel our current selectin
-        /// </summary>
-        public bool CancelSelection { get; set; }
-        /// <summary>
-        /// This is the first left click
-        /// </summary>
-        public bool FirstClick { get; set; }
-        /// <summary>
-        /// The mouse is moving, keep drawing
-        /// </summary>
-        public bool Moving { get; set; }
+        void LoadGrid(TileList tm)
+        {
+            TileMap = tm;
+            var l = tm.Data;
+            var tiles = l.Item2;
+            foreach (var list in tiles)
+            {
+                foreach (var tile in list)
+                {
+                    if (tile.Type != TileTypes.DEFAULT)
+                    {
+                        Tile t = new Tile(tile);
+                        Grid.SetColumn(t, tile.GridCell.X);
+                        Grid.SetRow(t, tile.GridCell.Y);
+
+                        Level.Children.Add(t);
+                    }
+                }
+            }
+        }
+
+        private void AddTiles(List<LevelObject> list)
+        {
+            List<Tile> ts = new List<Tile>();
+            foreach (Frostbyte.Tile t in list)
+            {
+                ts.Add(new Tile(t));
+            }
+            AddToGrid(ts);
+        }
+
+        private void AddToGrid(List<Tile> tiles)
+        {
+            foreach (Tile t in tiles)
+            {
+                Grid.SetColumn(t, t.GridCell.X);
+                Grid.SetRow(t, t.GridCell.Y);
+                This.mainWindow.Level.Children.Add(t);
+            }
+        }
+        
+        private void SwapTiles(List<LevelObject> list)
+        {
+            List<Tile> ts = new List<Tile>();
+            foreach (Frostbyte.Tile t in list)
+            {
+                ts.Add(new Tile(t));
+                List<Tile> toremove = new List<Tile>();
+                //remove old one
+                foreach (Tile tile in This.mainWindow.Level.Children)
+                {
+                    if (Grid.GetColumn(tile) == t.GridCell.X && Grid.GetRow(tile) == t.GridCell.Y)
+                    {
+                        toremove.Add(tile);
+                    }
+                }
+                foreach (var tile in toremove)
+                {
+                    This.mainWindow.Level.Children.Remove(tile);
+                }
+                
+            }
+            AddToGrid(ts);
+        }
+        #endregion Helper fns
+
+        #region MouseHandlers
+        void Level_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (CancelSelection && e.MouseDevice.RightButton == MouseButtonState.Released)
+            {
+                ClearSelection();
+            }
+
+            Moving = false;
+        }
+
+        void Level_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
+            {
+                if (SelectedTile != null)
+                {
+                    Moving = true;
+                    if (!SelectedTile.IsSpecialObject)
+                    {
+                        EndCell = e.GetPosition(Level);
+                        AddTile(GetCell(EndCell));
+                    }
+                    else
+                    {
+                        //do something for special objects when dragging
+                    }
+                }
+            }
+            if (ClearTile && e.MouseDevice.RightButton == MouseButtonState.Pressed)
+            {
+                RemoveTile(GetCell(e.GetPosition(Level)));
+            }
+        }
+
+        void Level_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //do some handling here for end of room that skips the rest
+            if (SelectedTile != null && SelectedTile.IsSpecialObject)
+            {
+                if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
+                {
+                    if (SelectedObject == null)
+                    {
+                        StartCell = e.GetPosition(Level);
+                        GridCell = GetCell(StartCell);
+                        Index2D i = new Index2D(GridCell.X, GridCell.Y);
+                        // fill the pieces
+                        if (SelectedTile.Name == "Room")
+                        {
+                            SelectedObject = new Room(i)
+                            {
+                                FloorType = SelectedTile.FloorType,
+                            };
+                        }
+                        else if (SelectedTile.Name == "Walls")
+                        {
+                            SelectedObject = new BorderWalls(i)
+                            {
+                                FloorType = SelectedTile.FloorType,
+                            };
+                        }
+                        else if (SelectedTile.Name == "Wall")
+                        {
+                            SelectedObject = new Wall(i)
+                            {
+                                FloorType = SelectedTile.FloorType,
+                            };
+                        }
+                        else if (SelectedTile.Name == "Floor")
+                        {
+                            SelectedObject = new Floor(i)
+                            {
+                                Type = TileTypes.Floor,
+                                FloorType = SelectedTile.FloorType,
+                            };
+                        }
+                    }
+                    else//here we complete things for the object
+                    {
+                        EndCell = e.GetPosition(Level);
+                        GridCell = GetCell(EndCell);
+
+                        SelectedObject.EndCell = new Index2D(GridCell.X, GridCell.Y);
+
+                        //determine orientation
+                        Point change = EndCell - (Vector)StartCell;
+                        Index2D diff = new Index2D(change.X, change.Y);
+                        if (SelectedObject.Type == TileTypes.Wall)
+                        {
+                            if (diff.MagX > diff.MagY)
+                            {
+                                SelectedObject.Type = diff.Y >= 0 ? TileTypes.Wall : TileTypes.Bottom;
+                            }
+                            else
+                            {
+                                SelectedObject.Orientation = diff.X >= 0 ? Orientations.Left : Orientations.Right;
+                            }
+                        }
+                        //determine what it is
+                        List<Tile> tiles = ToListTile(TileMap.Add(SelectedObject));
+
+                        AddToGrid(tiles);
+
+                        SelectedObject = null;
+                    }
+                }
+                else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
+                {
+                    if (ClearTile)
+                    {
+                        GridCell = GetCell(e.GetPosition(Level));
+                        RemoveTile(GridCell);
+                        FirstClick = true;
+                    }
+                    CancelSelection = true;
+                }
+            }
+            else
+            {
+                if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
+                {
+                    if (SelectedTile != null)
+                    {
+                        StartCell = e.GetPosition(Level);
+                        GridCell = GetCell(StartCell);
+                        FirstClick = true;
+                        AddTile(GridCell);
+                    }
+                }
+                else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
+                {
+                    if (ClearTile)
+                    {
+                        GridCell = GetCell(e.GetPosition(Level));
+                        RemoveTile(GridCell);
+                        FirstClick = true;
+                    }
+                    CancelSelection = true;
+                }
+            }
+        }
+        #endregion MouseHandlers
+
+        #region KeyControls
+
+        #endregion KeyControls
+
+        #region MenuFunctions
+        private void Yes(Object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void CanSave(Object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = TileMap.HasItems;
+        }
+
+        public void LoadFromFile(Object sender, ExecutedRoutedEventArgs e)
+        {
+            ClearSelection();
+            OpenFileDialog d = new OpenFileDialog();
+            d.FileName = "Level#";
+            d.DefaultExt = ".xml";
+            d.Filter = "Level files (.xml)|*.xml";
+            if (d.ShowDialog() == true)
+            {
+                Level.Children.Clear();
+                LoadGrid(new TileList(XDocument.Load(d.FileName)));
+            }
+        }
+
+        public void SaveFile(Object sender, ExecutedRoutedEventArgs e)
+        {
+            ClearSelection();
+            SaveFileDialog d = new SaveFileDialog();
+            d.FileName = "Level#";
+            d.DefaultExt = ".xml";
+            d.Filter = "Level files (.xml)|*.xml";
+            if (d.ShowDialog() == true)
+            {
+                //open save box and then create all the crap that needs to get saved
+                List<LevelObject> objs = TileMap.GenerateSaveObjects();
+
+                XDocument doc = new XDocument(new XElement("Level"));
+                foreach (LevelObject l in objs)
+                {
+                    doc.Root.Add(l.ToXML());
+                }
+
+                TileMap.Save(d.FileName, doc);
+            }
+        }
+
+        public void SaveFileAs(Object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.FileName = "Level#";
+            d.DefaultExt = ".xml";
+            d.Filter = "Level files (.xml)|*.xml";
+            if (d.ShowDialog() == true)
+            {
+                //open save box and then create all the crap that needs to get saved
+                List<LevelObject> objs = TileMap.GenerateSaveObjects();
+
+                XDocument doc = new XDocument(new XElement("Level"));
+                foreach (LevelObject l in objs)
+                {
+                    doc.Root.Add(l.ToXML());
+                }
+
+                TileMap.Save(d.FileName, doc);
+            }
+        }
+
+        public void SaveAndExit(Object sender, ExecutedRoutedEventArgs e)
+        {
+            SaveFileAs(sender, e);
+            Application.Current.Shutdown();
+        }
+
+        private void UndoAction(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+            SwapTiles(TileMap.Undo());
+        }
+        
+        private void RedoAction(object sender, ExecutedRoutedEventArgs e)
+        {
+            SwapTiles(TileMap.Redo());
+        }
+        #endregion MenuFunctions
+
+        #region RoutedCommands
+        public readonly static RoutedUICommand CommandSaveAndExit;
+        public readonly static RoutedUICommand CommandUndo;
+        public readonly static RoutedUICommand CommandRedo;
+        #endregion RoutedCommands
+
+        private void CanUndo(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = TileMap.CanUndo;
+        }
+
+        private void CanRedo(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = TileMap.CanRedo;
+        }
     }
 
 
