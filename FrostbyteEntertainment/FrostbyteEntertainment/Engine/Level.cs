@@ -230,6 +230,20 @@ namespace Frostbyte
                     delegate(WorldObject s) { return s as Sprite; }));
         }
 
+        /// <summary>
+        /// Retrieves all sprites with the specified type.
+        /// @todo Get only sprites within a certain distance of a point, for efficiency's sake.
+        ///     Possibly could make use of Bruce's collision code.
+        /// </summary>
+        /// <param name="type">The type name to select by.</param>
+        /// <returns></returns>
+        internal List<Sprite> GetSpritesByType(Type type)
+        {
+            return (mSprites.FindAll(
+                delegate(WorldObject s) { return type.IsAssignableFrom(s.GetType()); }).ConvertAll<Sprite>(
+                    delegate(WorldObject s) { return s as Sprite; }));
+        }
+
         internal void RemoveSprite(Sprite sp)
         {
             ToRemove.Add(sp);

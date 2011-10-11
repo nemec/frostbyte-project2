@@ -5,80 +5,63 @@ using System.Text;
 using System.Xml.Linq;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 /// \file Tile.cs This is Shared with the Level Editor
 namespace Frostbyte
 {
+    // REST OF CLASS LOCATED IN Shared/Tile.cs
+
     public partial class Tile : LevelObject
     {
-        public static readonly int TileSize = 64;
-
-        public Tile()
+        internal void Draw()
         {
-            Traversable = true;
-            FloorType = FloorTypes.DEFAULT;
-            Type = TileTypes.DEFAULT;
-            InstanceName = null;
-            Theme = Element.DEFAULT;
-        }
-
-        public override XElement ToXML()
-        {
-            XElement e = new XElement("Tile");
-            e.SetAttributeValue("Type", Type);
-            if(InstanceName!=null)
-            e.SetAttributeValue("InstanceName", InstanceName);
-            e.SetAttributeValue("Collision", Traversable);
-            e.SetAttributeValue("Theme", Theme);
-            e.SetAttributeValue("Orientation", Orientation);
-            e.SetAttributeValue("GridCell", GridCell);
-            return e;
-        }
-
-        public static Tile Parse(XElement elem)
-        {
-#if DEBUG1
-            try
+            /*string file = "error.png";
+            switch (Type)
             {
-#endif
-                Tile t = new Tile();
-                foreach (XAttribute attr in elem.Attributes())
-                {
-                    if (attr.Name == "Type")
-                    {
-                        t.Type = (TileTypes)Enum.Parse(typeof(TileTypes), attr.Value);
-                    }
-                    else if (attr.Name == "InstanceName")
-                    {
-                        t.InstanceName = attr.Value;
-                    }
-                    else if (attr.Name == "Collision")
-                    {
-                        t.Traversable = bool.Parse(attr.Value);
-                    }
-                    else if (attr.Name == "Theme")
-                    {
-                        t.Theme = (Element)Enum.Parse(typeof(Element), attr.Value);
-                    }
-                    else if (attr.Name == "Orientation")
-                    {
-                        t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), attr.Value);
-                    }
-                    else if (attr.Name == "GridCell")
-                    {
-                        t.GridCell = Index2D.Parse(attr.Value);
-                    }
-                }
-                return t;
-#if DEBUG1
-            }
-            catch (Exception e)
+                case TileTypes.Wall:
+                    file = "wall.png";
+                    break;
+                case TileTypes.Bottom:
+                    file = "top-grass.png";
+                    break;
+                case TileTypes.Corner:
+                    file = "corner.png";
+                    break;
+                case TileTypes.ConvexCorner:
+                    file = "convex-coner.png";
+                    break;
+                case TileTypes.Floor:
+                    file = "floor.png";
+                    break;
+                case TileTypes.Lava:
+                    file = "lava.png";
+                    break;
+                case TileTypes.Water:
+                    file = "water.png";
+                    break;
+                case TileTypes.SideWall:
+                    file = "side.png";
+                    break;
+                case TileTypes.Room:
+                    //do some magic to show pic for the walls etc
+                    file = "room.png";
+                    break;
+                case TileTypes.Empty:
+                    file = "";
+                    break;
+                default:
+                    file = "error.png";
+                    break;
+            }*/
+            //BitmapImage image = new BitmapImage(new Uri(file, UriKind.RelativeOrAbsolute));
+            Texture2D image = This.Game.Content.Load<Texture2D>("corner");
+            if (GridCell != null)
             {
-                Console.WriteLine(e.GetBaseException().Message);
-                return null;
+                This.Game.spriteBatch.Draw(image, GridCell.Pos, null,
+                    Microsoft.Xna.Framework.Color.White, 0, new Vector2(), 1, SpriteEffects.None, 0);
             }
-#endif
-
         }
     }
 }

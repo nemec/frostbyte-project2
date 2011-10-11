@@ -14,11 +14,12 @@ namespace Frostbyte
 
         internal Camera()
         {
-            _zoom = 2.0f;
+            _zoom = 1.0f;
         }
 
         /// <summary>
-        /// Not using rotation at the moment...
+        /// To use rotation, make the Property internal and devise a new way
+        /// for determining which grid cells to draw on the screen.
         /// </summary>
         private float Rotation
         {
@@ -71,9 +72,10 @@ namespace Frostbyte
             Vector3 rotationMod = new Vector3(RotationPoint, 0);
 
             return Matrix.CreateTranslation(new Vector3(-Pos.X, -Pos.Y, 0)) *
-                Matrix.CreateTranslation(-rotationMod) *
+                /*Matrix.CreateTranslation(-rotationMod) *
                 Matrix.CreateRotationZ(Rotation) *
                 Matrix.CreateTranslation(rotationMod) *
+                */
                 Matrix.CreateScale(new Vector3(Zoom, Zoom, 1));
                 
         }

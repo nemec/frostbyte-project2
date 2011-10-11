@@ -200,11 +200,53 @@ namespace Frostbyte
     /// </summary>
     class DummyAnimation : Animation
     {
+        /// <summary>
+        /// Creates an "animation" with no image.
+        /// Needs to load no content.
+        /// </summary>
+        internal DummyAnimation()
+            : this("__anim__")
+        {
+        }
+
+        /// <summary>
+        /// Creates an "animation" with no image.
+        /// Needs to load no content.
+        /// </summary>
+        /// <param name="name">Name of the animation</param>
         internal DummyAnimation(string name)
+            : this(name, 0, 0)
+        {
+        }
+
+        /// <summary>
+        /// Creates an "animation" with no image.
+        /// Needs to load no content.
+        /// </summary>
+        /// <param name="name">Name of the animation</param>
+        /// <param name="size">A Vector2 containing the width and height
+        /// of the resulting animation</param>
+        internal DummyAnimation(string name, Vector2 size)
+            : this(name, (int)size.X, (int)size.Y)
+        {
+        }
+
+        /// <summary>
+        /// Creates an "animation" with no image.
+        /// Needs to load no content.
+        /// </summary>
+        /// <param name="name">Name of the animation</param>
+        /// <param name="width">Width of the "animation"</param>
+        /// <param name="height">Height of the "animation"</param>
+        internal DummyAnimation(string name, int width, int height)
         {
             Name = name;
             Built = true;
-            Frames.Add(new SpriteFrame());
+            SpriteFrame frame = new SpriteFrame();
+            frame.Width = width;
+            frame.Height = height;
+
+            Frames.Add(frame);
         }
     }
 }
