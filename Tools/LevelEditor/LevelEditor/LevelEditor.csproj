@@ -56,16 +56,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Enums.cs">
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Enums.cs">
       <Link>Enums.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Tile.cs">
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Tile.cs">
       <Link>Tile.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\TileList.cs">
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\TileList.cs">
       <Link>TileList.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\TileHelper.cs">
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\TileHelper.cs">
       <Link>TileHelper.cs</Link>
     </Compile>
     <Compile Include="storage.cs" />
@@ -106,6 +106,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bot-convex-coner.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="bot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="botcorner.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="convex-coner.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

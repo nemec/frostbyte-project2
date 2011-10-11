@@ -114,10 +114,18 @@ namespace LevelEditor
                     Active=true
                 },
 
+                 new Tile(){
+                    Name="Bottom_Convex_Corner",
+                    Traversable=false,
+                    Type=TileTypes.BottomConvexCorner,
+                    Orientation=Orientations.Down,
+                    Active=true
+                },
+
                 new Tile(){
                     Name="TopGrass",
                     Traversable=false,
-                    Type=TileTypes.DEFAULT,
+                    Type=TileTypes.TopArea,
                     Orientation=Orientations.Left,
                     Active=true
                 },
@@ -693,13 +701,19 @@ namespace LevelEditor
                         file = "wall.png";
                         break;
                     case TileTypes.Bottom:
-                        file = "top-grass.png";
+                        file = "bot.png";
                         break;
                     case TileTypes.Corner:
                         file = "corner.png";
                         break;
+                    case TileTypes.BottomCorner:
+                        file = "botcorner.png";
+                        break;
                     case TileTypes.ConvexCorner:
                         file = "convex-coner.png";
+                        break;
+                    case TileTypes.BottomConvexCorner:
+                        file = "bot-convex-coner.png";
                         break;
                     case TileTypes.Floor:
                         file = "floor.png";
@@ -719,9 +733,12 @@ namespace LevelEditor
                         break;
                     case TileTypes.Stone:
                         file = "rock.png";
-                            break;
+                        break;
                     case TileTypes.Empty:
                         file = "";
+                        break;
+                    case TileTypes.TopArea:
+                        file = "top-grass.png";
                         break;
                     default:
                         file = "error.png";

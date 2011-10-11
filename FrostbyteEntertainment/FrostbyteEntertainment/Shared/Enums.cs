@@ -96,6 +96,18 @@ namespace Frostbyte
         /// A cell we want specifically empty
         /// </summary>
         Empty,
+        /// <summary>
+        /// Bottom convex corner for map
+        /// </summary>
+        BottomConvexCorner,
+        /// <summary>
+        /// Area where user will never walk
+        /// </summary>
+        TopArea,
+        /// <summary>
+        /// Bottom corner for map
+        /// </summary>
+        BottomCorner,
     }
 
     /// <summary>
