@@ -39,6 +39,7 @@ namespace Frostbyte
             Vector2 p1 = new Vector2(drawPoints[0].Position.X, drawPoints[0].Position.Y);
             Vector2 p2 = new Vector2(drawPoints[1].Position.X, drawPoints[1].Position.Y);
             Vector2 p3 = new Vector2(drawPoints[3].Position.X, drawPoints[3].Position.Y);
+            Corner3 = p3;
 
             xAxis = p2 - p1;
             xAxis.Normalize();
@@ -68,6 +69,11 @@ namespace Frostbyte
         /// Offset of Corner2 from sprite anchor.
         /// </summary>
         internal Vector2 Corner2 { get; set; }
+
+        /// <summary>
+        /// Offset of Corner2 from sprite anchor.
+        /// </summary>
+        internal Vector2 Corner3 { get; set; }
 
         /// <summary>
         /// Thickness of box
@@ -162,23 +168,23 @@ namespace Frostbyte
                             slope0to1 = (drawPoint0.Y - drawPoint1.Y) / (drawPoint0.X - drawPoint1.X);
                             //slope1to2 = (drawPoint1.Y - drawPoint2.Y) / (drawPoint1.X - drawPoint2.X);
 
-                            //beginning of the cell
+                            //left
                             float p1 = slope0to1 * (i * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X)));
-                            //end of the cell
+                            //right
                             float p2 = slope0to1 * ((i + 1) * Collision.CellWidth) + (drawPoint0.Y - (slope0to1 * (drawPoint0.X)));
-                            //what's this?
+                            //top
                             float p3 = (j * Collision.CellHeight - drawPoint0.Y) / slope0to1 + drawPoint0.X;
-                            //and this?
+                            //bottom
                             float p4 = ((j + 1) * Collision.CellHeight - drawPoint0.Y) / slope0to1 + drawPoint0.X;
                             if (
-                                    (p1 < ((j + 1) * Collision.CellHeight) && p1 > (j * Collision.CellHeight)) ||
-                                    (p2 < ((j + 1) * Collision.CellHeight) && p2 > (j * Collision.CellHeight)) ||
+                                    (p1 <= ((j + 1) * Collision.CellHeight) && p1 >= (j * Collision.CellHeight)) ||
+                                    (p2 <= ((j + 1) * Collision.CellHeight) && p2 >= (j * Collision.CellHeight)) ||
                                     (
-                                        p3 < ((i + 1) * Collision.CellWidth) && p3 > (i * Collision.CellWidth)
+                                        p3 <= ((i + 1) * Collision.CellWidth) && p3 >= (i * Collision.CellWidth)
                                     )
                                     ||
                                     (
-                                        p4 < ((i + 1) * Collision.CellWidth) && p4 > (i * Collision.CellWidth)
+                                        p4 <= ((i + 1) * Collision.CellWidth) && p4 >= (i * Collision.CellWidth)
                                     )
                                 )
                             {

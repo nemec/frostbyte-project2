@@ -146,53 +146,6 @@ namespace Frostbyte
                     }
                 }
             }
-            #region new
-            /*
-            List<Thread> threads = new List<Thread>();
-            List<List<Collision>> threadResults = new List<List<Collision>>();
-            Object thislock = new Object();
-            List<Circle>[] values = bucket.Values.ToArray();
-            for (int i = 0; i < threadMax; i++)
-            {
-                threadResults.Add(new List<Collision>());
-                int index = i;
-                List<Circle>[] valuesPortion = values.Skip(i * values.Length / threadMax).Take(values.Length / threadMax).ToArray();
-                Thread t = new Thread(new ThreadStart(delegate()
-                    {
-                        for(int j=0; j<valuesPortion.Length; j++)
-                        {
-                            List<Circle> list = valuesPortion[j];
-
-                            if (list.Count <= 1)
-                                continue;
-
-                            while (list.Count > 1)
-                            {
-                                Circle front = list.First();
-                                list.RemoveAt(0);
-                                for (int k = 0; k < list.Count; k++)
-                                {
-                                    if (distance(front, list[k]) <= front.radius + list[k].radius)
-                                    {
-                                        Collision collision = new Collision();
-                                        collision.objectOne = front;
-                                        collision.objectTwo = list[k];
-                                        threadResults[index].Add(collision);
-                                    }
-                                }
-                            }
-                        }
-                    }));
-                threads.Add(t);
-                t.Start();
-            }
-            for (int i = 0; i < threadMax; i++)
-                threads[i].Join();
-
-            for (int i = 0; i < threadMax; i++)
-                collisions.AddRange(threadResults[i]);
-            */
-            #endregion
         }
 
         internal static void Draw(Matrix transformation)
@@ -216,11 +169,11 @@ namespace Frostbyte
                 }
 
                 var BG = This.Game.CurrentLevel.Background;
-                if(BG!=null)
-                foreach (var col in BG.GetCollision())
-                {
-                    col.Draw(BG, transformation);
-                }
+                if (BG != null)
+                    foreach (var col in BG.GetCollision())
+                    {
+                        col.Draw(BG, transformation);
+                    }
             }
         }
 
@@ -268,7 +221,7 @@ namespace Frostbyte
         {
             float ds = Collision.DistanceSquared(w1.Pos + c1.Center, w2.Pos + o.Center);
             float r = c1.Radius + o.Radius;
-            return (ds <= r*r);
+            return (ds <= r * r);
         }
 
         /// <summary>
@@ -282,30 +235,71 @@ namespace Frostbyte
         internal static bool DetectCollision(WorldObject w1, Collision_OBB c1, WorldObject w2, Collision_OBB o)
         {
             //so, we've got to project the faces onto eachother and look for intersections
-            var a = c1.xAxis * c1.Corner1;
-            var b = c1.xAxis * c1.Corner2;
-            var c = c1.xAxis * o.Corner1;
-            var d = c1.xAxis * o.Corner2;
-
-
-            Vector2 TL1 = c1.Corner1+ w1.Pos;
-            Vector2 BR1 = c1.Corner2 + w1.Pos;
-            Vector2 TL2 = o.Corner1+ w2.Pos;
-            Vector2 BR2 = o.Corner2 + w2.Pos;
-
-            ///check rect vs rect really just axis aligned box check (simpler)
-            bool outsideX = BR1.X < TL2.X || TL1.X > BR2.X;
-            bool outsideY = BR1.Y < TL2.Y || TL1.Y > BR2.Y;
-            if (!(outsideY || outsideX))
-            {
-                //do an obb check here
-                return true;
-            }
-            else
+            //these values are values along the projected axis.
+            var temp = c1.xAxis;
+            var dot = 1;//Vector2.Dot(temp, temp);
+            var a = (Vector2.Dot((c1.Corner1 + w1.Pos), temp) / dot);
+            var b = (Vector2.Dot((c1.Corner2 + w1.Pos), temp) / dot);
+            var c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
+            var d = (Vector2.Dot((o.Corner2 + w2.Pos), temp) / dot);
+            if (
+                !(//basically see if it's not inside then return false otherwise keep checking
+                    a <= b ?
+                //is c or d between a b?
+                    (a <= c && c <= b) || (a <= d && d <= b) :
+                    (b <= c && c <= a) || (b <= d && d <= a)
+                    )
+                )
                 return false;
+            temp = c1.yAxis;
+            dot = 1;//Vector2.Dot(temp, temp);
+            a = (Vector2.Dot((c1.Corner1 + w1.Pos), temp) / dot);
+            b = (Vector2.Dot((c1.Corner3 + w1.Pos), temp) / dot);
+            c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
+            d = (Vector2.Dot((o.Corner3 + w2.Pos), temp) / dot);
+            if (
+                !(
+                   a <= b ?
+                //is c or d between a b?
+                   (a <= c && c <= b) || (a <= d && d <= b) :
+                   (b <= c && c <= a) || (b <= d && d <= a)
+                   )
+                )
+                return false;
+            temp = o.xAxis;
+            dot = 1;//Vector2.Dot(temp, temp);
+            a = (Vector2.Dot((c1.Corner1 + w1.Pos), temp) / dot);
+            b = (Vector2.Dot((c1.Corner2 + w1.Pos), temp) / dot);
+            c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
+            d = (Vector2.Dot((o.Corner2 + w2.Pos), temp) / dot);
+            if (
+                !(
+                   a <= b ?
+                //is c or d between a b?
+                   (a <= c && c <= b) || (a <= d && d <= b) :
+                   (b <= c && c <= a) || (b <= d && d <= a)
+                   )
+                )
+                return false;
+            temp = o.yAxis;
+            dot = 1;//Vector2.Dot(temp, temp);
+            a = (Vector2.Dot((c1.Corner1 + w1.Pos), temp) / dot);
+            b = (Vector2.Dot((c1.Corner3 + w1.Pos), temp) / dot);
+            c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
+            d = (Vector2.Dot((o.Corner3 + w2.Pos), temp) / dot);
+            if (
+                !(
+                   a <= b ?
+                //is c or d between a b?
+                   (a <= c && c <= b) || (a <= d && d <= b) :
+                   (b <= c && c <= a) || (b <= d && d <= a)
+                   )
+                )
+                return false;
+            return true;
         }
 
-        
+
 
         /// <summary>
         /// Determine whether an AABB and AABB collide
@@ -482,6 +476,6 @@ namespace Frostbyte
             return false;
         }
 
-        
+
     }
 }

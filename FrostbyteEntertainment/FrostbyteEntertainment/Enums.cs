@@ -92,6 +92,7 @@ namespace Frostbyte
         /// A cell we want specifically empty
         /// </summary>
         Empty,
+        Stone,
     }
 
     /// <summary>

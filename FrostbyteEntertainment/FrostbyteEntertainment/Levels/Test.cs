@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework.Input;
 
 namespace Frostbyte.Levels
 {
@@ -12,7 +13,7 @@ namespace Frostbyte.Levels
     {
         internal static void Load()
         {
-            Collision.Lists.Add(new KeyValuePair<int, int>(3, 2));
+            Collision.Lists.Add(new KeyValuePair<int, int>(0, 1));
 
             FrostbyteLevel l = (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel) as FrostbyteLevel;
 
@@ -37,10 +38,25 @@ namespace Frostbyte.Levels
             mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
             l.Camera.Pos = mage.Pos - new Microsoft.Xna.Framework.Vector2(This.Game.GraphicsDevice.Viewport.Width / 2,
                 This.Game.GraphicsDevice.Viewport.Height / 2);
-            Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
 
-            Sprite b = new Sprite("box2", new Actor(new Animation("boxen.anim")),3);
+            This.Game.CurrentLevel.AddAnimation(new Animation("boxen.anim"));
+            Actor act = new Actor(l.GetAnimation("boxen.anim"));
+            Sprite a = new Sprite("box1", act,0);
+            a.Pos = new Vector2(15,0);
 
+            Sprite b = new Sprite("box2", act,1);
+            b.UpdateBehavior = delegate()
+            {
+                var key = Keyboard.GetState();
+                if(key.IsKeyDown(Keys.A))
+                b.Pos.X -= 1;
+                if(key.IsKeyDown(Keys.D))
+                b.Pos.X += 1;
+                if(key.IsKeyDown(Keys.W))
+                b.Pos.Y -= 1;
+                if(key.IsKeyDown(Keys.S))
+                b.Pos.Y += 1;
+            };
         }
 
         internal static void Update()
