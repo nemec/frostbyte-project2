@@ -124,8 +124,8 @@ namespace Frostbyte
                         float tlx = float.Parse(tl[0]);
                         float tly = float.Parse(tl[1]);
                         string[] br = collision.Attribute("BRPos").Value.Split(',');
-                        float brx = float.Parse(tl[0]);
-                        float bry = float.Parse(tl[1]);
+                        float brx = float.Parse(br[0]);
+                        float bry = float.Parse(br[1]);
                         sf.CollisionData.Add(new Collision_AABB(
                             idCount++,
                             new Vector2(tlx, tly),

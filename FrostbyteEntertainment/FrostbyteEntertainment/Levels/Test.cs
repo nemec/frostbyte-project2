@@ -43,7 +43,8 @@ namespace Frostbyte.Levels
             Actor act = new Actor(l.GetAnimation("boxen.anim"));
             Sprite a = new Sprite("box1", act,0);
             a.Pos = new Vector2(15,0);
-
+            This.Game.CurrentLevel.AddAnimation(new Animation("boxen2.anim"));
+            act = new Actor(l.GetAnimation("boxen2.anim"));
             Sprite b = new Sprite("box2", act,1);
             b.UpdateBehavior = delegate()
             {

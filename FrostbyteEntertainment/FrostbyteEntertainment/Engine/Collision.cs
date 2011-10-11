@@ -243,7 +243,7 @@ namespace Frostbyte
             var c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
             var d = (Vector2.Dot((o.Corner2 + w2.Pos), temp) / dot);
             if (
-                !(//basically see if it's not inside then return false otherwise keep checking
+                !(//check if they intersect, if they don't we're not colliding.
                     a <= b ?
                 //is c or d between a b?
                     (a <= c && c <= b) || (a <= d && d <= b) :
@@ -258,7 +258,7 @@ namespace Frostbyte
             c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
             d = (Vector2.Dot((o.Corner3 + w2.Pos), temp) / dot);
             if (
-                !(
+                !(//check if they intersect, if they don't we're not colliding.
                    a <= b ?
                 //is c or d between a b?
                    (a <= c && c <= b) || (a <= d && d <= b) :
@@ -273,7 +273,7 @@ namespace Frostbyte
             c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
             d = (Vector2.Dot((o.Corner2 + w2.Pos), temp) / dot);
             if (
-                !(
+                !(//check if they intersect, if they don't we're not colliding.
                    a <= b ?
                 //is c or d between a b?
                    (a <= c && c <= b) || (a <= d && d <= b) :
@@ -288,7 +288,7 @@ namespace Frostbyte
             c = (Vector2.Dot((o.Corner1 + w2.Pos), temp) / dot);
             d = (Vector2.Dot((o.Corner3 + w2.Pos), temp) / dot);
             if (
-                !(
+                !(//check if they intersect, if they don't we're not colliding.
                    a <= b ?
                 //is c or d between a b?
                    (a <= c && c <= b) || (a <= d && d <= b) :
@@ -461,7 +461,40 @@ namespace Frostbyte
         /// <returns>Whether a collision occurred</returns>
         internal static bool DetectCollision(WorldObject w1, Collision_OBB c1, WorldObject w2, Collision_AABB o)
         {
-            return DetectCollision(w2, o, w1, c1);
+            //so, we've got to project the faces onto eachother and look for intersections
+            //these values are values along the projected axis.
+            Vector2 Corner1 = new Vector2(o.TL.X,o.BR.Y);
+            var temp = c1.xAxis;
+            var dot = 1;//Vector2.Dot(temp, temp);
+            var a = (Vector2.Dot((c1.Corner1 + w1.Pos), temp) / dot);
+            var b = (Vector2.Dot((c1.Corner2 + w1.Pos), temp) / dot);
+            var c = (Vector2.Dot((Corner1 + w2.Pos), temp) / dot);
+            var d = (Vector2.Dot((o.TL + w2.Pos), temp) / dot);
+            if (
+                !(//check if they intersect, if they don't we're not colliding.
+                    a <= b ?
+                //is c or d between a b?
+                    (a <= c && c <= b) || (a <= d && d <= b) :
+                    (b <= c && c <= a) || (b <= d && d <= a)
+                    )
+                )
+                return false;
+            temp = c1.yAxis;
+            dot = 1;//Vector2.Dot(temp, temp);
+            a = (Vector2.Dot((c1.Corner1 + w1.Pos), temp) / dot);
+            b = (Vector2.Dot((c1.Corner3 + w1.Pos), temp) / dot);
+            c = (Vector2.Dot((Corner1 + w2.Pos), temp) / dot);
+            d = (Vector2.Dot((o.BR + w2.Pos), temp) / dot);
+            if (
+                !(//check if they intersect, if they don't we're not colliding.
+                   a <= b ?
+                //is c or d between a b?
+                   (a <= c && c <= b) || (a <= d && d <= b) :
+                   (b <= c && c <= a) || (b <= d && d <= a)
+                   )
+                )
+                return false;
+            return true;
         }
         /// <summary>
         /// Detects OBB on OBB collision
@@ -473,7 +506,7 @@ namespace Frostbyte
         /// <returns>Whether a collision occurred</returns>
         internal static bool DetectCollision(WorldObject w1, Collision_AABB c1, WorldObject w2, Collision_OBB o)
         {
-            return false;
+            return DetectCollision(w2, o, w1, c1);
         }
 
 
