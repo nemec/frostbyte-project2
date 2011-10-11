@@ -17,27 +17,31 @@ namespace Frostbyte.Levels
 
             FrostbyteLevel l = (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel) as FrostbyteLevel;
 
-            l.TileMap = new TileList(XDocument.Load(@"Content\Level1.xml"));
+            l.TileMap = new TileList(XDocument.Load(@"Content/Level1.xml"));
 
-            LevelFunctions.Spawn(delegate()
+            /*LevelFunctions.Spawn(delegate()
             {
-                return new FerociousEnemy("e1", new Actor(new DummyAnimation("e1")), 1f, 10);
+                return new FerociousEnemy("e1", new Actor(new DummyAnimation("enemy", 10, 10)), 1f, 10);
             }, 10, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             LevelFunctions.Spawn(delegate()
             {
-                return new TestObstacle("e1", new Actor(new DummyAnimation("e1")));
+                return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
             }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             LevelFunctions.Spawn(delegate()
             {
-                return new TestAlly("e1", new Actor(new DummyAnimation("e1")));
-            }, 2, new Microsoft.Xna.Framework.Vector2(50, 50));
+                return new TestAlly("e1", new Actor(new DummyAnimation("ally", 10, 10)));
+            }, 2, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            Characters.Mage mage = new Characters.Mage("mage", new Actor(new DummyAnimation("mage")));
-            mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
-            l.Camera.Pos = mage.Pos - new Microsoft.Xna.Framework.Vector2(This.Game.GraphicsDevice.Viewport.Width / 2,
-                This.Game.GraphicsDevice.Viewport.Height / 2);
+            Sprite ally = new TestAlly("a1", new Actor(new DummyAnimation("ally", 10, 10)));
+            ally.Pos = new Vector2(250, 260);
+
+            Characters.Mage mage = new Characters.Mage("mage", new Actor(new Animation("shield_opaque.anim")));
+            mage.Pos = new Microsoft.Xna.Framework.Vector2(650, 250);
+            //l.Camera.Pos = mage.Pos - new Microsoft.Xna.Framework.Vector2(This.Game.GraphicsDevice.Viewport.Width / 2,
+            //    This.Game.GraphicsDevice.Viewport.Height / 2);
+            /*Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
 
             This.Game.CurrentLevel.AddAnimation(new Animation("boxen.anim"));
             Actor act = new Actor(l.GetAnimation("boxen.anim"));
@@ -58,6 +62,8 @@ namespace Frostbyte.Levels
                 if(key.IsKeyDown(Keys.S))
                 b.Pos.Y += 1;
             };
+            Sprite b = new Sprite("box2", new Actor(new Animation("boxen.anim")),3);*/
+
         }
 
         internal static void Update()
@@ -66,40 +72,21 @@ namespace Frostbyte.Levels
         }
     }
 
-    internal class Target : Sprite
+    internal class Target : Polygon
     {
-        internal Target(string name, Actor actor)
-            : base(name, actor)
+        internal Target(string name)
+            : this(name, 15)
         {
-
         }
 
-        BasicEffect basicEffect = new BasicEffect(This.Game.GraphicsDevice);
-        
-        internal override void Draw(GameTime gameTime)
+        internal Target(string name, int size)
+            : base(name, new Actor(new DummyAnimation("target", size, size)), Color.Red,
+                new Vector3(0, 0, 0),
+                new Vector3(size, 0, 0),
+                new Vector3(size, size, 0),
+                new Vector3(0, size, 0),
+                new Vector3(0, 0, 0))
         {
-            if (mVisible)
-            {
-                float height = This.Game.GraphicsDevice.Viewport.Height;
-                float width = This.Game.GraphicsDevice.Viewport.Width;
-                basicEffect.View = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, -10),
-                                                       new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, 0), new Vector3(0, -1, 0));
-                basicEffect.Projection = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width, This.Game.GraphicsDevice.Viewport.Height, 1, 20);
-                basicEffect.VertexColorEnabled = true;
-                basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
-                int size = 15;
-                VertexPositionColor[] points = new VertexPositionColor[5]{
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.Red),
-                new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y, 0), Color.Red),
-                new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y + size, 0), Color.Red),
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y + size, 0), Color.Red),
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.Red)};
-                foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
-                {
-                    pass.Apply();
-                    This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
-                }
-            }
         }
     }
 

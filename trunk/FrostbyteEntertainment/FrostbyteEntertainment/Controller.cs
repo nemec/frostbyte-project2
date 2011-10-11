@@ -430,7 +430,7 @@ namespace Frostbyte
             get
             {
                 Vector2 move = new Vector2();
-                if(mLastControllerState.IsKeyDown(Keys.D)){
+                /*if(mLastControllerState.IsKeyDown(Keys.D)){
                     move.X = 1;
                 }
                 else if(mLastControllerState.IsKeyDown(Keys.A)){
@@ -441,6 +441,24 @@ namespace Frostbyte
                     move.Y = -1;
                 }
                 else if(mLastControllerState.IsKeyDown(Keys.S)){
+                    move.Y = 1;
+                }*/
+
+                if (mLastControllerState.IsKeyDown(Keys.Right))
+                {
+                    move.X = 1;
+                }
+                else if (mLastControllerState.IsKeyDown(Keys.Left))
+                {
+                    move.X = -1;
+                }
+
+                if (mLastControllerState.IsKeyDown(Keys.Down))
+                {
+                    move.Y = -1;
+                }
+                else if (mLastControllerState.IsKeyDown(Keys.Up))
+                {
                     move.Y = 1;
                 }
 

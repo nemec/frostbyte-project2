@@ -115,7 +115,9 @@
     <Compile Include="Characters\Mage.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Enemies\Enemy.cs" />
+    <Compile Include="Engine\Polygon.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Shared\Enums.cs" />
     <Compile Include="FrostbyteLevel.cs" />
     <Compile Include="Engine\Actor.cs" />
     <Compile Include="Engine\Animation.cs" />
@@ -141,6 +143,9 @@
     <Compile Include="SpriteClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Shared\Tile.cs" />
+    <Compile Include="Shared\TileHelper.cs" />
+    <Compile Include="Shared\TileList.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileHelper.cs" />
     <Compile Include="TileList.cs" />
@@ -188,6 +193,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\shield_opaque.anim">
+      <Link>Content\Sprites\shield_opaque.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Sprites\boxen.anim">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

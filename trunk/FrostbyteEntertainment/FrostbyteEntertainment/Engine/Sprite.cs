@@ -29,8 +29,8 @@ namespace Frostbyte
                     if (mActor.Animations[mActor.CurrentAnimation].NumFrames > 1) mAnimating = true;
                 }
             }
-            var anim = GetAnimation();
-            Center = new Vector2(anim.Width / 2, anim.Height / 2);
+
+            Center = new Vector2(GetAnimation().Width / 2, GetAnimation().Height / 2);
         }
 
         internal Sprite(string name, Actor actor, int collisionlist)
@@ -71,9 +71,13 @@ namespace Frostbyte
 
         #region Methods
 
+        /// <summary>
+        /// Aligns the current sprite ('this') with the provided target sprite
+        /// </summary>
+        /// <param name="target">The sprite to align on</param>
         internal void CenterOn(Sprite target)
         {
-            Pos = target.Center;
+            Pos = target.Pos + target.Center - Center;
         }
 
         internal override List<CollisionObject> GetCollision()

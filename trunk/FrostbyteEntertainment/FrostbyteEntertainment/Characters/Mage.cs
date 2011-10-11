@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace Frostbyte.Characters
 {
@@ -27,10 +28,11 @@ namespace Frostbyte.Characters
         internal Mage(string name, Actor actor, PlayerIndex input)
             : base(name, actor)
         {
-            controller = new GamePadController(input);
+            //controller = new GamePadController(input);
+            controller = new KeyboardController();
             keyboard = new KeyboardController();
             currentTargetAlignment = TargetAlignment.None;
-            target = new Frostbyte.Levels.Target("target", new Actor(new DummyAnimation("target.anim")));
+            target = new Frostbyte.Levels.Target("target");
             target.mVisible = false;
             sortType = new DistanceSort(this);
 
@@ -155,7 +157,7 @@ namespace Frostbyte.Characters
             }
         }
 
-        internal override void Draw(GameTime gameTime)
+        /*internal override void Draw(GameTime gameTime)
         {
 
             float height = This.Game.GraphicsDevice.Viewport.Height;
@@ -176,7 +178,7 @@ namespace Frostbyte.Characters
                 pass.Apply();
                 This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, points, 0, 1);
             }
-        }
+        }*/
         #endregion
     }
 }
