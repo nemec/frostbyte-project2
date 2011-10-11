@@ -22,7 +22,7 @@ namespace Frostbyte.Levels
             /*LevelFunctions.Spawn(delegate()
             {
                 return new FerociousEnemy("e1", new Actor(new DummyAnimation("enemy", 10, 10)), 1f, 10);
-            }, 10, new Microsoft.Xna.Framework.Vector2(50, 50));
+            }, 15, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             LevelFunctions.Spawn(delegate()
             {
@@ -163,7 +163,7 @@ namespace Frostbyte.Levels
         #region Variables
 
         bool changeState = false;
-        TimeSpan idleTime = new TimeSpan(0, 0, 0);
+        TimeSpan idleTime = new TimeSpan(0, 0, 2);
 
 
         #endregion Variables
@@ -211,23 +211,22 @@ namespace Frostbyte.Levels
 
             // Tests for Movement Patterns
             // Ram for 5 sec, charge for 5 sec, stealth charge for five sec, stealth camp 10 sec, retreat indefinitely
-            if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
-                changeState = ram(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 2), 1000f, 2.0f);
+            //if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
+               //changeState = stealthCamp(Player1.Pos, Vector2.Zero, 30f);
+            //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
+            //    changeState = charge(Player1.Pos, Vector2.Zero, 1000f, 1.1f);
 
-            else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
-                changeState = charge(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 3), 1000f, 1.1f);
+            //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
+            //    changeState = stealthCharge(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
 
-            else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
-                changeState = stealthCharge(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
+            //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 25)))
+                 changeState = teaseRetreat(Player1.Pos, Vector2.Zero, 30f, 1000f, 1.1f);
 
-            else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 25)))
-                changeState = stealthCamp(Player1.Pos, Vector2.Zero, 30f);
+            //else if (!changeState)
+            //    changeState = retreat(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
 
-            else if (!changeState)
-                changeState = retreat(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
-
-            else
-                changeState = !freeze(idleTime);
+           // else
+            //    changeState = !freeze(idleTime);
             
         }
 
