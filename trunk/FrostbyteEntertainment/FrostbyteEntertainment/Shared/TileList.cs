@@ -171,7 +171,7 @@ namespace Frostbyte
         {
             List<Tile> tiles = new List<Tile>();
             //deterime what it is
-            if (obj.GetType() == typeof(Room))
+            if (obj is Room)
             {
                 Room r = obj as Room;
                 if (dontAdd || Add(r))
@@ -199,7 +199,7 @@ namespace Frostbyte
 
                 }
             }
-            else if (obj.GetType() == typeof(BorderWalls))
+            else if (obj is BorderWalls)
             {
                 List<Tile> t = new List<Tile>();
                 BorderWalls b = obj as BorderWalls;
@@ -213,7 +213,7 @@ namespace Frostbyte
                     tiles.Add(t[i]);
                 }
             }
-            else if (obj.GetType() == typeof(Wall))
+            else if (obj is Wall)
             {
                 List<Tile> t;
                 Add(obj as Wall, out t, dontAdd);
@@ -224,7 +224,7 @@ namespace Frostbyte
                     tiles.Add(t[i]);
                 }
             }
-            else if (obj.GetType() == typeof(Floor))
+            else if (obj is Floor)
             {
                 List<Tile> t;
                 Add(obj as Floor, out t, dontAdd);
@@ -497,17 +497,17 @@ namespace Frostbyte
         {
             //if (!dontAddToUndo)
             //{
-            //    var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
+            //    var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo is Tile) ? lo.GridCell == elem.GridCell : false; });
             //    if (tiles.Count > 0)
             //        RemovedTiles.Push(tiles);
             //}
             //else
             //{
-            //    var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
+            //    var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo is Tile) ? lo.GridCell == elem.GridCell : false; });
             //    if (tiles.Count > 0)
             //        RedoTiles.Push(tiles);
             //}
-            LevelParts.RemoveAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
+            LevelParts.RemoveAll(delegate(LevelObject lo) { return lo is Tile ? lo.GridCell == elem.GridCell : false; });
             mTiles[y][x] = new Tile();
             return true;
         }
@@ -573,7 +573,7 @@ namespace Frostbyte
         {
             List<Tile> tiles = new List<Tile>();
             //deterime what it is
-            if (obj.GetType() == typeof(Room))
+            if (obj is Room)
             {
                 Room r = obj as Room;
 
@@ -598,7 +598,7 @@ namespace Frostbyte
                     tiles.Add(t[i]);
                 }
             }
-            else if (obj.GetType() == typeof(BorderWalls))
+            else if (obj is BorderWalls)
             {
                 List<Tile> t;
                 Remove(obj as BorderWalls, out t, true);
@@ -609,7 +609,7 @@ namespace Frostbyte
                     tiles.Add(t[i]);
                 }
             }
-            else if (obj.GetType() == typeof(Wall))
+            else if (obj is Wall)
             {
                 List<Tile> t;
                 Remove(obj as Wall, out t, true);
@@ -620,7 +620,7 @@ namespace Frostbyte
                     tiles.Add(t[i]);
                 }
             }
-            else if (obj.GetType() == typeof(Floor))
+            else if (obj is Floor)
             {
                 List<Tile> t;
                 Remove(obj as Floor, out t, true);
@@ -945,6 +945,46 @@ namespace Frostbyte
 
             return n;
         }
+
+        /// <summary>
+        /// Obtains a list of tiles within the 2D range from top left to bottom right
+        /// </summary>
+        /// <param name="startCell">Top Left of the range</param>
+        /// <param name="endCell">Bottom Right of the range</param>
+        /// <returns>Lsit of all Tiles within the range</returns>
+        internal List<Tile> GetCurrentState(Index2D startCell, Index2D endCell)
+        {
+            List<Tile> tiles = new List<Tile>();
+
+            for (int row = startCell.Y, rowEnd = endCell.Y, col = startCell.X, colEnd = endCell.X; row <= rowEnd; row++)
+            {
+                //we want to make sure that we put in empty items
+                //on our grid if our list is empty or the first element has GridCell == null (we can assume the whole set will)
+                if (mTiles.Count > 0 && mTiles[row][0].GridCell!=null)
+                    tiles.AddRange(mTiles[row].GetRange(col, colEnd - col + 1));
+                else
+                    for (col = startCell.X; col <= colEnd; col++)
+                    {
+                        tiles.Add(new Tile() { GridCell=new Index2D(col,row) });
+                    }
+            }
+            return tiles;
+        }
+
+        /// <summary>
+        /// Sets the portion of the grid corresponding to these tiles to these tiles. 
+        /// Wipes current data. 
+        /// Only functions if the tiles already have data
+        /// </summary>
+        /// <param name="list">List of tiles to place where they go</param>
+        internal void SetState(List<Tile> list)
+        {
+            if (mTiles.Count > 0)
+                foreach (var tile in list)
+                {
+                    mTiles[tile.GridCell.Y][tile.GridCell.X] = tile;
+                }
+        }
         #endregion Access Values
 
         #region Saving
@@ -959,7 +999,7 @@ namespace Frostbyte
             //remove from copy all the tiles that match our current objects
             foreach (var lo in LevelParts)
             {
-                if (lo as LevelPart != null)
+                if (lo is LevelPart)
                 {
                     List<Tile> removed = copy.Add(lo as LevelPart);
                     objs.Add(lo);
@@ -972,7 +1012,7 @@ namespace Frostbyte
                     //    }
                     //}
                 }
-                else if (lo as Tile != null)
+                else if (lo is Tile)
                 {
                     Tile tile = lo as Tile;
                     if (tile.Theme == Element.DEFAULT)

@@ -75,6 +75,7 @@
     <Compile Include="TitleGroup.xaml.cs">
       <DependentUpon>TitleGroup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UndoablePlacement.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

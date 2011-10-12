@@ -26,8 +26,8 @@ namespace Frostbyte
         {
             XElement e = new XElement("Tile");
             e.SetAttributeValue("Type", Type);
-            if(InstanceName!=null)
-            e.SetAttributeValue("InstanceName", InstanceName);
+            if (InstanceName != null)
+                e.SetAttributeValue("InstanceName", InstanceName);
             e.SetAttributeValue("Collision", Traversable);
             e.SetAttributeValue("Theme", Theme);
             e.SetAttributeValue("Orientation", Orientation);
@@ -41,35 +41,35 @@ namespace Frostbyte
             try
             {
 #endif
-                Tile t = new Tile();
-                foreach (XAttribute attr in elem.Attributes())
+            Tile t = new Tile();
+            foreach (XAttribute attr in elem.Attributes())
+            {
+                if (attr.Name == "Type")
                 {
-                    if (attr.Name == "Type")
-                    {
-                        t.Type = (TileTypes)Enum.Parse(typeof(TileTypes), attr.Value);
-                    }
-                    else if (attr.Name == "InstanceName")
-                    {
-                        t.InstanceName = attr.Value;
-                    }
-                    else if (attr.Name == "Collision")
-                    {
-                        t.Traversable = bool.Parse(attr.Value);
-                    }
-                    else if (attr.Name == "Theme")
-                    {
-                        t.Theme = (Element)Enum.Parse(typeof(Element), attr.Value);
-                    }
-                    else if (attr.Name == "Orientation")
-                    {
-                        t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), attr.Value);
-                    }
-                    else if (attr.Name == "GridCell")
-                    {
-                        t.GridCell = Index2D.Parse(attr.Value);
-                    }
+                    t.Type = (TileTypes)Enum.Parse(typeof(TileTypes), attr.Value);
                 }
-                return t;
+                else if (attr.Name == "InstanceName")
+                {
+                    t.InstanceName = attr.Value;
+                }
+                else if (attr.Name == "Collision")
+                {
+                    t.Traversable = bool.Parse(attr.Value);
+                }
+                else if (attr.Name == "Theme")
+                {
+                    t.Theme = (Element)Enum.Parse(typeof(Element), attr.Value);
+                }
+                else if (attr.Name == "Orientation")
+                {
+                    t.Orientation = (Orientations)Enum.Parse(typeof(Orientations), attr.Value);
+                }
+                else if (attr.Name == "GridCell")
+                {
+                    t.GridCell = Index2D.Parse(attr.Value);
+                }
+            }
+            return t;
 #if DEBUG1
             }
             catch (Exception e)
