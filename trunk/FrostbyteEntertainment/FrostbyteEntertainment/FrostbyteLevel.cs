@@ -117,12 +117,14 @@ namespace Frostbyte
             {
                 Viewport viewport = This.Game.GraphicsDevice.Viewport;
                 Vector2 cameraPos = This.Game.CurrentLevel.Camera.Pos;
-                int borderWidth = 200;//viewport.Width/2;
-                int borderHeight = 200;//viewport.Height/2;
+                int borderWidth = 200;
+                int borderHeight = 200;
 
-                Vector2 min = players[0].Pos;
-                Vector2 max = players[0].Pos;
-                foreach(Sprite player in players){
+                Vector2 min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+                Vector2 max = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
+                float scale = This.Game.CurrentLevel.Camera.Zoom;
+                foreach (Sprite player in players)
+                {
                     if (player.Pos.X < min.X)
                     {
                         min.X = player.Pos.X;
@@ -131,53 +133,48 @@ namespace Frostbyte
                     {
                         min.Y = player.Pos.Y;
                     }
-                    if (player.Pos.X > max.X)
+                    if (player.Pos.X + player.GetAnimation().Width > max.X)
                     {
                         max.X = player.Pos.X + player.GetAnimation().Width;
                     }
-                    if (player.Pos.Y > max.Y)
+                    if (player.Pos.Y + player.GetAnimation().Height > max.Y)
                     {
                         max.Y = player.Pos.Y + player.GetAnimation().Height;
                     }
                 }
 
-                Vector2 spread = max - min;
-                spread.X = Math.Abs(spread.X);
-                spread.Y = Math.Abs(spread.Y);
-                int w = viewport.Width - 2 * borderWidth;
-                int h = viewport.Height - 2 * borderHeight;
-                float scale = This.Game.CurrentLevel.Camera.Zoom;
-                if (spread.X < w * scale)
-                {
-                    spread.X = w * scale;
-                }
-                if (spread.Y < h * scale)
-                {
-                    spread.Y = h * scale;
-                }
+                float w = (viewport.Width - 2 * borderWidth);
+                float h = (viewport.Height - 2 * borderHeight);
 
-                scale = Math.Min(w / spread.X * scale, h / spread.Y * scale);
+                Vector2 spread = max - min;
+                scale = Math.Min(w / spread.X, h / spread.Y);
+                scale = scale > 1 ? 1 : scale;
+                
                 This.Game.CurrentLevel.Camera.Zoom = scale;
 
-                Vector2 minDiff = min - cameraPos;
-                Vector2 maxDiff = max - cameraPos;
+                cameraPos.X = min.X - borderWidth / scale;
+                cameraPos.Y = min.Y - borderHeight / scale;
 
-                if (minDiff.X < viewport.X + borderWidth)
+                /*Vector2 minDiff = min - cameraPos;
+                Vector2 maxDiff = max - cameraPos;
+                float sw = borderWidth / scale;
+                float sh = borderHeight / scale;
+                if (minDiff.X < viewport.X + sw)
                 {
-                    cameraPos.X -= borderWidth - (minDiff.X);
+                    cameraPos.X -= sw - (minDiff.X);
                 }
-                else if (maxDiff.X > viewport.X + viewport.Width - borderWidth)
+                else if (maxDiff.X > viewport.X + viewport.Width - sw)
                 {
-                    cameraPos.X += borderWidth - (viewport.Width - (maxDiff.X));
+                    cameraPos.X += sw - (viewport.Width - (maxDiff.X));
                 }
-                if (minDiff.Y < viewport.Y + borderHeight)
+                if (minDiff.Y < viewport.Y + sh)
                 {
-                    cameraPos.Y -= borderHeight - (minDiff.Y);
+                    cameraPos.Y -= sh - (minDiff.Y);
                 }
-                else if (maxDiff.Y > viewport.Y + viewport.Height - borderHeight)
+                else if (maxDiff.Y > viewport.Y + viewport.Height - sh)
                 {
-                    cameraPos.Y += borderHeight - (viewport.Height - (maxDiff.Y));
-                }
+                    cameraPos.Y += sh - (viewport.Height - (maxDiff.Y));
+                }*/
                 This.Game.CurrentLevel.Camera.Pos = cameraPos;
             }
         }
@@ -186,7 +183,7 @@ namespace Frostbyte
         {
             base.Update();
 
-            //RealignViewport();
+            RealignViewport();
 
             /*KeyboardState k = Keyboard.GetState();
             if (k.IsKeyDown(Keys.K))
