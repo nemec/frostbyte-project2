@@ -756,12 +756,12 @@ namespace LevelEditor
         private void UndoAction(object sender, ExecutedRoutedEventArgs e)
         {
             
-            SwapTiles(TileMap.Undo());
+            SwapTiles(Undo());
         }
         
         private void RedoAction(object sender, ExecutedRoutedEventArgs e)
         {
-            SwapTiles(TileMap.Redo());
+            SwapTiles(Redo());
         }
         #endregion MenuFunctions
 
@@ -771,15 +771,57 @@ namespace LevelEditor
         public readonly static RoutedUICommand CommandRedo;
         #endregion RoutedCommands
 
+        #region Execution
         private void CanUndo(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = TileMap.CanUndo;
+            e.CanExecute = UndoTiles.Count > 0;
         }
 
         private void CanRedo(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = TileMap.CanRedo;
+            e.CanExecute = RedoTiles.Count > 0;
         }
+        #endregion Execution
+
+        #region Undo
+        /// <summary>
+        /// List of tiles that have been removed. 
+        /// </summary>
+        Stack<List<LevelObject>> UndoTiles = new Stack<List<LevelObject>>();
+
+        public List<LevelObject> Undo()
+        {
+            List<LevelObject> objs = UndoTiles.Pop();
+            foreach (LevelObject obj in objs)
+            {
+                if (obj.GetType() == typeof(Frostbyte.Tile))
+                    TileMap.Add(obj as Frostbyte.Tile);
+                else if (obj as LevelPart!=null)
+                    TileMap.Add(obj as LevelPart);
+            }
+            return objs;
+        }
+        #endregion Undo
+
+        #region Redo
+        /// <summary>
+        /// List of tiles that have been removed. 
+        /// </summary>
+        Stack<List<LevelObject>> RedoTiles = new Stack<List<LevelObject>>();
+
+        public List<LevelObject> Redo()
+        {
+            List<LevelObject> objs = RedoTiles.Pop();
+            foreach (LevelObject obj in objs)
+            {
+                if (obj.GetType() == typeof(Frostbyte.Tile))
+                    TileMap.Add(obj as Frostbyte.Tile);
+                else if (obj as LevelPart != null)
+                    TileMap.Add(obj as LevelPart);
+            }
+            return objs;
+        }
+        #endregion Redo
     }
 
 
