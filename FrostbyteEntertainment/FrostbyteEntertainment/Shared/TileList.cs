@@ -78,7 +78,7 @@ namespace Frostbyte
         /// <param name="x">The X grid location</param>
         /// <param name="y">The Y gird location</param>
         /// <returns></returns>
-        internal bool Add(Tile t, int x, int y, bool dontAddToUndo = false)
+        internal bool Add(Tile t, int x, int y)
         {
             int gridwidth = x;
             if (mTiles.Count > 0)
@@ -93,7 +93,7 @@ namespace Frostbyte
                 {
                     row.Add(new Tile());
                 }
-            Remove(t, dontAddToUndo);
+            Remove(t);
             mTiles[y][x] = t;
             return true;
         }
@@ -156,9 +156,9 @@ namespace Frostbyte
         /// </summary>
         /// <param name="t">Room to add</param>
         /// <returns>Success</returns>
-        internal bool Add(Tile t, bool dontAddToUndo = false)
+        internal bool Add(Tile t)
         {
-            Add(t, t.GridCell.X, t.GridCell.Y, dontAddToUndo);
+            Add(t, t.GridCell.X, t.GridCell.Y);
             LevelParts.Add(t);
             return true;
         }
@@ -485,28 +485,28 @@ namespace Frostbyte
         #endregion Adds
 
         #region RemoveItems
-        public bool Remove(Tile t, bool dontAddToUndo = false)
+        public bool Remove(Tile t)
         {
             if (mTiles.Count > t.GridCell.Y && mTiles[t.GridCell.Y].Count > t.GridCell.X)
-                return Remove(t, t.GridCell.X, t.GridCell.Y, dontAddToUndo);
+                return Remove(t, t.GridCell.X, t.GridCell.Y);
             else
                 return false;
         }
 
-        public bool Remove(Tile elem, int x, int y, bool dontAddToUndo = false)
+        public bool Remove(Tile elem, int x, int y)
         {
-            if (!dontAddToUndo)
-            {
-                var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
-                if (tiles.Count > 0)
-                    RemovedTiles.Push(tiles);
-            }
-            else
-            {
-                var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
-                if (tiles.Count > 0)
-                    RedoTiles.Push(tiles);
-            }
+            //if (!dontAddToUndo)
+            //{
+            //    var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
+            //    if (tiles.Count > 0)
+            //        RemovedTiles.Push(tiles);
+            //}
+            //else
+            //{
+            //    var tiles = LevelParts.FindAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
+            //    if (tiles.Count > 0)
+            //        RedoTiles.Push(tiles);
+            //}
             LevelParts.RemoveAll(delegate(LevelObject lo) { return lo.GetType() == typeof(Tile) ? lo.GridCell == elem.GridCell : false; });
             mTiles[y][x] = new Tile();
             return true;
@@ -1055,57 +1055,7 @@ namespace Frostbyte
         }
         #endregion Loading
 
-        #region Undo
-        /// <summary>
-        /// List of tiles that have been removed. 
-        /// </summary>
-        Stack<List<LevelObject>> RemovedTiles = new Stack<List<LevelObject>>();
-
-        public List<LevelObject> Undo()
-        {
-            List<LevelObject> objs = RemovedTiles.Pop();
-            foreach (Tile obj in objs)
-            {
-                Add(obj, true);
-            }
-            return objs;
-        }
-        #endregion Undo
-
-        #region Redo
-        /// <summary>
-        /// List of tiles that have been removed. 
-        /// </summary>
-        Stack<List<LevelObject>> RedoTiles = new Stack<List<LevelObject>>();
-
-        public List<LevelObject> Redo()
-        {
-            List<LevelObject> objs = RedoTiles.Pop();
-            foreach (Tile obj in objs)
-            {
-                Add(obj, false);
-            }
-            return objs;
-        }
-        #endregion Redo
-
         #region Properties
-        public bool CanUndo
-        {
-            get
-            {
-                return RemovedTiles.Count > 0;
-            }
-        }
-        public bool CanRedo
-        {
-            get
-            {
-                return RedoTiles.Count > 0;
-            }
-        }
-        #endregion Properties
-
         public bool HasItems
         {
             get
@@ -1113,5 +1063,6 @@ namespace Frostbyte
                 return mTiles.Count > 0;
             }
         }
+        #endregion Properties
     }
 }
