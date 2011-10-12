@@ -27,7 +27,7 @@ namespace Frostbyte.Levels
             LevelFunctions.Spawn(delegate()
             {
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
-            }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
+            }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             Sprite ally = new TestAlly("a1", new Actor(new DummyAnimation("ally", 10, 10)));
             ally.Pos = new Vector2(250, 260);

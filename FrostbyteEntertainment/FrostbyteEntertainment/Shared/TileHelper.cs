@@ -27,8 +27,8 @@ namespace Frostbyte
         /// <param name="y">Ycoord == Row</param>
         public Index2D(int x, int y)
         {
-            X = x;
-            Y = y;
+            X = x > 0 ? x : 0;
+            Y = y > 0 ? y : 0;
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Frostbyte
 
         public override bool Equals(object obj)
         {
-            if (obj as Index2D != null)
+            if (obj is Index2D)
                 return this == (obj as Index2D);
             else
                 return false;
@@ -443,7 +443,7 @@ namespace Frostbyte
 
         public override bool Equals(object obj)
         {
-            if (obj as LevelObject != null)
+            if (obj is LevelObject)
                 return this == (obj as LevelObject);
             else
                 return false;
