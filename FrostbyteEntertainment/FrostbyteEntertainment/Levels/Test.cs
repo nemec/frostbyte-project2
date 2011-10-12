@@ -19,7 +19,7 @@ namespace Frostbyte.Levels
 
             l.TileMap = new TileList(XDocument.Load(@"Content/Level1.xml"));
 
-            /*LevelFunctions.Spawn(delegate()
+            LevelFunctions.Spawn(delegate()
             {
                 return new FerociousEnemy("e1", new Actor(new DummyAnimation("enemy", 10, 10)), 1f, 10);
             }, 15, new Microsoft.Xna.Framework.Vector2(50, 50));
@@ -32,7 +32,7 @@ namespace Frostbyte.Levels
             LevelFunctions.Spawn(delegate()
             {
                 return new TestAlly("e1", new Actor(new DummyAnimation("ally", 10, 10)));
-            }, 2, new Microsoft.Xna.Framework.Vector2(50, 50));*/
+            }, 2, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             Sprite ally = new TestAlly("a1", new Actor(new DummyAnimation("ally", 10, 10)));
             ally.Pos = new Vector2(250, 260);
@@ -152,7 +152,7 @@ namespace Frostbyte.Levels
                 new VertexPositionColor(new Vector3(Pos.X, Pos.Y + size, 0), Color.LightCyan),
                 new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.LightCyan)};
                 pass.Apply();
-                basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
+                basicEffect.World = Matrix.Identity;//Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
                 This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
             }
         }
@@ -186,6 +186,7 @@ namespace Frostbyte.Levels
 
         internal override void Draw(GameTime gameTime)
         {
+            var transformation = This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 int size = 10;
@@ -195,8 +196,8 @@ namespace Frostbyte.Levels
                 new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y + size, 0), Color.BlueViolet),
                 new VertexPositionColor(new Vector3(Pos.X, Pos.Y + size, 0), Color.BlueViolet),
                 new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.BlueViolet)};
+                basicEffect.World = Matrix.Identity;// Matrix.CreateTranslation(new Vector3(Pos, 0)) * transformation;
                 pass.Apply();
-                basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
                 if (mVisible) {
                     This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
                 }
@@ -214,13 +215,13 @@ namespace Frostbyte.Levels
             //if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
                //changeState = stealthCamp(Player1.Pos, Vector2.Zero, 30f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
-            //    changeState = charge(Player1.Pos, Vector2.Zero, 1000f, 1.1f);
+                changeState = charge(Player1.Pos, Vector2.Zero, 1000f, 1.1f);
 
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
             //    changeState = stealthCharge(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
 
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 25)))
-                 changeState = teaseRetreat(Player1.Pos, Vector2.Zero, 30f, 1000f, 1.1f);
+            //     changeState = teaseRetreat(Player1.Pos, Vector2.Zero, 30f, 1000f, 1.1f);
 
             //else if (!changeState)
             //    changeState = retreat(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
