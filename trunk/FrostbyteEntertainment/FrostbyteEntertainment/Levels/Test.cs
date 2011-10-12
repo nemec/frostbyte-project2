@@ -209,13 +209,12 @@ namespace Frostbyte.Levels
             Sprite Player1 = This.Game.CurrentLevel.GetSpritesByType("Mage")[0];
          // Sprite Player2 = This.Game.CurrentLevel.GetSpritesByType("Mage")[1];
 
-
             // Tests for Movement Patterns
             // Ram for 5 sec, charge for 5 sec, stealth charge for five sec, stealth camp 10 sec, retreat indefinitely
             //if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
                //changeState = stealthCamp(Player1.Pos, Vector2.Zero, 30f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
-                changeState = charge(Player1.Pos, Vector2.Zero, 1000f, 1.1f);
+                changeState = charge(Player1.CenterPos() , Player1.CenterPos() , 1000f, 1f);
 
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
             //    changeState = stealthCharge(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
