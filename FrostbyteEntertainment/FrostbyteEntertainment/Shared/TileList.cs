@@ -72,6 +72,18 @@ namespace Frostbyte
 
         #region Adds
         /// <summary>
+        /// Adds a FrostByte.Tile to the grid and to ObjectList
+        /// </summary>
+        /// <param name="t">Room to add</param>
+        /// <returns>Success</returns>
+        internal bool Add(Tile t)
+        {
+            Add(t, t.GridCell.X, t.GridCell.Y);
+            LevelParts.Add(t);
+            return true;
+        }
+
+        /// <summary>
         /// Adds a Tile to the tile map but not list of objects
         /// </summary>
         /// <param name="t">The tile to add</param>
@@ -148,18 +160,6 @@ namespace Frostbyte
         internal bool Add(Floor f)
         {
             LevelParts.Add(f);
-            return true;
-        }
-
-        /// <summary>
-        /// Adds a FrostByte.Tile to the grid and to ObjectList
-        /// </summary>
-        /// <param name="t">Room to add</param>
-        /// <returns>Success</returns>
-        internal bool Add(Tile t)
-        {
-            Add(t, t.GridCell.X, t.GridCell.Y);
-            LevelParts.Add(t);
             return true;
         }
 
@@ -484,11 +484,14 @@ namespace Frostbyte
         #endregion Magic Adds
         #endregion Adds
 
-        #region RemoveItems
+        #region Removals
         public bool Remove(Tile t)
         {
             if (mTiles.Count > t.GridCell.Y && mTiles[t.GridCell.Y].Count > t.GridCell.X)
+            {
+                LevelParts.Remove(t);
                 return Remove(t, t.GridCell.X, t.GridCell.Y);
+            }
             else
                 return false;
         }
@@ -569,39 +572,41 @@ namespace Frostbyte
         /// Determines what an object is and adds it to the level
         /// </summary>
         /// <param name="obj">Object we want to split and add</param>
-        internal List<Tile> Remove(LevelPart obj)
+        internal List<Tile> Remove(LevelPart obj, bool dontRemove = false)
         {
             List<Tile> tiles = new List<Tile>();
             //deterime what it is
             if (obj is Room)
             {
                 Room r = obj as Room;
-
-                //we're going to be getting them a lot otherwise
-                Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
-                Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
-                List<Tile> t;
-                Remove(new BorderWalls(r), out t, true);
-
-                //for some reson foreach doesn't work here
-                for (int i = 0; i < t.Count; i++)
+                if (Remove(r))
                 {
-                    tiles.Add(t[i]);
-                }
+                    //we're going to be getting them a lot otherwise
+                    Index2D start = new Index2D(Math.Min(r.StartCell.X, r.EndCell.X), Math.Min(r.StartCell.Y, r.EndCell.Y));
+                    Index2D end = new Index2D(Math.Max(r.StartCell.X, r.EndCell.X), Math.Max(r.StartCell.Y, r.EndCell.Y));
+                    List<Tile> t;
+                    Remove(new BorderWalls(r), out t, true);
 
-                t = new List<Tile>();
-                Remove(new Floor(r), out t, true);
+                    //for some reson foreach doesn't work here
+                    for (int i = 0; i < t.Count; i++)
+                    {
+                        tiles.Add(t[i]);
+                    }
 
-                //for some reson foreach doesn't work here
-                for (int i = 0; i < t.Count; i++)
-                {
-                    tiles.Add(t[i]);
+                    t = new List<Tile>();
+                    Remove(new Floor(r), out t, true);
+
+                    //for some reson foreach doesn't work here
+                    for (int i = 0; i < t.Count; i++)
+                    {
+                        tiles.Add(t[i]);
+                    }
                 }
             }
             else if (obj is BorderWalls)
             {
                 List<Tile> t;
-                Remove(obj as BorderWalls, out t, true);
+                Remove(obj as BorderWalls, out t, dontRemove);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -612,7 +617,7 @@ namespace Frostbyte
             else if (obj is Wall)
             {
                 List<Tile> t;
-                Remove(obj as Wall, out t, true);
+                Remove(obj as Wall, out t, dontRemove);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -623,7 +628,7 @@ namespace Frostbyte
             else if (obj is Floor)
             {
                 List<Tile> t;
-                Remove(obj as Floor, out t, true);
+                Remove(obj as Floor, out t, dontRemove);
 
                 //for some reson foreach doesn't work here
                 for (int i = 0; i < t.Count; i++)
@@ -877,7 +882,7 @@ namespace Frostbyte
             return true;
         }
         #endregion Magic Removes
-        #endregion RemoveItems
+        #endregion Removals
 
         #region Access Values
         internal bool TryGetValue(int x, int y, out Tile value)
@@ -960,13 +965,13 @@ namespace Frostbyte
             {
                 //we want to make sure that we put in empty items
                 //on our grid if our list is empty or the first element has GridCell == null (we can assume the whole set will)
-                if (mTiles.Count > 0 && mTiles[row][0].GridCell!=null)
+                if (mTiles.Count > 0 /*&& mTiles[row][0].GridCell!=null*/)
                     tiles.AddRange(mTiles[row].GetRange(col, colEnd - col + 1));
-                else
-                    for (col = startCell.X; col <= colEnd; col++)
-                    {
-                        tiles.Add(new Tile() { GridCell=new Index2D(col,row) });
-                    }
+                //else
+                //    for (col = startCell.X; col <= colEnd; col++)
+                //    {
+                //        tiles.Add(new Tile() { GridCell=new Index2D(col,row) });
+                //    }
             }
             return tiles;
         }
@@ -980,10 +985,18 @@ namespace Frostbyte
         internal void SetState(List<Tile> list)
         {
             if (mTiles.Count > 0)
-                foreach (var tile in list)
+            {
+                //if the tiles existed we set them back
+                if (list.Count > 0)
+                    foreach (var tile in list)
+                    {
+                        mTiles[tile.GridCell.Y][tile.GridCell.X] = tile;
+                    }
+                else
                 {
-                    mTiles[tile.GridCell.Y][tile.GridCell.X] = tile;
+                    //otherwise we have to remove them somehow...
                 }
+            }
         }
         #endregion Access Values
 

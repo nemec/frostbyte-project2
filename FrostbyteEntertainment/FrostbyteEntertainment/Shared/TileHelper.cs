@@ -27,8 +27,8 @@ namespace Frostbyte
         /// <param name="y">Ycoord == Row</param>
         public Index2D(int x, int y)
         {
-            X = x > 0 ? x : 0;
-            Y = y > 0 ? y : 0;
+            X = x;
+            Y = y;
         }
 
         /// <summary>
