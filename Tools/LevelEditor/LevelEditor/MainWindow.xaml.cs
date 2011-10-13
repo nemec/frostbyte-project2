@@ -44,8 +44,8 @@ namespace LevelEditor
 
         public Vector GridCell = new Vector(-1, -1);
 
-        public Point StartCell { get; set; }
-        public Point EndCell { get; set; }
+        public Point StartPoint { get; set; }
+        public Point EndPoint { get; set; }
 
         public int Cellsize = 64;
 
@@ -317,8 +317,8 @@ namespace LevelEditor
             //}
             SelectedObject = null;
             SelectedTile = null;
-            StartCell = new Point(-1, -1);
-            EndCell = new Point(-1, -1);
+            StartPoint = new Point(-1, -1);
+            EndPoint = new Point(-1, -1);
             ClearTile = true;
             CancelSelection = false;
         }
@@ -338,6 +338,11 @@ namespace LevelEditor
             return ts;
         }
 
+        /// <summary>
+        /// Adds a tile to the list and the map
+        /// </summary>
+        /// <param name="newpt"></param>
+        /// <returns></returns>
         private List<Tile> AddTile(Vector newpt)
         {
             List<Tile> tiles = new List<Tile>();
@@ -366,7 +371,7 @@ namespace LevelEditor
                     Tile toadd = Tile.DeepCopy(SelectedTile);
 
                     //orient it
-                    Point p = EndCell - (Vector)StartCell;
+                    Point p = EndPoint - (Vector)StartPoint;
                     Index2D orientation = new Index2D(p.X, p.Y);
                     if (orientation.X > 0 && orientation.Y < 0)
                     {
@@ -413,6 +418,11 @@ namespace LevelEditor
             return tiles;
         }
 
+        /// <summary>
+        /// Remmoves a tile from the grid and the map
+        /// </summary>
+        /// <param name="newpt"></param>
+        /// <returns></returns>
         private List<Tile> RemoveTile(Vector newpt)
         {
             //remove old element
@@ -572,11 +582,13 @@ namespace LevelEditor
                     Moving = true;
                     if (!SelectedTile.IsSpecialObject)
                     {
-                        EndCell = e.GetPosition(Level);
+                        EndPoint = e.GetPosition(Level);
+                        Vector startTemp = GetCell(StartPoint);
+                        Vector endTemp = GetCell(EndPoint);
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
-                        UndoableAction ua = new UndoableAction() { Added = true, OldState = TileMap.GetCurrentState(new Index2D(StartCell.X, StartCell.Y), new Index2D(EndCell.X, EndCell.Y)) };
-                        foreach (Tile item in AddTile(GetCell(EndCell)))
+                        UndoableAction ua = new UndoableAction() { Added = true, OldState = TileMap.GetCurrentState(new Index2D(startTemp.X, startTemp.Y), new Index2D(endTemp.X, endTemp.Y)) };
+                        foreach (Tile item in AddTile(endTemp))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -604,8 +616,8 @@ namespace LevelEditor
                 {
                     if (SelectedObject == null)
                     {
-                        StartCell = e.GetPosition(Level);
-                        GridCell = GetCell(StartCell);
+                        StartPoint = e.GetPosition(Level);
+                        GridCell = GetCell(StartPoint);
                         Index2D i = new Index2D(GridCell.X, GridCell.Y);
                         // fill the pieces
                         if (SelectedTile.Name == "Room")
@@ -640,13 +652,13 @@ namespace LevelEditor
                     }
                     else//here we complete things for the object
                     {
-                        EndCell = e.GetPosition(Level);
-                        GridCell = GetCell(EndCell);
+                        EndPoint = e.GetPosition(Level);
+                        GridCell = GetCell(EndPoint);
 
                         SelectedObject.EndCell = new Index2D(GridCell.X, GridCell.Y);
 
                         //determine orientation
-                        Point change = EndCell - (Vector)StartCell;
+                        Point change = EndPoint - (Vector)StartPoint;
                         Index2D diff = new Index2D(change.X, change.Y);
                         if (SelectedObject.Type == TileTypes.Wall)
                         {
@@ -677,7 +689,7 @@ namespace LevelEditor
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
                         UndoableAction ua = new UndoableAction() { Added = false, OldState = TileMap.GetCurrentState(new Index2D(GridCell.X, GridCell.Y), new Index2D(GridCell.X, GridCell.Y)) };
-                        foreach (Tile item in RemoveTile(GetCell(EndCell)))
+                        foreach (Tile item in RemoveTile(GridCell))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -694,13 +706,13 @@ namespace LevelEditor
                 {
                     if (SelectedTile != null)
                     {
-                        StartCell = e.GetPosition(Level);
-                        GridCell = GetCell(StartCell);
+                        StartPoint = e.GetPosition(Level);
+                        GridCell = GetCell(StartPoint);
                         FirstClick = true;
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
-                        UndoableAction ua = new UndoableAction() { Added = true, OldState = TileMap.GetCurrentState(new Index2D(StartCell.X, StartCell.Y), new Index2D(EndCell.X, EndCell.Y)) };
-                        foreach (Tile item in AddTile(GetCell(EndCell)))
+                        UndoableAction ua = new UndoableAction() { Added = true, OldState = TileMap.GetCurrentState(new Index2D(GridCell.X, GridCell.Y), new Index2D(GridCell.X, GridCell.Y)) };
+                        foreach (Tile item in AddTile(GridCell))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -716,7 +728,7 @@ namespace LevelEditor
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
                         UndoableAction ua = new UndoableAction() { Added = false, OldState = TileMap.GetCurrentState(new Index2D(GridCell.X, GridCell.Y), new Index2D(GridCell.X, GridCell.Y)) };
-                        foreach (Tile item in RemoveTile(GetCell(EndCell)))
+                        foreach (Tile item in RemoveTile(GridCell))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -810,16 +822,14 @@ namespace LevelEditor
 
         private void UndoAction(object sender, ExecutedRoutedEventArgs e)
         {
-            var tiles = Undo();
-            ClearTiles(tiles);
-            AddToGrid(tiles);
+            UndoOrRedo(true);
+            LoadGrid(TileMap);
         }
 
         private void RedoAction(object sender, ExecutedRoutedEventArgs e)
         {
-            var tiles = Redo();
-            ClearTiles(tiles);
-            AddToGrid(tiles);
+            UndoOrRedo(false);
+            LoadGrid(TileMap);
         }
         #endregion MenuFunctions
 
@@ -841,103 +851,28 @@ namespace LevelEditor
         }
         #endregion Execution
 
-        #region Undo
+        #region Undo/redo
         /// <summary>
         /// List of tiles that have been removed. 
         /// </summary>
         Stack<UndoableAction> UndoTiles = new Stack<UndoableAction>();
 
-        public List<Tile> Undo()
-        {
-            List<Tile> tiles = new List<Tile>();
-            UndoableAction placedObject = UndoTiles.Pop();
-            List<LevelObject> objs = placedObject.Objects;
-            foreach (LevelObject obj in objs)
-            {
-                if (obj is Frostbyte.Tile)
-                {
-                    Frostbyte.Tile t = obj as Frostbyte.Tile;
-                    if (placedObject.Added)
-                    {
-                        //remove the tiles
-                        TileMap.Remove(t);
-                        //pass data out of fn
-                        tiles.Add(new Tile(t));
-                        //replace with old tiles
-                        TileMap.SetState(placedObject.OldState);
-                        //we've just been removed
-                        placedObject.Added = false;
-                        //now we can redo what we just undid
-                        RedoTiles.Push(placedObject);
-                    }
-                    else
-                    {
-                        //copy current state
-                        placedObject.OldState = TileMap.GetCurrentState(t.GridCell, t.GridCell);
-                        //add new tiles
-                        TileMap.Add(t);
-                        //pass tiles out of fn
-                        tiles.Add(new Tile(t));
-                        //we've just been added
-                        placedObject.Added = true;
-                        //let us be able to undo this sucker
-                        RedoTiles.Push(placedObject);
-                    }
-                }
-                else if (obj is LevelPart)
-                {
-                    LevelPart lp = obj as LevelPart;
-                    List<Frostbyte.Tile> fbts = new List<Frostbyte.Tile>();
-                    if (placedObject.Added)
-                    {
-                        //remove the tiles
-                        ClearTiles(ToListTile(TileMap.Remove(lp)));
-                        //replace with old tiles
-                        TileMap.SetState(placedObject.OldState);
-                        //pass out the old state to draw
-                        foreach (var thing in placedObject.OldState)
-                        {
-                            fbts.Add(thing);
-                        }
-                        //we've just been removed
-                        placedObject.Added = false;
-                        //now we can redo what we just undid
-                        RedoTiles.Push(placedObject);
-                    }
-                    else
-                    {
-                        //copy current state
-                        placedObject.OldState = TileMap.GetCurrentState(lp.StartCell, lp.EndCell);
-                        //add new tiles and pass out the result
-                        fbts = TileMap.Add(lp);
-                        //we've just been added
-                        placedObject.Added = true;
-                        //Now we can redo this
-                        RedoTiles.Push(placedObject);
-                    }
-
-                    //pass tiles to draw out of the fn
-                    foreach (var item in fbts)
-                    {
-                        tiles.Add(new Tile(item));
-                    }
-                }
-            }
-            return tiles;
-        }
-        #endregion Undo
-
-        #region Redo
         /// <summary>
         /// List of tiles that have been removed. 
         /// </summary>
         Stack<UndoableAction> RedoTiles = new Stack<UndoableAction>();
 
-        public List<Tile> Redo()
+        /// <summary>
+        /// Undoes or redoes the last action
+        /// </summary>
+        /// <param name="undo">True means undo False means redo</param>
+        /// <returns>List of tiles to replace on the grid</returns>
+        public List<Tile> UndoOrRedo(bool undo)
         {
             List<Tile> tiles = new List<Tile>();
-            UndoableAction placedObject = RedoTiles.Pop();
+            UndoableAction placedObject = undo ? UndoTiles.Pop() : RedoTiles.Pop();
             List<LevelObject> objs = placedObject.Objects;
+            bool oldStateSet = false;
             foreach (LevelObject obj in objs)
             {
                 if (obj is Frostbyte.Tile)
@@ -947,27 +882,19 @@ namespace LevelEditor
                     {
                         //remove the tiles
                         TileMap.Remove(t);
-                        //pass data out of fn
-                        tiles.Add(new Tile(t));
-                        //replace with old tiles
-                        TileMap.SetState(placedObject.OldState);
-                        //we've just been removed
-                        placedObject.Added = false;
-                        //now we can redo what we just undid
-                        UndoTiles.Push(placedObject);
                     }
                     else
                     {
                         //copy current state
-                        placedObject.OldState = TileMap.GetCurrentState(t.GridCell, t.GridCell);
+                        if (!oldStateSet)
+                        {
+                            oldStateSet = true;
+                            placedObject.OldState = TileMap.GetCurrentState(t.GridCell, t.GridCell);
+                        }
                         //add new tiles
                         TileMap.Add(t);
                         //pass tiles out of fn
                         tiles.Add(new Tile(t));
-                        //we've just been added
-                        placedObject.Added = true;
-                        //let us be able to undo this sucker
-                        UndoTiles.Push(placedObject);
                     }
                 }
                 else if (obj is LevelPart)
@@ -978,28 +905,17 @@ namespace LevelEditor
                     {
                         //remove the tiles
                         ClearTiles(ToListTile(TileMap.Remove(lp)));
-                        //replace with old tiles
-                        TileMap.SetState(placedObject.OldState);
-                        //pass out the old state to draw
-                        foreach (var thing in placedObject.OldState)
-                        {
-                            fbts.Add(thing);
-                        }
-                        //we've just been removed
-                        placedObject.Added = false;
-                        //now we can redo what we just undid
-                        UndoTiles.Push(placedObject);
                     }
                     else
                     {
                         //copy current state
-                        placedObject.OldState = TileMap.GetCurrentState(lp.StartCell, lp.EndCell);
+                        if (!oldStateSet)
+                        {
+                            oldStateSet = true;
+                            placedObject.OldState = TileMap.GetCurrentState(lp.StartCell, lp.EndCell);
+                        }
                         //add new tiles and pass out the result
                         fbts = TileMap.Add(lp);
-                        //we've just been added
-                        placedObject.Added = true;
-                        //Now we can redo this
-                        UndoTiles.Push(placedObject);
                     }
 
                     //pass tiles to draw out of the fn
@@ -1009,9 +925,26 @@ namespace LevelEditor
                     }
                 }
             }
+            //replace with old tiles'
+            if (placedObject.Added)
+            {
+                TileMap.SetState(placedObject.OldState);
+                //pass data out of fn
+                foreach (var tile in placedObject.OldState)
+                {
+                    tiles.Add(new Tile(tile));
+                }
+            }
+            //we've just been removed
+            placedObject.Added = !placedObject.Added;
+            //now we can undo/redo what we just did
+            if (undo)
+                RedoTiles.Push(placedObject);
+            else
+                UndoTiles.Push(placedObject);
             return tiles;
         }
-        #endregion Redo
+        #endregion Redo/undo
     }
 
 

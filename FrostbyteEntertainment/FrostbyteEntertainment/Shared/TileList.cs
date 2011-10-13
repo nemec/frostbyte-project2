@@ -968,8 +968,13 @@ namespace Frostbyte
                 if (mTiles.Count > 0 &&
                     mTiles.Count > row &&//make sure the row exists
                     mTiles[row].Count > col &&//make sure the col exists
-                    mTiles[row][col].GridCell != null)
-                    tiles.AddRange(mTiles[row].GetRange(col, colEnd - col + 1));
+                    mTiles[row].Count > colEnd //make sure the colEnd exists
+                   )
+                    for (col = Math.Min(startCell.X, endCell.X); col <= colEnd; col++)
+                    {
+                        Tile t = mTiles[row][col];
+                        tiles.Add(t.GridCell!=null?t:new Tile() { GridCell = new Index2D(col, row) });
+                    }
                 else
                     for (col = Math.Min(startCell.X, endCell.X); col <= colEnd; col++)
                     {
@@ -993,6 +998,7 @@ namespace Frostbyte
                 if (list.Count > 0 && list[0].GridCell != null)
                     foreach (var tile in list)
                     {
+                        if(tile.GridCell!=null)
                         mTiles[tile.GridCell.Y][tile.GridCell.X] = tile;
                     }
                 //else if(ts!=null)
@@ -1002,6 +1008,27 @@ namespace Frostbyte
                 //        mTiles[tile.GridCell.Y][tile.GridCell.X] = new Tile();
                 //    }
                 //}
+            }
+        }
+
+        /// <summary>
+        /// Returns the MaxColumn that the list has. Returns -1 if the list is empty
+        /// </summary>
+        public int MaxColumn
+        {
+            get
+            {
+                return mTiles.Count > 0 ? mTiles[0].Count - 1 : -1;
+            }
+        }
+        /// <summary>
+        /// Returns the MaxRow that the list has. Returns -1 if the list is empty
+        /// </summary>
+        public int MaxRow
+        {
+            get
+            {
+                return mTiles.Count - 1;
             }
         }
         #endregion Access Values
