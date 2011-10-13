@@ -961,17 +961,20 @@ namespace Frostbyte
         {
             List<Tile> tiles = new List<Tile>();
 
-            for (int row = startCell.Y, rowEnd = endCell.Y, col = startCell.X, colEnd = endCell.X; row <= rowEnd; row++)
+            for (int row = startCell.Y, rowEnd = endCell.Y, col = Math.Min(startCell.X, endCell.X), colEnd = Math.Max(startCell.X, endCell.X); row <= rowEnd; row++)
             {
                 //we want to make sure that we put in empty items
                 //on our grid if our list is empty or the first element has GridCell == null (we can assume the whole set will)
-                if (mTiles.Count > 0 /*&& mTiles[row][0].GridCell!=null*/)
+                if (mTiles.Count > 0 &&
+                    mTiles.Count > row &&//make sure the row exists
+                    mTiles[row].Count > col &&//make sure the col exists
+                    mTiles[row][col].GridCell != null)
                     tiles.AddRange(mTiles[row].GetRange(col, colEnd - col + 1));
-                //else
-                //    for (col = startCell.X; col <= colEnd; col++)
-                //    {
-                //        tiles.Add(new Tile() { GridCell=new Index2D(col,row) });
-                //    }
+                else
+                    for (col = Math.Min(startCell.X, endCell.X); col <= colEnd; col++)
+                    {
+                        tiles.Add(new Tile() { GridCell = new Index2D(col, row) });
+                    }
             }
             return tiles;
         }
@@ -982,20 +985,23 @@ namespace Frostbyte
         /// Only functions if the tiles already have data
         /// </summary>
         /// <param name="list">List of tiles to place where they go</param>
-        internal void SetState(List<Tile> list)
+        internal void SetState(List<Tile> list, List<Tile> ts = null)
         {
             if (mTiles.Count > 0)
             {
                 //if the tiles existed we set them back
-                if (list.Count > 0)
+                if (list.Count > 0 && list[0].GridCell != null)
                     foreach (var tile in list)
                     {
                         mTiles[tile.GridCell.Y][tile.GridCell.X] = tile;
                     }
-                else
-                {
-                    //otherwise we have to remove them somehow...
-                }
+                //else if(ts!=null)
+                //{
+                //    foreach (var tile in ts)
+                //    {
+                //        mTiles[tile.GridCell.Y][tile.GridCell.X] = new Tile();
+                //    }
+                //}
             }
         }
         #endregion Access Values
