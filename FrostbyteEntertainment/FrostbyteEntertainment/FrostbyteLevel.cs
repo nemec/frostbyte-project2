@@ -57,6 +57,7 @@ namespace Frostbyte
     /// </summary>
     class FrostbyteLevel : Level
     {
+        #region Constructors
         internal Vector2[] PlayerSpawnPoint = new Vector2[2]{
             new Vector2(50, 50),
             new Vector2(60, 50)
@@ -67,7 +68,9 @@ namespace Frostbyte
             : base(n, loadBehavior, updateBehavior, endBehavior, winCondition)
         {
         }
+        #endregion
 
+        #region Variables
         /// <summary>
         /// Target lists
         /// </summary>
@@ -79,6 +82,14 @@ namespace Frostbyte
         private Vector3 StartDraw;
         private Vector3 EndDraw;
         private Polygon viewportPolygon = null;
+        #endregion
+
+        #region Constants
+        private readonly float MAX_ZOOM = 1.0f;
+        private readonly float MIN_ZOOM = 0.8f;
+        private readonly int BORDER_WIDTH = 200;
+        private readonly int BORDER_HEIGHT = 200;
+        #endregion
 
         /// <summary>
         /// A list of levels in the order they should be played through
@@ -97,8 +108,14 @@ namespace Frostbyte
         /// </summary>
         internal static int CurrentStage = 0;
 
+        /// <summary>
+        /// Iterates through every player onscreen to gather the minimum and maximum X and Y coordinates
+        /// for any of the players. The new zoom/scale factor is calculated and then the viewport is shifted
+        /// if need be.
+        /// </summary>
         internal void RealignViewport()
         {
+            #region Create Viewport
             if (viewportPolygon == null)
             {
                 Viewport viewport = This.Game.GraphicsDevice.Viewport;
@@ -111,18 +128,15 @@ namespace Frostbyte
                 });
                 viewportPolygon.Static = true;
             }
+            #endregion
 
             List<Sprite> players = GetSpritesByType(typeof(Player));
             if (players != null && players.Count > 0)
             {
-                Viewport viewport = This.Game.GraphicsDevice.Viewport;
-                Vector2 cameraPos = This.Game.CurrentLevel.Camera.Pos;
-                int borderWidth = 200;
-                int borderHeight = 200;
-
                 Vector2 min = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
                 Vector2 max = new Vector2(float.NegativeInfinity, float.NegativeInfinity);
-                float scale = This.Game.CurrentLevel.Camera.Zoom;
+
+                #region Find Min and Max
                 foreach (Sprite player in players)
                 {
                     if (player.Pos.X < min.X)
@@ -142,40 +156,49 @@ namespace Frostbyte
                         max.Y = player.Pos.Y + player.GetAnimation().Height;
                     }
                 }
+                #endregion
 
-                float w = (viewport.Width - 2 * borderWidth);
-                float h = (viewport.Height - 2 * borderHeight);
+                #region Calculate Zoom Factor
+                Viewport viewport = This.Game.GraphicsDevice.Viewport;
+                float zoom = This.Game.CurrentLevel.Camera.Zoom;
+                Vector2 span = max - min;
+                zoom = Math.Min((viewport.Width - 2 * BORDER_WIDTH) / span.X,
+                                (viewport.Height - 2 * BORDER_HEIGHT) / span.Y);
 
-                Vector2 spread = max - min;
-                scale = Math.Min(w / spread.X, h / spread.Y);
-                scale = scale > 1 ? 1 : scale;
-                
-                This.Game.CurrentLevel.Camera.Zoom = scale;
+                // Normalize values if necessary
+                zoom = zoom > MAX_ZOOM ? MAX_ZOOM : zoom;
+                zoom = zoom < MIN_ZOOM ? MIN_ZOOM : zoom;
+                #endregion
 
-                cameraPos.X = min.X - borderWidth / scale;
-                cameraPos.Y = min.Y - borderHeight / scale;
-
-                /*Vector2 minDiff = min - cameraPos;
-                Vector2 maxDiff = max - cameraPos;
-                float sw = borderWidth / scale;
-                float sh = borderHeight / scale;
-                if (minDiff.X < viewport.X + sw)
+                Vector2 cameraPos = This.Game.CurrentLevel.Camera.Pos;
+                #region Shift Viewport
+                if (zoom <= MAX_ZOOM && zoom > MIN_ZOOM)
                 {
-                    cameraPos.X -= sw - (minDiff.X);
+                    Vector2 topLeftCorner = min - cameraPos;
+                    Vector2 bottomRightCorner = max - cameraPos;
+
+                    if (topLeftCorner.X < viewport.X + BORDER_WIDTH / zoom)
+                    {
+                        cameraPos.X += topLeftCorner.X - (viewport.X + BORDER_WIDTH) / zoom;
+                    }
+                    else if (bottomRightCorner.X > viewport.X + (viewport.Width - BORDER_WIDTH) / zoom)
+                    {
+                        cameraPos.X += bottomRightCorner.X - (viewport.X + (viewport.Width - BORDER_WIDTH) / zoom);
+                    }
+
+                    if (topLeftCorner.Y < viewport.Y + BORDER_HEIGHT / zoom)
+                    {
+                        cameraPos.Y += topLeftCorner.Y - (viewport.Y + BORDER_HEIGHT) / zoom;
+                    }
+                    else if (bottomRightCorner.Y > viewport.Y + (viewport.Height - BORDER_HEIGHT) / zoom)
+                    {
+                        cameraPos.Y += bottomRightCorner.Y - (viewport.Y + (viewport.Height - BORDER_HEIGHT) / zoom);
+                    }
                 }
-                else if (maxDiff.X > viewport.X + viewport.Width - sw)
-                {
-                    cameraPos.X += sw - (viewport.Width - (maxDiff.X));
-                }
-                if (minDiff.Y < viewport.Y + sh)
-                {
-                    cameraPos.Y -= sh - (minDiff.Y);
-                }
-                else if (maxDiff.Y > viewport.Y + viewport.Height - sh)
-                {
-                    cameraPos.Y += sh - (viewport.Height - (maxDiff.Y));
-                }*/
+                #endregion
+
                 This.Game.CurrentLevel.Camera.Pos = cameraPos;
+                This.Game.CurrentLevel.Camera.Zoom = zoom;
             }
         }
 
@@ -185,45 +208,14 @@ namespace Frostbyte
 
             RealignViewport();
 
-            /*KeyboardState k = Keyboard.GetState();
-            if (k.IsKeyDown(Keys.K))
-            {
-                Camera.Pos = new Vector2(Camera.Pos.X, Camera.Pos.Y + 5);
-            }
-            else if (k.IsKeyDown(Keys.I))
-            {
-                Camera.Pos = new Vector2(Camera.Pos.X, Camera.Pos.Y - 5);
-            }
-
-            if (k.IsKeyDown(Keys.L))
-            {
-                Camera.Pos = new Vector2(Camera.Pos.X + 5, Camera.Pos.Y);
-            }
-            if (k.IsKeyDown(Keys.J))
-            {
-                Camera.Pos = new Vector2(Camera.Pos.X - 5, Camera.Pos.Y);
-            }
-
-            if (k.IsKeyDown(Keys.PageUp))
-            {
-                Camera.Zoom += 0.05f;
-            }
-            else if (k.IsKeyDown(Keys.PageDown))
-            {
-                Camera.Zoom -= 0.05f;
-            }
-            else if (k.IsKeyDown(Keys.Home))
-            {
-                Camera.Zoom = 1f;
-            }*/
-            
-
-            Matrix drawTransformation = Camera.GetTransformation(This.Game.GraphicsDevice);
-            Viewport viewport = This.Game.GraphicsDevice.Viewport;
             Vector3 cameraPosition = new Vector3(Camera.Pos, 0);
+            Viewport viewport = This.Game.GraphicsDevice.Viewport;
+            float zoom = This.Game.CurrentLevel.Camera.Zoom;
 
-            StartDraw = (cameraPosition) / Tile.TileSize;
-            EndDraw = (cameraPosition + new Vector3(viewport.Width, viewport.Height, 0)) / Tile.TileSize;
+            StartDraw = (cameraPosition + new Vector3(viewport.X, viewport.Y, 0)) / Tile.TileSize;
+            EndDraw = (cameraPosition + new Vector3(viewport.X + viewport.Width / zoom,
+                                                viewport.Y + viewport.Height / zoom, 0)) / Tile.TileSize;
+            Debug.WriteLine(EndDraw);
         }
         
         internal override void Draw(GameTime gameTime)
