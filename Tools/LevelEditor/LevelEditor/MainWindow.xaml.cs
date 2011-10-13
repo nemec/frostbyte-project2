@@ -486,6 +486,10 @@ namespace LevelEditor
             }
         }
 
+        /// <summary>
+        /// adds tiles to the grid from a level obj list
+        /// </summary>
+        /// <param name="list"></param>
         private void AddTiles(List<LevelObject> list)
         {
             List<Tile> ts = new List<Tile>();
@@ -496,6 +500,10 @@ namespace LevelEditor
             AddToGrid(ts);
         }
 
+        /// <summary>
+        /// adds tiles to the grid
+        /// </summary>
+        /// <param name="tiles"></param>
         private void AddToGrid(List<Tile> tiles)
         {
             foreach (Tile t in tiles)
@@ -506,12 +514,10 @@ namespace LevelEditor
             }
         }
 
-        private void SwapTiles(List<Tile> list)
-        {
-            RemoveTiles(list);
-            AddToGrid(list);
-        }
-
+        /// <summary>
+        /// removes tiles form the grid and the list
+        /// </summary>
+        /// <param name="list"></param>
         private void RemoveTiles(List<Tile> list)
         {
             foreach (Tile o in list)
@@ -520,6 +526,30 @@ namespace LevelEditor
             }
         }
 
+        /// <summary>
+        /// Clears the tiles from the grid
+        /// </summary>
+        /// <param name="list"></param>
+        private void ClearTiles(List<Tile> list)
+        {
+            List<Tile> toRemove = new List<Tile>();
+            foreach (Tile t in list)
+            {
+                foreach (Tile item in Level.Children)
+                {
+                    int x = Grid.GetColumn(item);
+                    int y = Grid.GetRow(item);
+                    if (t.GridCell.X == x && t.GridCell.Y == y)
+                    {
+                        toRemove.Add(item);
+                    }
+                }
+            }
+            foreach (var elem in toRemove)
+            {
+                Level.Children.Remove(elem);
+            }
+        }
         #endregion Helper fns
 
         #region MouseHandlers
@@ -780,13 +810,16 @@ namespace LevelEditor
 
         private void UndoAction(object sender, ExecutedRoutedEventArgs e)
         {
-
-            SwapTiles(Undo());
+            var tiles = Undo();
+            ClearTiles(tiles);
+            AddToGrid(tiles);
         }
 
         private void RedoAction(object sender, ExecutedRoutedEventArgs e)
         {
-            SwapTiles(Redo());
+            var tiles = Redo();
+            ClearTiles(tiles);
+            AddToGrid(tiles);
         }
         #endregion MenuFunctions
 
@@ -840,7 +873,7 @@ namespace LevelEditor
                     else
                     {
                         //copy current state
-                        placedObject.OldState = TileMap.GetCurrentState(t.GridCell,t.GridCell);
+                        placedObject.OldState = TileMap.GetCurrentState(t.GridCell, t.GridCell);
                         //add new tiles
                         TileMap.Add(t);
                         //pass tiles out of fn
@@ -858,11 +891,11 @@ namespace LevelEditor
                     if (placedObject.Added)
                     {
                         //remove the tiles
-                        TileMap.Remove(lp);
+                        ClearTiles(ToListTile(TileMap.Remove(lp)));
                         //replace with old tiles
                         TileMap.SetState(placedObject.OldState);
                         //pass out the old state to draw
-                        foreach(var thing in placedObject.OldState)
+                        foreach (var thing in placedObject.OldState)
                         {
                             fbts.Add(thing);
                         }
@@ -944,7 +977,7 @@ namespace LevelEditor
                     if (placedObject.Added)
                     {
                         //remove the tiles
-                        TileMap.Remove(lp);
+                        ClearTiles(ToListTile(TileMap.Remove(lp)));
                         //replace with old tiles
                         TileMap.SetState(placedObject.OldState);
                         //pass out the old state to draw
