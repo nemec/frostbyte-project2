@@ -478,24 +478,9 @@ namespace LevelEditor
         void LoadGrid(TileList tm)
         {
             TileMap = tm;
-            var l = tm.Data;
-            var tiles = l.Item2;
-            foreach (var list in tiles)
-            {
-                foreach (var tile in list)
-                {
-                    if (tile.Type != TileTypes.DEFAULT)
-                    {
-                        Tile t = new Tile(tile);
-                        Grid.SetColumn(t, tile.GridCell.X);
-                        Grid.SetRow(t, tile.GridCell.Y);
-
-                        Level.Children.Add(t);
-                    }
-                }
-            }
+            ReloadGrid();
         }
-
+        
         /// <summary>
         /// adds tiles to the grid from a level obj list
         /// </summary>
@@ -558,6 +543,30 @@ namespace LevelEditor
             foreach (var elem in toRemove)
             {
                 Level.Children.Remove(elem);
+            }
+        }
+
+        /// <summary>
+        /// Redraws the grid from the current TileMap
+        /// </summary>
+        private void ReloadGrid()
+        {
+            Level.Children.Clear();
+            var l = TileMap.Data;
+            var tiles = l.Item2;
+            foreach (var list in tiles)
+            {
+                foreach (var tile in list)
+                {
+                    if (tile.Type != TileTypes.DEFAULT)
+                    {
+                        Tile t = new Tile(tile);
+                        Grid.SetColumn(t, tile.GridCell.X);
+                        Grid.SetRow(t, tile.GridCell.Y);
+
+                        Level.Children.Add(t);
+                    }
+                }
             }
         }
         #endregion Helper fns
@@ -680,6 +689,7 @@ namespace LevelEditor
 
                         SelectedObject = null;
                     }
+                    RedoTiles.Clear();
                 }
                 else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
                 {
@@ -718,6 +728,7 @@ namespace LevelEditor
                         }
                         ua.Objects = lo;
                         UndoTiles.Push(ua);
+                        RedoTiles.Clear();
                     }
                 }
                 else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
@@ -766,7 +777,6 @@ namespace LevelEditor
             d.Filter = "Level files (.xml)|*.xml";
             if (d.ShowDialog() == true)
             {
-                Level.Children.Clear();
                 LoadGrid(new TileList(XDocument.Load(d.FileName)));
             }
         }
@@ -823,13 +833,13 @@ namespace LevelEditor
         private void UndoAction(object sender, ExecutedRoutedEventArgs e)
         {
             UndoOrRedo(true);
-            LoadGrid(TileMap);
+            ReloadGrid();
         }
 
         private void RedoAction(object sender, ExecutedRoutedEventArgs e)
         {
             UndoOrRedo(false);
-            LoadGrid(TileMap);
+            ReloadGrid();
         }
         #endregion MenuFunctions
 
