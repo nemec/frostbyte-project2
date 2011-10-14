@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 
 namespace Frostbyte.Enemies
@@ -56,58 +57,59 @@ namespace Frostbyte.Enemies
         protected abstract void updateMovement();
         protected abstract void updateAttack();
 
+        private Sprite GetClosestTarget(List<Sprite> targets)
+        {
+            return GetClosestTarget(targets, float.PositiveInfinity);
+        }
+
+        /// <summary>
+        /// Returns a sprite in targets that is closest to the enemy's current position
+        /// and within aggroDistance distance from the current position.
+        /// </summary>
+        /// <param name="targets"></param>
+        /// <param name="aggroDistance"></param>
+        /// <returns></returns>
+        private Sprite GetClosestTarget(List<Sprite> targets, float aggroDistance)
+        {
+            Sprite min = null;
+            foreach (Sprite target in targets)
+            {
+                if (target == this)
+                {
+                    continue;
+                }
+                if (min == null ||
+                    Vector2.DistanceSquared(target.Pos, CenterPos) <
+                    Vector2.DistanceSquared(min.Pos, CenterPos))
+                {
+                    if (Vector2.DistanceSquared(target.Pos, CenterPos) <= aggroDistance * aggroDistance)
+                    {
+                        min = target;
+                    }
+                }
+            }
+            return min;
+        }
+
         #region AI Movements
         //These are only to update position of enemy
         
         /// <summary>
         /// Update enemy position directly toward target for given duration - complete
         /// </summary>
-        protected bool charge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
+        protected bool charge(List<Sprite> targets, float aggroDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            Sprite min = GetClosestTarget(targets, aggroDistance);
+
+            if (min == null)  // No targets, so just continue on
+            {
+                return true;
+            }
+
             float chargeSpeed = Speed * speedMultiplier;
-            int playerToCharge = 0;
-
-
-            // choose which player to charge
-            if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
-            {
-                // charge P1
-                playerToCharge = 1;
-                isCharging = true;
-            }
-
-            else if ((distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
-            {
-                // charge P2
-                playerToCharge = 2;
-                isCharging = true;
-            }
-
-            else return true;
-
-            if (isCharging)
-            {
-
-                if (playerToCharge == 1)
-                {
-                    direction = P1Coord - CenterPos();
-                    direction.Normalize();
-                    Pos += direction * chargeSpeed;
-
-                }
-                else if (playerToCharge == 2)
-                {
-                    direction = P2Coord - CenterPos();
-                    direction.Normalize();
-                    Pos += direction * chargeSpeed;
-                }
-            }
-            else
-            {
-                movementStartTime = This.gameTime.TotalGameTime;
-            }
+            direction = min.Pos - CenterPos;
+            direction.Normalize();
+            Pos += direction * chargeSpeed;
 
             return false;
         }
@@ -115,45 +117,37 @@ namespace Frostbyte.Enemies
         /// <summary>
         /// Update enemy position directly toward target with variation of speed (sinusoidal) for given duration - complete
         /// </summary>
-        protected bool pulseCharge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
+        protected bool pulseCharge(List<Sprite> targets, float aggroDistance, float speedMultiplier)
         {
             speedMultiplier = (float) Math.Sin( (2 * This.gameTime.TotalGameTime.Milliseconds / 1000.0 ) * (2 * Math.PI) ) + 1.5f;
 
-            return charge(P1Coord, P2Coord, aggroDistance, speedMultiplier);
+            return charge(targets, aggroDistance, speedMultiplier);
         }
 
         /// <summary>
         /// Charge but do not update direction for length of charge - complete
         /// </summary>
-        protected bool ram(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
+        protected bool ram(List<Sprite> targets, TimeSpan duration, float aggroDistance, float speedMultiplier)
         {
-            // check this stuff before committing to the ram
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            if (!isRamming)
+            {
+                movementStartTime = This.gameTime.TotalGameTime;
+
+                Sprite target = GetClosestTarget(targets, aggroDistance);
+                if (target != null)
+                {
+                    direction = target.Pos - CenterPos;
+                    direction.Normalize();
+                    isRamming = true;
+                }
+            }
+
             float ramSpeed = Speed * speedMultiplier;
-
-            if ( !isRamming && (distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
-            {
-                // charge P1
-                direction = P1Coord - CenterPos();
-                isRamming = true;
-            }
-
-            else if (!isRamming && (distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
-            {
-                // charge P2
-                direction = P2Coord - CenterPos();
-                isRamming = true;
-            }
 
             if (isRamming)
             {
-                // Snapshot current gameTime
-
-
                 if (This.gameTime.TotalGameTime <= movementStartTime + duration)
                 {
-                    direction.Normalize();
                     Pos += direction * ramSpeed;
                 }
                 else
@@ -163,75 +157,42 @@ namespace Frostbyte.Enemies
                 }
             }
 
-            else
-            {
-                movementStartTime = This.gameTime.TotalGameTime;
-            }
-
             return false;
         }
 
         /// <summary>
         /// Hide and follow player until certain distance from player - complete
         /// </summary>
-        protected bool stealthCharge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float visibleDistance, float speedMultiplier)
+        protected bool stealthCharge(List<Sprite> targets, TimeSpan duration, float aggroDistance, float visibleDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            if (!isCharging)
+            {
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            Sprite target = GetClosestTarget(targets, aggroDistance);
+            if (target != null)
+            {
+                isCharging = true;
+                if (Vector2.DistanceSquared(target.Pos, CenterPos) <= visibleDistance * visibleDistance)
+                {
+                    mVisible = true;
+                }
+                else
+                {
+                    mVisible = false;
+                }
+            }
+
             float chargeSpeed = Speed * speedMultiplier;
-            int playerToCharge = 0;
-
-            // choose which player to charge
-            if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
-            {
-                // charge P1
-                playerToCharge = 1;
-                isCharging = true;
-             
-                // decide whether or not to stealth
-                if (distToP1 <= visibleDistance * visibleDistance)
-                {
-                    mVisible = true;
-                }
-                else
-                {
-                    mVisible = false;
-                }
-            }
-
-            else if ((distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
-            {
-                // charge P2
-                playerToCharge = 2;
-                isCharging = true;
-
-                // decide whether or not to stealth
-                if (distToP2 <= visibleDistance * visibleDistance)
-                {
-                    mVisible = true;
-                }
-                else
-                {
-                    mVisible = false;
-                }
-            }
 
             if (isCharging)
             {
                 if (This.gameTime.TotalGameTime <= movementStartTime + duration)
                 {
-                    if (playerToCharge == 1)
-                    {
-                        direction = P1Coord - CenterPos();
-                        direction.Normalize();
-                        Pos += direction * chargeSpeed;
-                    }
-                    else if (playerToCharge == 2)
-                    {
-                        direction = P2Coord - CenterPos();
-                        direction.Normalize();
-                        Pos += direction * chargeSpeed;
-                    }
+                    direction = target.Pos - CenterPos;
+                    direction.Normalize();
+                    Pos += direction * chargeSpeed;
                 }
                 else
                 {
@@ -240,10 +201,6 @@ namespace Frostbyte.Enemies
                     return true;
                 }
             }
-            else
-            {
-                movementStartTime = This.gameTime.TotalGameTime;
-            }
 
             return false;
         }
@@ -251,22 +208,20 @@ namespace Frostbyte.Enemies
         /// <summary>
         /// Be Invisible and still until certain distance from player - complete
         /// </summary>
-        protected bool stealthCamp(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
+        protected bool stealthCamp(List<Sprite> targets, float aggroDistance)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            Sprite target = GetClosestTarget(targets, aggroDistance);
 
-            if (aggroDistance * aggroDistance >= distToP1 /*|| aggroDistance <= distToP2*/)
+            if (target != null)
             {
                 isFrozen = false;
                 mVisible = true;
+                return true;
             }
-
-            else if ( aggroDistance * aggroDistance < distToP1 )
+            else
             {
                 isFrozen = true;
                 mVisible = false;
-                return true;
             }
 
             return false;
@@ -275,92 +230,34 @@ namespace Frostbyte.Enemies
         /// <summary>
         /// Be Invisible and move away until you are y distance away
         /// </summary>
-        protected bool stealthRetreat(Vector2 P1Coord, Vector2 P2Coord, float safeDistance, float speedMultiplier)
+        protected bool stealthRetreat(List<Sprite> targets, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
-            float fleeSpeed = Speed * speedMultiplier;
-            int playerToFlee = 0;
+            mVisible = retreat(targets, safeDistance, speedMultiplier);
+            return mVisible;
+        }
 
-
-            // choose which player to run from
-            if ((distToP1 <= distToP2) && (distToP1 <= safeDistance * safeDistance))
-            {
-                // charge P1
-                mVisible = false;
-                playerToFlee = 1;
-                isCharging = true;
-            }
-
-            else if ((distToP2 < distToP1) && (distToP2 <= safeDistance * safeDistance))
-            {
-                // charge P2
-                mVisible = false;
-                playerToFlee = 2;
-                isCharging = true;
-            }
-
-            else
-            {
-                isCharging = false;
-                mVisible = true;
-                return true;
-            }
-
-            if (isCharging)
-            {
-
-                if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
-                {
-
-                    direction = P1Coord - CenterPos();
-                    direction.Normalize();
-                    Pos -= direction * fleeSpeed;
-                }
-
-                else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
-                {
-                    direction = P2Coord - CenterPos();
-                    direction.Normalize();
-                    Pos -= direction * fleeSpeed;
-                }
-            }
-
-            else
-            {
-                movementStartTime = This.gameTime.TotalGameTime;
-            }
-
-            return false;
+        protected bool retreat(List<Sprite> targets, float safeDistance, float speedMultiplier)
+        {
+            return retreat(targets, TimeSpan.MaxValue, safeDistance, speedMultiplier);
         }
 
         /// <summary>
         /// Move away until x seconds have passed or you are y distance away
         /// </summary>
-        protected bool retreat(Vector2 P1Coord, Vector2 P2Coord, float safeDistance, float speedMultiplier)
+        protected bool retreat(List<Sprite> targets, TimeSpan duration, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            if (!isCharging)
+            {
+                movementStartTime = This.gameTime.TotalGameTime;
+            }
+
+            Sprite target = GetClosestTarget(targets, safeDistance);
             float fleeSpeed = Speed * speedMultiplier;
-            int playerToFlee = 0;
 
-
-            // choose which player to run from
-            if ((distToP1 <= distToP2) && (distToP1 <= safeDistance * safeDistance))
+            if (target != null)
             {
-                // charge P1
-                playerToFlee = 1;
-                isCharging = true;
-                
-            }
-
-            else if ((distToP2 < distToP1) && (distToP2 <= safeDistance * safeDistance))
-            {
-                // charge P2
-                playerToFlee = 2;
                 isCharging = true;
             }
-
             else
             {
                 isCharging = false;
@@ -369,26 +266,19 @@ namespace Frostbyte.Enemies
 
             if (isCharging)
             {
-
-                if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
+                if (This.gameTime.TotalGameTime <= movementStartTime + duration)
                 {
-                    direction = P1Coord - CenterPos();
+                    direction = target.Pos - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
-                else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
+                else
                 {
-                    direction = P2Coord - CenterPos();
-                    direction.Normalize();
-                    Pos -= direction * fleeSpeed;
+                    isCharging = false;
+                    return true;
                 }
-
             }
 
-            else
-            {
-                movementStartTime = This.gameTime.TotalGameTime;
-            }
             return false;
         }
 
@@ -397,8 +287,8 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool teaseRetreat(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
             float fleeSpeed = Speed * speedMultiplier;
             int playerToFlee = 0;
 
@@ -431,13 +321,13 @@ namespace Frostbyte.Enemies
 
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
-                    direction = P1Coord - CenterPos();
+                    direction = P1Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
-                    direction = P2Coord - CenterPos();
+                    direction = P2Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
@@ -467,6 +357,30 @@ namespace Frostbyte.Enemies
                 isFrozen = false;
                 return true;
             }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Wander around for x seconds or until within a certain distance from a target
+        /// 
+        /// </summary>
+        protected bool wander(List<Sprite> targets, TimeSpan duration, float safeDistance, float arcAngle)
+        {
+            Sprite min = GetClosestTarget(targets, safeDistance);
+
+            if (min != null)  // Near a target, move on to something else
+            {
+                return true;
+            }
+            Random r = new Random();
+            double angle = Math.Atan2(direction.Y, direction.X) + (2 * r.NextDouble() - 1) * arcAngle;
+            direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+
+            /*float chargeSpeed = Speed;
+            direction = min.Pos - CenterPos;
+            direction.Normalize();*/
+            Pos += direction * Speed / 2;  // Wandering should be *slow*
 
             return false;
         }

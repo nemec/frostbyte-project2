@@ -90,7 +90,15 @@ namespace Frostbyte
         /// <summary>
         /// The centerpoint of the sprite relative to Pos
         /// </summary>
-        internal Vector2 Center = new Vector2();
+        internal Vector2 Center { get; set; }
+
+        internal Vector2 CenterPos
+        {
+            get
+            {
+                return Pos + Center;
+            }
+        }
         #endregion Properties
 
         #region Variables
