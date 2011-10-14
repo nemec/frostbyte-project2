@@ -46,7 +46,7 @@ namespace Frostbyte
                 }
             }
 
-            foreach (WorldObject worldObject in This.Game.CurrentLevel.mSprites)
+            foreach (WorldObject worldObject in This.Game.CurrentLevel.mWorldObjects)
             {
                 //make sure we've got a bucket list
                 while (Collision.Buckets.Count - 1 < worldObject.CollisionList)
@@ -62,7 +62,7 @@ namespace Frostbyte
 
         internal static void DetectCollisions()
         {
-            if (This.Game.CurrentLevel.mSprites.Count > 0)
+            if (This.Game.CurrentLevel.mWorldObjects.Count > 0)
             {
                 CollisionData = new Dictionary<WorldObject, List<Tuple<CollisionObject, WorldObject, CollisionObject>>>();
 
@@ -160,7 +160,7 @@ namespace Frostbyte
                 basicEffect.VertexColorEnabled = true;
 
 
-                foreach (WorldObject world in This.Game.CurrentLevel.mSprites)
+                foreach (WorldObject world in This.Game.CurrentLevel.mWorldObjects)
                 {
                     foreach (CollisionObject collisionObject in world.GetCollision())
                     {

@@ -28,5 +28,10 @@ namespace Frostbyte
         {
             return new List<Vector2>();
         }
+
+        internal override void Update()
+        {
+            
+        }
     }
 }

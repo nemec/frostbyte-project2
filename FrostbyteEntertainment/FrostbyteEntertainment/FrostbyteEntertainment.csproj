@@ -115,6 +115,7 @@
     <Compile Include="Characters\Mage.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Enemies\Enemy.cs" />
+    <Compile Include="Engine\ParticleEmitter.cs" />
     <Compile Include="Engine\Polygon.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Shared\Enums.cs" />

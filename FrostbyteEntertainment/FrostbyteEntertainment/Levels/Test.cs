@@ -57,6 +57,24 @@ namespace Frostbyte.Levels
             };
             Sprite b = new Sprite("box2", new Actor(new Animation("boxen.anim")),3);*/
 
+            #region particles
+            //virus = This.Game.Content.Load<Texture2D>("virus2");
+            //fire = This.Game.Content.Load<Texture2D>("fire");
+            //blueFire = This.Game.Content.Load<Texture2D>("blue fire");
+            Effect particleEffect = l.GetEffect("ParticleSystem");
+            Texture2D fire = l.GetTexture("fire");
+            Texture2D blueFire = l.GetTexture("blue fire");
+            ParticleEmitter emitter1 = new ParticleEmitter(1000, particleEffect, l.GetTexture("virus2"));
+            ParticleEmitter emitter2 = new ParticleEmitter(2000, particleEffect, fire);
+            ParticleEmitter emitter3 = new ParticleEmitter(1000, particleEffect, blueFire, fire);
+            emitter3.effectTechnique = "ChangePicAndFadeAtPercent";
+            emitter3.fadeStartPercent = .8f;
+            emitter3.changePicPercent = .5f;
+            ParticleEmitter emitter4 = new ParticleEmitter(4000, particleEffect, blueFire, fire);
+            emitter4.effectTechnique = "ChangePicAndFadeAtPercent";
+            emitter4.fadeStartPercent = .8f;
+            emitter4.changePicPercent = .6f;
+            #endregion particles
         }
 
         internal static void Update()

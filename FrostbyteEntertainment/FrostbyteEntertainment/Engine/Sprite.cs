@@ -19,6 +19,7 @@ namespace Frostbyte
             UpdateBehavior = () => { };
             EndBehavior = () => { };
 
+            //adds the sprite to the level
             (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel).AddSprite(this);
             Speed = 3;
 
@@ -70,15 +71,6 @@ namespace Frostbyte
         #endregion Behaviors
 
         #region Methods
-
-        /// <summary>
-        /// Aligns the current sprite ('this') with the provided target sprite
-        /// </summary>
-        /// <param name="target">The sprite to align on</param>
-        internal void CenterOn(Sprite target)
-        {
-            Pos = target.Pos + target.Center - Center;
-        }
 
         internal override List<CollisionObject> GetCollision()
         {
@@ -193,6 +185,10 @@ namespace Frostbyte
         //internal vector<Collision> getCollisionData();
         #endregion Collision
 
+        internal override void Update()
+        {
+            UpdateBehavior();
+        }
         #endregion Methods
 
         #region Variables
