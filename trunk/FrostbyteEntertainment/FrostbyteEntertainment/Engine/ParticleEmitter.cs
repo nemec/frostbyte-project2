@@ -58,7 +58,6 @@ namespace Frostbyte
         private float m_changePicPercent = .80f;
         
         //World/View/Projection Matrices
-        private Matrix wMatrix;
         private Matrix viewMatrix;
         private Matrix projectionMatrix;
 
@@ -74,6 +73,10 @@ namespace Frostbyte
         #region Internal Properties
 
         internal BlendState blendState = BlendState.AlphaBlend;
+
+        /// <summary>
+        /// Types are "FadeAtXPercent", "ChangePicAndFadeAtPercent"
+        /// </summary>
         internal string effectTechnique
         {
             get
@@ -164,11 +167,6 @@ namespace Frostbyte
             //load the HLSL code
             this.effect = effect.Clone();
 
-            //Create View and Projection Matrices
-            wMatrix = Matrix.Identity;
-            viewMatrix = Matrix.CreateLookAt(new Vector3(0,0,-10), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
-            projectionMatrix = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width, This.Game.GraphicsDevice.Viewport.Height, -50f, 50f);
-
             sendConstantsToGPU();
 
             
@@ -181,8 +179,6 @@ namespace Frostbyte
 
         private void sendConstantsToGPU()
         {
-            effect.Parameters["xWorldViewProjection"].SetValue(wMatrix * viewMatrix * projectionMatrix);
-            effect.Parameters["xWorld"].SetValue(wMatrix);
             effect.Parameters["xTexture1"].SetValue(texture1);
             effect.Parameters["xTexture2"].SetValue(texture2);
         }
@@ -280,8 +276,19 @@ namespace Frostbyte
                 //Set the effect technique
                 effect.CurrentTechnique = effect.Techniques[m_effectTechnique];
 
+                //Create View and Projection Matrices
+                viewMatrix = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + This.Game.GraphicsDevice.Viewport.Width / 2,
+                                                             This.Game.GraphicsDevice.Viewport.Y + This.Game.GraphicsDevice.Viewport.Height / 2,
+                                                             -10),
+                                                 new Vector3(This.Game.GraphicsDevice.Viewport.X + This.Game.GraphicsDevice.Viewport.Width / 2,
+                                                             This.Game.GraphicsDevice.Viewport.Y + This.Game.GraphicsDevice.Viewport.Height / 2,
+                                                             0),
+                                                 new Vector3(0, -1, 0));
+                projectionMatrix = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width, This.Game.GraphicsDevice.Viewport.Height, -50f, 50f);
+
                 //These lines store data in variables on the graphics card
                 effect.Parameters["xCurrentTime"].SetValue((int)gameTime.TotalGameTime.TotalMilliseconds);
+                effect.Parameters["xWorldViewProjection"].SetValue(Matrix.Identity * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice) * viewMatrix * projectionMatrix);
 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {

@@ -1,5 +1,4 @@
 float4x4 xWorldViewProjection;
-float4x4 xWorld;
 float xCurrentTime;
 Texture xTexture1;
 Texture xTexture2;
