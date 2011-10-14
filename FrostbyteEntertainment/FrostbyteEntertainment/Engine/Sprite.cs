@@ -168,8 +168,7 @@ namespace Frostbyte
             }
             if (mVisible == true)
             {
-                SpriteFrame f = mActor.Animations[mActor.CurrentAnimation].Frames[mActor.Frame];
-                This.Game.spriteBatch.Draw(f.Image, Pos + f.AnimationPeg, new Rectangle((int)f.StartPos.X, (int)f.StartPos.Y, f.Width, f.Height), Color.White, Angle, GetAnimation().AnimationPeg, Scale, SpriteEffects.None, 0);
+                This.Game.spriteBatch.Draw(frame.Image, Pos + frame.AnimationPeg, new Rectangle((int)frame.StartPos.X, (int)frame.StartPos.Y, frame.Width, frame.Height), Color.White, Angle, GetAnimation().AnimationPeg, Scale, SpriteEffects.None, 0);
             }
         }
 

@@ -188,7 +188,7 @@ namespace Frostbyte
 
     public class Floor : LevelPart
     {
-        public Floor(Index2D start, Index2D end, TileTypes t, Element theme, bool move = true, FloorTypes f = FloorTypes.Themed)
+        public Floor(Index2D start, Index2D end, TileTypes t, Element theme, bool move = true, TileTypes f = TileTypes.Floor)
         {
             StartCell = start;
             EndCell = end;
@@ -211,9 +211,9 @@ namespace Frostbyte
             EndCell = new Index2D(end.X - 1, end.Y - 1);
             Type = r.Type;
             Theme = r.Theme;
-            Traversable = r.FloorType == FloorTypes.Themed ? true : false;
+            Traversable = r.FloorType == TileTypes.Floor ? true : false;
             FloorType = r.FloorType;
-            Type = r.FloorType == FloorTypes.Themed ? TileTypes.Floor : r.FloorType == FloorTypes.Lava ? TileTypes.Lava : TileTypes.Water;
+            Type = r.FloorType == TileTypes.Floor ? TileTypes.Floor : r.FloorType == TileTypes.Lava ? TileTypes.Lava : TileTypes.Water;
         }
 
         public override XElement ToXML()
@@ -324,7 +324,7 @@ namespace Frostbyte
 
     public class Room : LevelPart
     {
-        public Room(Index2D start, Index2D end, Element theme, FloorTypes f = FloorTypes.Themed, bool move = true)
+        public Room(Index2D start, Index2D end, Element theme, TileTypes f = TileTypes.Floor, bool move = true)
         {
             StartCell = start;
             EndCell = end;
@@ -361,7 +361,7 @@ namespace Frostbyte
                     Index2D.Parse(elem.Attribute("EndCell").Value),
                     //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
                     (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                    (FloorTypes)Enum.Parse(typeof(FloorTypes), elem.Attribute("FloorType").Value),
+                    (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("FloorType").Value),
                     bool.Parse(elem.Attribute("Collision").Value)
                 );
             else if (elem.Attribute("FloorType") != null)
@@ -370,7 +370,7 @@ namespace Frostbyte
                     Index2D.Parse(elem.Attribute("EndCell").Value),
                     //(TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("Type").Value),
                     (Element)Enum.Parse(typeof(Element), elem.Attribute("Theme").Value),
-                    (FloorTypes)Enum.Parse(typeof(FloorTypes), elem.Attribute("FloorType").Value)
+                    (TileTypes)Enum.Parse(typeof(TileTypes), elem.Attribute("FloorType").Value)
                 );
             else
                 return new Room(
@@ -406,7 +406,7 @@ namespace Frostbyte
 
         public Orientations Orientation { get; set; }
 
-        public FloorTypes FloorType { get; set; }
+        public TileTypes FloorType { get; set; }
 
         public Index2D GridCell { get; set; }
 

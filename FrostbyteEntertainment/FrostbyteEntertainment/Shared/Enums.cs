@@ -62,16 +62,36 @@ namespace Frostbyte
         /// </summary>
         Bottom,
         /// <summary>
-        /// A corner (may be tl, tr, bl, br) \todo mabe distinguish between types of corners (determined by orientation)
+        /// A corner for top wall
         /// </summary>
         Corner,
-        /// A corner (may be tl, tr, bl, br) \todo mabe distinguish between types of corners (determined by orientation)
+        /// A corner for top of halls
         /// </summary>
         ConvexCorner,
+        /// <summary>
+        /// Sidewall (faces left so we need to set Orientation accordingly to ensure flips)
+        /// </summary>
+        SideWall,
+        /// <summary>
+        /// Area where user will never walk
+        /// </summary>
+        TopArea,
+        /// <summary>
+        /// Bottom corner for map
+        /// </summary>
+        BottomCorner,
+        /// <summary>
+        /// Bottom Convex corner for map (halls etc)
+        /// </summary>
+        BottomConvexCorner,
         /// <summary>
         /// This is for floor tiles
         /// </summary>
         Floor,
+        /// <summary>
+        /// Water tile
+        /// </summary>
+        Water,
         /// <summary>
         /// Lava tile
         /// </summary>
@@ -81,14 +101,6 @@ namespace Frostbyte
         /// </summary>
         Stone,
         /// <summary>
-        /// Water tile
-        /// </summary>
-        Water,
-        /// <summary>
-        /// Sidewall (faces left so we need to set Orientation accordingly to ensure flips)
-        /// </summary>
-        SideWall,
-        /// <summary>
         /// For Room class (needed for editor)
         /// </summary>
         Room,
@@ -96,29 +108,6 @@ namespace Frostbyte
         /// A cell we want specifically empty
         /// </summary>
         Empty,
-        /// <summary>
-        /// Bottom convex corner for map
-        /// </summary>
-        BottomConvexCorner,
-        /// <summary>
-        /// Area where user will never walk
-        /// </summary>
-        TopArea,
-        /// <summary>
-        /// Bottom corner for map
-        /// </summary>
-        BottomCorner,
-    }
-
-    /// <summary>
-    /// Whether or not the floor is Themed or not (I know it's repetitive but I couldn't think of a better way atm) \todo See if we can get rid of this
-    /// </summary>
-    public enum FloorTypes
-    {
-        DEFAULT = -1,
-        Themed = 0,
-        Water,
-        Lava
     }
 
     /// <summary>

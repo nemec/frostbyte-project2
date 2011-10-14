@@ -15,52 +15,40 @@ namespace Frostbyte
 
     public partial class Tile : LevelObject
     {
+        Texture2D Image { get; set; }
+
+        /// <summary>
+        /// The tiles's width
+        /// </summary>
+        internal int Width { get; set; }
+
+        /// <summary>
+        ///  The tiles's height
+        /// </summary>
+        internal int Height { get; set; }
+
         internal void Draw()
         {
-            /*string file = "error.png";
-            switch (Type)
+            if (Image == null)
             {
-                case TileTypes.Wall:
-                    file = "wall.png";
-                    break;
-                case TileTypes.Bottom:
-                    file = "top-grass.png";
-                    break;
-                case TileTypes.Corner:
-                    file = "corner.png";
-                    break;
-                case TileTypes.ConvexCorner:
-                    file = "convex-coner.png";
-                    break;
-                case TileTypes.Floor:
-                    file = "floor.png";
-                    break;
-                case TileTypes.Lava:
-                    file = "lava.png";
-                    break;
-                case TileTypes.Water:
-                    file = "water.png";
-                    break;
-                case TileTypes.SideWall:
-                    file = "side.png";
-                    break;
-                case TileTypes.Room:
-                    //do some magic to show pic for the walls etc
-                    file = "room.png";
-                    break;
-                case TileTypes.Empty:
-                    file = "";
-                    break;
-                default:
-                    file = "error.png";
-                    break;
-            }*/
+
+            }
+
             //BitmapImage image = new BitmapImage(new Uri(file, UriKind.RelativeOrAbsolute));
             Texture2D image = This.Game.Content.Load<Texture2D>("corner");
             if (GridCell != null)
             {
-                This.Game.spriteBatch.Draw(image, GridCell.Pos, null,
-                    Microsoft.Xna.Framework.Color.White, 0, new Vector2(), 1, SpriteEffects.None, 0);
+                This.Game.spriteBatch.Draw(
+                        image,
+                        GridCell.Pos,
+                        null,
+                        Microsoft.Xna.Framework.Color.White,
+                        0,
+                        new Vector2(),
+                        1,
+                        SpriteEffects.None,
+                        0
+                    );
             }
         }
     }

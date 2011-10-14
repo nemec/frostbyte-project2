@@ -16,7 +16,7 @@ namespace Frostbyte
         public Tile()
         {
             Traversable = true;
-            FloorType = FloorTypes.DEFAULT;
+            FloorType = TileTypes.DEFAULT;
             Type = TileTypes.DEFAULT;
             InstanceName = null;
             Theme = Element.DEFAULT;

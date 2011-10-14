@@ -59,7 +59,7 @@ namespace LevelEditor
             }
         }
 
-        public FloorTypes FloorType
+        public TileTypes FloorType
         {
             get
             {

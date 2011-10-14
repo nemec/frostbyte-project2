@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SpriteSheet>
+  <Frame Height="64" Width="64" TLPos="0,0" />
+  <Frame Height="64" Width="64" TLPos="64,0" />
+  <Frame Height="64" Width="64" TLPos="128,0" />
+  <Frame Height="64" Width="64" TLPos="0,64" />
+  <Frame Height="64" Width="64" TLPos="64,64" />
+  <Frame Height="64" Width="64" TLPos="128,64" />
+  <Frame Height="64" Width="64" TLPos="0,128" />
+  <Frame Height="64" Width="64" TLPos="64,128" />
+  <Frame Height="64" Width="64" TLPos="128,128" />
+</SpriteSheet>
