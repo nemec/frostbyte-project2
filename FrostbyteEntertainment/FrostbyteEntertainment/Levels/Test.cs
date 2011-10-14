@@ -29,8 +29,8 @@ namespace Frostbyte.Levels
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
             }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            //Sprite ally = new TestAlly("a1", new Actor(new DummyAnimation("ally", 10, 10)));
-            //ally.Pos = new Vector2(250, 260);
+            Sprite ally = new TestAlly("a1", new Actor(new Animation("antibody.anim")));
+            ally.Pos = new Vector2(250, 260);
 
             Characters.Mage mage = new Characters.Mage("mage", new Actor(new Animation("shield_opaque.anim")));
             mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
@@ -90,13 +90,13 @@ namespace Frostbyte.Levels
         {
             float height = This.Game.GraphicsDevice.Viewport.Height;
             float width = This.Game.GraphicsDevice.Viewport.Width;
-            basicEffect.View = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, -10),
+            /*basicEffect.View = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, -10),
                                                    new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, 0), new Vector3(0, -1, 0));
             basicEffect.Projection = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width, This.Game.GraphicsDevice.Viewport.Height, 1, 20);
-            basicEffect.VertexColorEnabled = true;
+            basicEffect.VertexColorEnabled = true;*/
         }
 
-        BasicEffect basicEffect = new BasicEffect(This.Game.GraphicsDevice);
+        /*BasicEffect basicEffect = new BasicEffect(This.Game.GraphicsDevice);
         VertexPositionColor[] points;
 
         internal override void Draw(GameTime gameTime)
@@ -114,7 +114,7 @@ namespace Frostbyte.Levels
                 basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
                 This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
             }
-        }
+        }*/
     }
 
     internal class TestObstacle : Obstacle

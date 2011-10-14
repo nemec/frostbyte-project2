@@ -162,8 +162,9 @@ namespace Frostbyte
                 Viewport viewport = This.Game.GraphicsDevice.Viewport;
                 float zoom = This.Game.CurrentLevel.Camera.Zoom;
                 Vector2 span = max - min;
-                zoom = Math.Min((viewport.Width - 2 * BORDER_WIDTH) / span.X,
-                                (viewport.Height - 2 * BORDER_HEIGHT) / span.Y);
+                float scaleX = (viewport.Width - 2 * BORDER_WIDTH) / span.X;
+                float scaleY = (viewport.Height - 2 * BORDER_HEIGHT) / span.Y;
+                zoom = Math.Min(scaleX, scaleY);
 
                 // Normalize values if necessary
                 zoom = zoom > MAX_ZOOM ? MAX_ZOOM : zoom;
@@ -172,11 +173,10 @@ namespace Frostbyte
 
                 Vector2 cameraPos = This.Game.CurrentLevel.Camera.Pos;
                 #region Shift Viewport
-                if (zoom <= MAX_ZOOM && zoom > MIN_ZOOM)
+                Vector2 topLeftCorner = min - cameraPos;
+                Vector2 bottomRightCorner = max - cameraPos;
+                if (zoom != MIN_ZOOM || scaleX >= MIN_ZOOM)
                 {
-                    Vector2 topLeftCorner = min - cameraPos;
-                    Vector2 bottomRightCorner = max - cameraPos;
-
                     if (topLeftCorner.X < viewport.X + BORDER_WIDTH / zoom)
                     {
                         cameraPos.X += topLeftCorner.X - (viewport.X + BORDER_WIDTH) / zoom;
@@ -185,7 +185,9 @@ namespace Frostbyte
                     {
                         cameraPos.X += bottomRightCorner.X - (viewport.X + (viewport.Width - BORDER_WIDTH) / zoom);
                     }
-
+                }
+                if (zoom != MIN_ZOOM || scaleY >= MIN_ZOOM)
+                {
                     if (topLeftCorner.Y < viewport.Y + BORDER_HEIGHT / zoom)
                     {
                         cameraPos.Y += topLeftCorner.Y - (viewport.Y + BORDER_HEIGHT) / zoom;
