@@ -86,7 +86,7 @@ namespace LevelEditor
                     Name="Floor",
                     Traversable=true,
                     Type=TileTypes.Floor,
-                    FloorType = FloorTypes.Themed,
+                    FloorType = TileTypes.Floor,
                     Orientation= Orientations.Down,
                     Active=true
                 },
@@ -97,14 +97,6 @@ namespace LevelEditor
                     Orientation = Orientations.Down,
                     Active=true
                 },
-
-                //new Tile(){
-                //    Name="Wall_Left",
-                //    Traversable=false,
-                //    Type=TileTypes.SideWall,
-                //    Orientation = Orientations.Right,
-                //    Active=true
-                //},
 
                 new Tile(){
                     Name="Wall_Right",
@@ -168,31 +160,6 @@ namespace LevelEditor
                     Orientation=Orientations.Left,
                     Active=true
                 },
-
-                //new Tile(){
-                //    Name="Corner_TR",
-                //    Traversable=false,
-                //    Type=TileTypes.Corner,
-                //    Orientation=Orientations.Down,
-                //    Active=true
-                //},
-
-                //new Tile(){
-                //    Name="Corner_BR",
-                //    Traversable=false,
-                //    Type=TileTypes.Corner,
-                //    Orientation=Orientations.Up,
-                //    Active=true
-                //}
-                //,
-
-                //new Tile(){
-                //    Name="Corner_BL",
-                //    Traversable=false,
-                //    Type=TileTypes.Corner,
-                //    Orientation = Orientations.Up_Right,
-                //    Active=true
-                //}
             };
             #endregion Tiles
 
@@ -205,7 +172,7 @@ namespace LevelEditor
                     Traversable=false,
                     Type = TileTypes.Room,
                     Orientation = Orientations.Down,
-                    FloorType = FloorTypes.Themed,
+                    FloorType = TileTypes.Floor,
                     IsSpecialObject=true,
                     Active=true
                 },
@@ -215,7 +182,6 @@ namespace LevelEditor
                     Traversable=false,
                     Type = TileTypes.Wall,
                     Orientation = Orientations.Down,
-                    FloorType = FloorTypes.Themed,
                     IsSpecialObject=true,
                     Active=true
                 },
@@ -225,7 +191,6 @@ namespace LevelEditor
                     Traversable=false,
                     Type = TileTypes.Wall,
                     Orientation = Orientations.Down,
-                    FloorType = FloorTypes.Themed,
                     IsSpecialObject=true,
                     Active=true
                 },
@@ -235,7 +200,7 @@ namespace LevelEditor
                     Traversable=false,
                     Type = TileTypes.Floor,
                     Orientation = Orientations.Down,
-                    FloorType = FloorTypes.Themed,
+                    FloorType = TileTypes.Floor,
                     IsSpecialObject=true,
                     Active=true
                 }
@@ -261,11 +226,6 @@ namespace LevelEditor
             Level.MouseDown += new MouseButtonEventHandler(Level_MouseDown);
             Level.MouseUp += new MouseButtonEventHandler(Level_MouseUp);
             Level.MouseMove += new MouseEventHandler(Level_MouseMove);
-
-
-            //SaveMap.MouseUp += new MouseButtonEventHandler(SaveMap_MouseUp);
-            //LoadLevel.MouseUp += new MouseButtonEventHandler(LoadLevel_MouseUp);
-
             #endregion Event Handlers
         }
 

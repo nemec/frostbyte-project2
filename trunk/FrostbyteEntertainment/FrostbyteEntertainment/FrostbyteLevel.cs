@@ -221,16 +221,22 @@ namespace Frostbyte
         internal override void Draw(GameTime gameTime)
         {
             /// \todo draw base tiles
+            //draw base tiles
             This.Game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Camera.GetTransformation(This.Game.GraphicsDevice));
 
-            for (int x = (int)Math.Floor(StartDraw.X); x < (int)Math.Ceiling(EndDraw.X); x++)
+            List<Tile> drawLater = new List<Tile>();
+            for (int y = (int)Math.Floor(StartDraw.Y); y < (int)Math.Ceiling(EndDraw.Y); y++)
             {
-                for (int y = (int)Math.Floor(StartDraw.Y); y < (int)Math.Ceiling(EndDraw.Y); y++)
+                for (int x = (int)Math.Floor(StartDraw.X); x < (int)Math.Ceiling(EndDraw.X); x++)
                 {
                     Tile toDraw;
                     TileMap.TryGetValue(x, y, out toDraw);
 
                     toDraw.Draw();
+                    if (!(toDraw.Type == TileTypes.Bottom || toDraw.Type == TileTypes.BottomConvexCorner))
+                        toDraw.Draw();
+                    else
+                        drawLater.Add(toDraw);
                 }
             }
             This.Game.spriteBatch.End();
@@ -238,6 +244,11 @@ namespace Frostbyte
             base.Draw(gameTime);
 
             /// \todo draw bottom tiles
+            //draw bottom tiles
+            foreach (Tile tile in drawLater)
+            {
+                tile.Draw();
+            }
         }
     }
 }
