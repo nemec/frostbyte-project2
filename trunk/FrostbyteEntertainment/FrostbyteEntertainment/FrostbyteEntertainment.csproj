@@ -193,6 +193,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\antibody.anim">
+      <Link>Content\Sprites\antibody.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\shield_opaque.anim">
       <Link>Content\Sprites\shield_opaque.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

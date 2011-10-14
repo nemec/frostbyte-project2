@@ -21,21 +21,19 @@ namespace Frostbyte.Levels
 
             LevelFunctions.Spawn(delegate()
             {
-                return new FerociousEnemy("e1", new Actor(new DummyAnimation("enemy", 10, 10)), 1f, 10);
-            }, 15, new Microsoft.Xna.Framework.Vector2(50, 50));
+                return new FerociousEnemy("e1", new Actor(new Animation("antibody.anim")), 1f, 10);
+            }, 1, new Microsoft.Xna.Framework.Vector2(50, 50));
 
-            LevelFunctions.Spawn(delegate()
+            /*LevelFunctions.Spawn(delegate()
             {
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
-            }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));
+            }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            Sprite ally = new TestAlly("a1", new Actor(new DummyAnimation("ally", 10, 10)));
-            ally.Pos = new Vector2(250, 260);
+            //Sprite ally = new TestAlly("a1", new Actor(new DummyAnimation("ally", 10, 10)));
+            //ally.Pos = new Vector2(250, 260);
 
             Characters.Mage mage = new Characters.Mage("mage", new Actor(new Animation("shield_opaque.anim")));
-            mage.Pos = new Microsoft.Xna.Framework.Vector2(650, 250);
-            //l.Camera.Pos = mage.Pos - new Microsoft.Xna.Framework.Vector2(This.Game.GraphicsDevice.Viewport.Width / 2,
-            //    This.Game.GraphicsDevice.Viewport.Height / 2);
+            mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
             /*Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
 
             This.Game.CurrentLevel.AddAnimation(new Animation("boxen.anim"));
@@ -147,7 +145,7 @@ namespace Frostbyte.Levels
                 new VertexPositionColor(new Vector3(Pos.X, Pos.Y + size, 0), Color.LightCyan),
                 new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.LightCyan)};
                 pass.Apply();
-                basicEffect.World = Matrix.Identity;//Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
+                basicEffect.World = Matrix.Identity;
                 This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
             }
         }
@@ -166,63 +164,31 @@ namespace Frostbyte.Levels
         internal FerociousEnemy(string name, Actor actor, float speed, int health)
             : base(name, actor, speed, health)
         {
-            //moved here because it was hiding parent variable
             movementStartTime = new TimeSpan(0, 0, 1);
-            float height = This.Game.GraphicsDevice.Viewport.Height;
-            float width = This.Game.GraphicsDevice.Viewport.Width;
-            basicEffect.View = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, -10),
-                                                   new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, 0), new Vector3(0, -1, 0));
-            basicEffect.Projection = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width, This.Game.GraphicsDevice.Viewport.Height, 1, 20);
-            basicEffect.VertexColorEnabled = true;
-        }
-
-        BasicEffect basicEffect = new BasicEffect(This.Game.GraphicsDevice);
-        VertexPositionColor[] points;
-
-        internal override void Draw(GameTime gameTime)
-        {
-            var transformation = This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
-            {
-                int size = 10;
-                points = new VertexPositionColor[5]{
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.BlueViolet),
-                new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y, 0), Color.BlueViolet),
-                new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y + size, 0), Color.BlueViolet),
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y + size, 0), Color.BlueViolet),
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.BlueViolet)};
-                basicEffect.World = Matrix.Identity;// Matrix.CreateTranslation(new Vector3(Pos, 0)) * transformation;
-                pass.Apply();
-                if (mVisible) {
-                    This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.LineStrip, points, 0, points.Length - 1);
-                }
-            }
         }
 
         protected override void updateMovement()
         {
-            Sprite Player1 = This.Game.CurrentLevel.GetSpritesByType("Mage")[0];
-         // Sprite Player2 = This.Game.CurrentLevel.GetSpritesByType("Mage")[1];
-
+            if (changeState)
+            {
+                movementStartTime = TimeSpan.MaxValue;
+            }
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
             // Tests for Movement Patterns
             // Ram for 5 sec, charge for 5 sec, stealth charge for five sec, stealth camp 10 sec, retreat indefinitely
             //if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
-               //changeState = stealthCamp(Player1.Pos, Vector2.Zero, 30f);
+            //        changeState = stealthCamp(targets, 30f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
-                changeState = charge(Player1.CenterPos() , Player1.CenterPos() , 1000f, 1f);
-
+            //      changeState = charge(targets, 1000f, 1f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
-            //    changeState = stealthCharge(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
-
+            //    changeState = stealthCharge(targets, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 25)))
             //     changeState = teaseRetreat(Player1.Pos, Vector2.Zero, 30f, 1000f, 1.1f);
-
             //else if (!changeState)
-            //    changeState = retreat(Player1.Pos, Vector2.Zero, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
-
-           // else
+            //    changeState = retreat(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
+            // else
             //    changeState = !freeze(idleTime);
-            
+            changeState = wander(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, (float)Math.PI/8);
         }
 
         protected override void updateAttack()
