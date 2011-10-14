@@ -175,7 +175,7 @@ namespace Frostbyte
                 #region Shift Viewport
                 Vector2 topLeftCorner = min - cameraPos;
                 Vector2 bottomRightCorner = max - cameraPos;
-                if (zoom != MIN_ZOOM || scaleX >= MIN_ZOOM)
+                if (scaleX >= MIN_ZOOM)
                 {
                     if (topLeftCorner.X < viewport.X + BORDER_WIDTH / zoom)
                     {
@@ -186,7 +186,7 @@ namespace Frostbyte
                         cameraPos.X += bottomRightCorner.X - (viewport.X + (viewport.Width - BORDER_WIDTH) / zoom);
                     }
                 }
-                if (zoom != MIN_ZOOM || scaleY >= MIN_ZOOM)
+                if (scaleY >= MIN_ZOOM)
                 {
                     if (topLeftCorner.Y < viewport.Y + BORDER_HEIGHT / zoom)
                     {
