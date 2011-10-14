@@ -118,6 +118,7 @@
     <Compile Include="Engine\ParticleEmitter.cs" />
     <Compile Include="Engine\Polygon.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="Personality.cs" />
     <Compile Include="Shared\Enums.cs" />
     <Compile Include="FrostbyteLevel.cs" />
     <Compile Include="Engine\Actor.cs" />
