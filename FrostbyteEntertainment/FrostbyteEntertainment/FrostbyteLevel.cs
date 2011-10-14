@@ -225,8 +225,8 @@ namespace Frostbyte
                 //createParticlesInCircle(emitter4, 10, 125, new Vector2(200, -200));
             }
         }
-        
-        internal override void Draw(GameTime gameTime)
+
+        internal override void Draw(GameTime gameTime, bool drawAfter = false)
         {
             #region Draw Base Tiles
             //draw base tiles
@@ -250,7 +250,7 @@ namespace Frostbyte
             This.Game.spriteBatch.End();
             #endregion
 
-            base.Draw(gameTime);
+            base.Draw(gameTime, true);
 
             This.Game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Camera.GetTransformation(This.Game.GraphicsDevice));
 
@@ -259,7 +259,23 @@ namespace Frostbyte
             {
                 tile.Draw();
             }
+
             This.Game.spriteBatch.End();
+
+            #region Draw Static Sprites
+            if (staticSprites.Count > 0)
+            {
+                This.Game.spriteBatch.Begin();
+
+                foreach (var sprite in staticSprites)
+                {
+                    sprite.Draw(gameTime);
+                }
+
+                This.Game.spriteBatch.End();
+            }
+            #endregion
+
         }
 
 
