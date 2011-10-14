@@ -243,12 +243,14 @@ namespace Frostbyte
 
             base.Draw(gameTime);
 
-            /// \todo draw bottom tiles
+            This.Game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Camera.GetTransformation(This.Game.GraphicsDevice));
+
             //draw bottom tiles
             foreach (Tile tile in drawLater)
             {
                 tile.Draw();
             }
+            This.Game.spriteBatch.End();
         }
     }
 }
