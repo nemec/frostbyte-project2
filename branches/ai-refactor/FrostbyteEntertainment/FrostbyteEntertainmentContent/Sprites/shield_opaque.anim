@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animation>
+  <Frame SpriteSheet="shield_opaque" FrameDelay="20" Width="36" Height="36" TLPos="0,0" AnimationPeg="0,0" >
+    <Collision Type="Circle" Pos="18.0,18.0" Radius="18.0"/>
+  </Frame>
+</Animation>

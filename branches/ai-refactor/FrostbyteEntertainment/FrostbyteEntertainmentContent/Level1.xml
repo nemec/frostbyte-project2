@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Level>
+  <Room Type="Wall" StartCell="0,0" EndCell="16,13" Collision="false" Theme="Earth" />
+</Level>
