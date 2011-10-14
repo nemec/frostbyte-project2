@@ -132,6 +132,11 @@ namespace Frostbyte
         internal Camera Camera = new Camera();
 
         /// <summary>
+        /// Sprites that will be drawn after everything else
+        /// </summary>
+        protected List<WorldObject> staticSprites = new List<WorldObject>();
+
+        /// <summary>
         /// List of particle emitters for level.
         /// </summary>
         //protected List<ParticleEmitter> mParticleEmitters = new List<ParticleEmitter>();
@@ -202,8 +207,9 @@ namespace Frostbyte
         #region Methods
 
         #region Draw
-        internal virtual void Draw(Microsoft.Xna.Framework.GameTime gameTime)
+        internal virtual void Draw(Microsoft.Xna.Framework.GameTime gameTime, bool drawLater = false)
         {
+            staticSprites.Clear();
             This.Game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Camera.GetTransformation(This.Game.GraphicsDevice));
 
             /** Draw Background */
@@ -212,10 +218,7 @@ namespace Frostbyte
                 Background.Draw(gameTime);
             }
 
-            List<WorldObject> staticSprites = new List<WorldObject>();
-
             #region Draw Sprites
-
             foreach (var sprite in mWorldObjects)
             {
                 if (!sprite.Static)
@@ -232,17 +235,18 @@ namespace Frostbyte
             #endregion
 
             #region Draw Static Sprites
-            if (staticSprites.Count > 0)
-            {
-                This.Game.spriteBatch.Begin();
-
-                foreach (var sprite in staticSprites)
+            if (!drawLater)
+                if (staticSprites.Count > 0)
                 {
-                    sprite.Draw(gameTime);
-                }
+                    This.Game.spriteBatch.Begin();
 
-                This.Game.spriteBatch.End();
-            }
+                    foreach (var sprite in staticSprites)
+                    {
+                        sprite.Draw(gameTime);
+                    }
+
+                    This.Game.spriteBatch.End();
+                }
             #endregion
 
             /** Draw Boundary Data */
@@ -360,7 +364,7 @@ namespace Frostbyte
             {
                 try
                 {
-                    Texture2D tex = This.Game.Content.Load<Texture2D>(string.Format("Textures/{0}",name));
+                    Texture2D tex = This.Game.Content.Load<Texture2D>(string.Format("Textures/{0}", name));
                     mTextures[name] = tex;
                     return tex;
                 }

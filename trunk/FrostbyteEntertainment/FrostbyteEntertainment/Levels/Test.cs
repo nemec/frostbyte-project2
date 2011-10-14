@@ -74,6 +74,10 @@ namespace Frostbyte.Levels
             emitter4.effectTechnique = "ChangePicAndFadeAtPercent";
             emitter4.fadeStartPercent = .8f;
             emitter4.changePicPercent = .6f;
+            emitter1.Static = true;
+            emitter2.Static = true;
+            emitter3.Static = true;
+            emitter4.Static = true;
             #endregion particles
         }
 
