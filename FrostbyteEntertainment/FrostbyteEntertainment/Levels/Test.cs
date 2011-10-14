@@ -169,7 +169,7 @@ namespace Frostbyte.Levels
         }
     }
 
-    internal class FerociousEnemy : Frostbyte.Enemies.Enemy
+    internal class FerociousEnemy : Frostbyte.Enemy
     {
         #region Variables
 
@@ -192,10 +192,11 @@ namespace Frostbyte.Levels
                 movementStartTime = TimeSpan.MaxValue;
             }
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            Personality.Update();
             // Tests for Movement Patterns
             // Ram for 5 sec, charge for 5 sec, stealth charge for five sec, stealth camp 10 sec, retreat indefinitely
             //if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
-            //        changeState = stealthCamp(targets, 30f);
+            //        changeState = stealthCamp(targets, 100f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
             //      changeState = charge(targets, 1000f, 1f);
             //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
@@ -206,7 +207,7 @@ namespace Frostbyte.Levels
             //    changeState = retreat(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
             // else
             //    changeState = !freeze(idleTime);
-            changeState = wander(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, (float)Math.PI/8);
+            //changeState = wander(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, (float)Math.PI/8);
         }
 
         protected override void updateAttack()
