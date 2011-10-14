@@ -215,12 +215,11 @@ namespace Frostbyte
             StartDraw = (cameraPosition + new Vector3(viewport.X, viewport.Y, 0)) / Tile.TileSize;
             EndDraw = (cameraPosition + new Vector3(viewport.X + viewport.Width / zoom,
                                                 viewport.Y + viewport.Height / zoom, 0)) / Tile.TileSize;
-            Debug.WriteLine(EndDraw);
         }
         
         internal override void Draw(GameTime gameTime)
         {
-            /// \todo draw base tiles
+            #region Draw Base Tiles
             This.Game.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, Camera.GetTransformation(This.Game.GraphicsDevice));
 
             for (int x = (int)Math.Floor(StartDraw.X); x < (int)Math.Ceiling(EndDraw.X); x++)
@@ -234,6 +233,7 @@ namespace Frostbyte
                 }
             }
             This.Game.spriteBatch.End();
+            #endregion
 
             base.Draw(gameTime);
 

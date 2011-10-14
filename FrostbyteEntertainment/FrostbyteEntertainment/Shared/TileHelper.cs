@@ -429,7 +429,7 @@ namespace Frostbyte
             {
                 return false;
             }
-            return a.Type == b.Type && a.Theme == b.Theme && a.Traversable == b.Traversable && a.Orientation == b.Orientation && a.FloorType == b.FloorType && a.GridCell.X == b.GridCell.X && a.GridCell.Y == b.GridCell.Y && a.InstanceName == b.InstanceName && a.GetType()==b.GetType();
+            return a.Type == b.Type && a.Theme == b.Theme && a.Traversable == b.Traversable && a.Orientation == b.Orientation && a.FloorType == b.FloorType && a.GridCell.X == b.GridCell.X && a.GridCell.Y == b.GridCell.Y && a.InstanceName == b.InstanceName;
         }
         public static bool operator !=(LevelObject a, LevelObject b)
         {

@@ -80,11 +80,6 @@ namespace Frostbyte
             Pos = target.Pos + target.Center - Center;
         }
 
-        internal Vector2 CenterPos()
-        {
-            return Center + Pos;
-        }
-
         internal override List<CollisionObject> GetCollision()
         {
             return GetAnimation().CollisionData;

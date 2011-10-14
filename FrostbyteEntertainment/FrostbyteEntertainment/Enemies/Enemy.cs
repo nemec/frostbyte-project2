@@ -62,10 +62,27 @@ namespace Frostbyte.Enemies
         /// <summary>
         /// Update enemy position directly toward target for given duration - complete
         /// </summary>
-        protected bool charge(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float speedMultiplier)
+        protected bool charge(List<Sprite> targets, float aggroDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            Sprite min = null;
+            foreach(Sprite target in targets){
+                if (min == null ||
+                    Vector2.DistanceSquared(target.Pos, CenterPos) <
+                    Vector2.DistanceSquared(min.Pos, CenterPos))
+                {
+                    if (Vector2.DistanceSquared(target.Pos, CenterPos) <= aggroDistance * aggroDistance)
+                    {
+                        min = target;
+                    }
+                }
+            }
+            
+            if (min == null)
+            {
+                // No targets, so just continue on
+                return true;
+            }
+
             float chargeSpeed = Speed * speedMultiplier;
             int playerToCharge = 0;
 
@@ -85,21 +102,19 @@ namespace Frostbyte.Enemies
                 isCharging = true;
             }
 
-            else return true;
-
             if (isCharging)
             {
 
                 if (playerToCharge == 1)
                 {
-                    direction = P1Coord - CenterPos();
+                    direction = P1Coord - CenterPos;
                     direction.Normalize();
                     Pos += direction * chargeSpeed;
 
                 }
                 else if (playerToCharge == 2)
                 {
-                    direction = P2Coord - CenterPos();
+                    direction = P2Coord - CenterPos;
                     direction.Normalize();
                     Pos += direction * chargeSpeed;
                 }
@@ -128,21 +143,21 @@ namespace Frostbyte.Enemies
         protected bool ram(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float speedMultiplier)
         {
             // check this stuff before committing to the ram
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
             float ramSpeed = Speed * speedMultiplier;
 
             if ( !isRamming && (distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
             {
                 // charge P1
-                direction = P1Coord - CenterPos();
+                direction = P1Coord - CenterPos;
                 isRamming = true;
             }
 
             else if (!isRamming && (distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
             {
                 // charge P2
-                direction = P2Coord - CenterPos();
+                direction = P2Coord - CenterPos;
                 isRamming = true;
             }
 
@@ -176,8 +191,8 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool stealthCharge(Vector2 P1Coord, Vector2 P2Coord, TimeSpan duration, float aggroDistance, float visibleDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
             float chargeSpeed = Speed * speedMultiplier;
             int playerToCharge = 0;
 
@@ -222,13 +237,13 @@ namespace Frostbyte.Enemies
                 {
                     if (playerToCharge == 1)
                     {
-                        direction = P1Coord - CenterPos();
+                        direction = P1Coord - CenterPos;
                         direction.Normalize();
                         Pos += direction * chargeSpeed;
                     }
                     else if (playerToCharge == 2)
                     {
-                        direction = P2Coord - CenterPos();
+                        direction = P2Coord - CenterPos;
                         direction.Normalize();
                         Pos += direction * chargeSpeed;
                     }
@@ -253,8 +268,8 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool stealthCamp(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
 
             if (aggroDistance * aggroDistance >= distToP1 /*|| aggroDistance <= distToP2*/)
             {
@@ -277,8 +292,8 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool stealthRetreat(Vector2 P1Coord, Vector2 P2Coord, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
             float fleeSpeed = Speed * speedMultiplier;
             int playerToFlee = 0;
 
@@ -313,14 +328,14 @@ namespace Frostbyte.Enemies
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
 
-                    direction = P1Coord - CenterPos();
+                    direction = P1Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
 
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
-                    direction = P2Coord - CenterPos();
+                    direction = P2Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
@@ -339,8 +354,8 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool retreat(Vector2 P1Coord, Vector2 P2Coord, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
             float fleeSpeed = Speed * speedMultiplier;
             int playerToFlee = 0;
 
@@ -372,13 +387,13 @@ namespace Frostbyte.Enemies
 
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
-                    direction = P1Coord - CenterPos();
+                    direction = P1Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
-                    direction = P2Coord - CenterPos();
+                    direction = P2Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
@@ -397,8 +412,8 @@ namespace Frostbyte.Enemies
         /// </summary>
         protected bool teaseRetreat(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos());
-            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos());
+            double distToP1 = Vector2.DistanceSquared(P1Coord, CenterPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, CenterPos);
             float fleeSpeed = Speed * speedMultiplier;
             int playerToFlee = 0;
 
@@ -431,13 +446,13 @@ namespace Frostbyte.Enemies
 
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
-                    direction = P1Coord - CenterPos();
+                    direction = P1Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
-                    direction = P2Coord - CenterPos();
+                    direction = P2Coord - CenterPos;
                     direction.Normalize();
                     Pos -= direction * fleeSpeed;
                 }
