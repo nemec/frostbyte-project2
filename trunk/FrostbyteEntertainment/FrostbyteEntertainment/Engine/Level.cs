@@ -7,6 +7,38 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Frostbyte
 {
+    [Serializable]
+    class TextureDoesNotExistException : Exception
+    {
+        private string name;
+
+        public TextureDoesNotExistException(string name)
+        {
+            this.name = name;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Textrue {0} does not exist.", name);
+        }
+    }
+
+    [Serializable]
+    class EffectDoesNotExistException : Exception
+    {
+        private string name;
+
+        public EffectDoesNotExistException(string name)
+        {
+            this.name = name;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Effect {0} does not exist.", name);
+        }
+    }
+
     class Level
     {
 
@@ -83,6 +115,16 @@ namespace Frostbyte
         /// This level's Animations
         /// </summary>
         protected Dictionary<string, Animation> mAnims = new Dictionary<string, Animation>();
+
+        /// <summary>
+        /// Textures that have been loaded by the level.
+        /// </summary>
+        protected Dictionary<string, Texture2D> mTextures = new Dictionary<string, Texture2D>();
+
+        /// <summary>
+        /// Effects that have been loaded by the level.
+        /// </summary>
+        protected Dictionary<string, Effect> mEffects = new Dictionary<string, Effect>();
 
         protected List<WorldObject> ToAdd = new List<WorldObject>();
         protected List<WorldObject> ToRemove = new List<WorldObject>();
@@ -287,6 +329,56 @@ namespace Frostbyte
         internal void RemoveActor(string name)
         {
             mActors.Remove(name);
+        }
+
+        /// <summary>
+        /// Returns the texture if it exists loads from disk if it not. Can throw an exception
+        /// </summary>
+        /// <param name="name">Name of the texture</param>
+        /// <returns>The requested texture</returns>
+        internal Texture2D GetTexture(string name)
+        {
+            Texture2D output;
+            if (mTextures.TryGetValue(name, out output))
+                return output;
+            else
+            {
+                try
+                {
+                    Texture2D tex = This.Game.Content.Load<Texture2D>(name);
+                    mTextures[name] = tex;
+                    return tex;
+                }
+                catch
+                {
+                    throw new TextureDoesNotExistException(name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the effect if it exists loads from disk if it not. Can throw an exception
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal Effect GetEffect(string name)
+        {
+            Effect output;
+            if (mEffects.TryGetValue(name, out output))
+                return output;
+            else
+            {
+                try
+                {
+                    Effect tex = This.Game.Content.Load<Effect>(name);
+                    mEffects[name] = tex;
+                    return tex;
+                }
+                catch
+                {
+                    throw new EffectDoesNotExistException(name);
+                }
+            }
         }
         #endregion Management
 

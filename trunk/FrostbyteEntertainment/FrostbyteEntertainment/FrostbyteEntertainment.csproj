@@ -148,7 +148,6 @@
     <Compile Include="Shared\TileList.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="TileHelper.cs" />
-    <Compile Include="TileList.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\FrostbyteEntertainmentContent\Level1.xml">
@@ -200,6 +199,9 @@
     <None Include="..\FrostbyteEntertainmentContent\Sprites\shield_opaque.anim">
       <Link>Content\Sprites\shield_opaque.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Tiles\Earth.png.spsh">
+      <Link>Content\Tiles\Earth.png.spsh</Link>
     </None>
     <None Include="Content\Sprites\boxen.anim">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
