@@ -36,7 +36,7 @@ namespace Frostbyte.Characters
             target.mVisible = false;
             sortType = new DistanceSort(this);
 
-            UpdateBehavior = Update;
+            UpdateBehavior = mUpdate;
         }
         #endregion
 
@@ -85,7 +85,7 @@ namespace Frostbyte.Characters
             currentTargetAlignment = TargetAlignment.None;
         }
 
-        public void Update()
+        public void mUpdate()
         {
             controller.Update();
 

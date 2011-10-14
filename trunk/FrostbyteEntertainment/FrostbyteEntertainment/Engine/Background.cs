@@ -211,5 +211,9 @@ namespace Frostbyte
             }
         }
 
+
+        internal override void Update()
+        {
+        }
     }
 }

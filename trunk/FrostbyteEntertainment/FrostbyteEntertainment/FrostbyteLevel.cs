@@ -217,6 +217,13 @@ namespace Frostbyte
             StartDraw = (cameraPosition + new Vector3(viewport.X, viewport.Y, 0)) / Tile.TileSize;
             EndDraw = (cameraPosition + new Vector3(viewport.X + viewport.Width / zoom,
                                                 viewport.Y + viewport.Height / zoom, 0)) / Tile.TileSize;
+            foreach (ParticleEmitter emitter in mWorldObjects.FindAll(delegate(WorldObject o) { return o is ParticleEmitter; }))
+            {
+                createParticlesInCircle(emitter, 10, 150, new Vector2(-200, -200));
+                //createParticlesLikeFlamingRing(emitter2, 10, 150, new Vector2(150, 100));
+                //createParticlesLikeFlame(emitter3, 10, new Vector2(-150, 100));
+                //createParticlesInCircle(emitter4, 10, 125, new Vector2(200, -200));
+            }
         }
         
         internal override void Draw(GameTime gameTime)
@@ -254,5 +261,66 @@ namespace Frostbyte
             }
             This.Game.spriteBatch.End();
         }
+
+
+        private void createParticlesInCircle(ParticleEmitter emitter, int maxNumToCreate, float radius, Vector2 circleOrigin)
+        {
+            Random rand = new Random(This.gameTime.TotalGameTime.Milliseconds);
+            double positionAngle = ((This.gameTime.TotalGameTime.TotalMilliseconds % 8000.0) / 8000.0) * Math.PI * 2;
+            Vector2 position = new Vector2((float)Math.Cos(positionAngle) * radius, (float)Math.Sin(positionAngle) * radius) + circleOrigin;
+
+            for (int i = 0; i < maxNumToCreate; i++)
+            {
+                double velocityAngle = rand.NextDouble() * Math.PI * 2;
+                float velocitySpeed = rand.Next(2, 15);
+                double accelAngle = rand.NextDouble() * Math.PI * 2;
+                float accelSpeed = rand.Next(2, 15);
+                emitter.createParticles(new Vector2((float)Math.Cos(velocityAngle) * velocitySpeed, (float)Math.Sin(velocityAngle) * velocitySpeed),
+                                new Vector2((float)Math.Cos(accelAngle) * accelSpeed, (float)Math.Sin(accelAngle) * accelSpeed),
+                                position,
+                                rand.Next(5, 20),
+                                rand.Next(1000, 4000));
+            }
+        }
+
+        private void createParticlesLikeFlame(ParticleEmitter emitter, int maxNumToCreate, Vector2 flameOrigin)
+        {
+            Random rand = new Random(This.gameTime.TotalGameTime.Milliseconds);
+            Vector2 position = new Vector2((float)rand.Next(0, 20), (float)rand.Next(0, 20)) + flameOrigin;
+
+            for (int i = 0; i < maxNumToCreate; i++)
+            {
+                double velocityAngle = rand.NextDouble() * Math.PI * .5 + Math.PI / 4;
+                float velocitySpeed = rand.Next(2, 15);
+                double accelAngle = rand.NextDouble() * Math.PI * .25 + (Math.PI * 3) / 8;
+                float accelSpeed = rand.Next(2, 15);
+                emitter.createParticles(new Vector2((float)Math.Cos(velocityAngle) * velocitySpeed, (float)Math.Sin(velocityAngle) * velocitySpeed),
+                                new Vector2((float)Math.Cos(accelAngle) * accelSpeed, (float)Math.Sin(accelAngle) * accelSpeed),
+                                position,
+                                rand.Next(5, 20),
+                                rand.Next(1000, 4500));
+            }
+        }
+
+        private void createParticlesLikeFlamingRing(ParticleEmitter emitter, int maxNumToCreate, float radius, Vector2 flameOrigin)
+        {
+            Random rand = new Random(This.gameTime.TotalGameTime.Milliseconds);
+
+            for (int i = 0; i < maxNumToCreate; i++)
+            {
+                double positionAngle = rand.NextDouble() * Math.PI * 2;
+                Vector2 position = new Vector2((float)Math.Cos(positionAngle) * radius, (float)Math.Sin(positionAngle) * radius) + flameOrigin;
+                double velocityAngle = rand.NextDouble() * Math.PI * .25 + (Math.PI * 3) / 8;
+                float velocitySpeed = rand.Next(2, 15);
+                double accelAngle = rand.NextDouble() * Math.PI * .25 + (Math.PI * 3) / 8;
+                float accelSpeed = rand.Next(2, 15);
+                emitter.createParticles(new Vector2((float)Math.Cos(velocityAngle) * velocitySpeed, (float)Math.Sin(velocityAngle) * velocitySpeed),
+                                new Vector2((float)Math.Cos(accelAngle) * accelSpeed, (float)Math.Sin(accelAngle) * accelSpeed),
+                                position,
+                                rand.Next(5, 20),
+                                rand.Next(1000, 4000));
+            }
+        }
+
     }
 }

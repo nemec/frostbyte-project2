@@ -104,7 +104,7 @@ namespace Frostbyte
         /// <summary>
         /// Vector of all WorldObjects drawn on the level.
         /// </summary>
-        internal List<WorldObject> mSprites = new List<WorldObject>();
+        internal List<WorldObject> mWorldObjects = new List<WorldObject>();
 
         /// <summary>
         /// This level's actors. 
@@ -131,13 +131,17 @@ namespace Frostbyte
 
         internal Camera Camera = new Camera();
 
+        /// <summary>
+        /// List of particle emitters for level.
+        /// </summary>
+        //protected List<ParticleEmitter> mParticleEmitters = new List<ParticleEmitter>();
         #endregion Variables
 
 
         internal void Load()
         {
             This.Game.AudioManager.Stop();
-            mSprites.Clear();
+            mWorldObjects.Clear();
             mActors.Clear();
             mAnims.Clear();
             LoadBehavior();
@@ -146,7 +150,7 @@ namespace Frostbyte
 
         internal virtual void Update()
         {
-            mSprites.Sort();
+            mWorldObjects.Sort();
             if (Loaded)
             {
                 UpdateBehavior();
@@ -154,10 +158,10 @@ namespace Frostbyte
                 {
                     Unload();
                 }
-                foreach (Sprite sp in mSprites)
+                foreach (WorldObject sp in mWorldObjects)
                 {
                     if (!WinCondition())
-                        sp.UpdateBehavior();
+                        sp.Update();
                     else
                     {
                         Unload();
@@ -166,16 +170,16 @@ namespace Frostbyte
                 }
                 foreach (var item in ToRemove)
                 {
-                    mSprites.Remove(item);
+                    mWorldObjects.Remove(item);
                 }
                 ToRemove.Clear();
                 foreach (var item in ToAdd)
                 {
-                    mSprites.Add(item);
+                    mWorldObjects.Add(item);
                 }
                 ToAdd.Clear();
                 Collision.Update();
-                foreach (Sprite sp in mSprites)
+                foreach (WorldObject sp in mWorldObjects)
                 {
                     sp.DoCollisions();
                 }
@@ -189,7 +193,7 @@ namespace Frostbyte
         internal void Unload()
         {
             This.Game.AudioManager.Stop();
-            mSprites.Clear();
+            mWorldObjects.Clear();
             mActors.Clear();
             mAnims.Clear();
             EndBehavior();
@@ -212,7 +216,7 @@ namespace Frostbyte
 
             #region Draw Sprites
 
-            foreach (var sprite in mSprites)
+            foreach (var sprite in mWorldObjects)
             {
                 if (!sprite.Static)
                 {
@@ -255,7 +259,18 @@ namespace Frostbyte
 
         internal Sprite GetSprite(string name)
         {
-            return (mSprites.Find(delegate(WorldObject s) { return s.Name == name; }) as Sprite);
+            return (mWorldObjects.Find(delegate(WorldObject s) { return s.Name == name; }) as Sprite);
+        }
+
+
+        internal void AddParticleEmitter(ParticleEmitter particleEmitter)
+        {
+            ToAdd.Add(particleEmitter);
+        }
+
+        internal ParticleEmitter GetParticleEmitter(string name)
+        {
+            return (mWorldObjects.Find(delegate(WorldObject s) { return s.Name == name; }) as ParticleEmitter);
         }
 
         /// <summary>
@@ -267,7 +282,7 @@ namespace Frostbyte
         /// <returns></returns>
         internal List<Sprite> GetSpritesByType(string typename)
         {
-            return (mSprites.FindAll(
+            return (mWorldObjects.FindAll(
                 delegate(WorldObject s) { return s.GetType().Name == typename; }).ConvertAll<Sprite>(
                     delegate(WorldObject s) { return s as Sprite; }));
         }
@@ -281,7 +296,7 @@ namespace Frostbyte
         /// <returns></returns>
         internal List<Sprite> GetSpritesByType(Type type)
         {
-            return (mSprites.FindAll(
+            return (mWorldObjects.FindAll(
                 delegate(WorldObject s) { return type.IsAssignableFrom(s.GetType()); }).ConvertAll<Sprite>(
                     delegate(WorldObject s) { return s as Sprite; }));
         }
@@ -345,7 +360,7 @@ namespace Frostbyte
             {
                 try
                 {
-                    Texture2D tex = This.Game.Content.Load<Texture2D>(name);
+                    Texture2D tex = This.Game.Content.Load<Texture2D>(string.Format("Textures/{0}",name));
                     mTextures[name] = tex;
                     return tex;
                 }
@@ -387,5 +402,6 @@ namespace Frostbyte
             return Name;
         }
         #endregion Methods
+
     }
 }
