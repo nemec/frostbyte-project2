@@ -103,6 +103,9 @@ namespace Frostbyte
         /// </summary>
         internal Vector2 Center { get; set; }
 
+        /// <summary>
+        /// Returns the actual world position of the centerpoint
+        /// </summary>
         internal Vector2 CenterPos
         {
             get
