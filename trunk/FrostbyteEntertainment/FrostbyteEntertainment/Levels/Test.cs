@@ -17,11 +17,36 @@ namespace Frostbyte.Levels
 
             FrostbyteLevel l = (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel) as FrostbyteLevel;
 
+            //load the level
             l.TileMap = new TileList(XDocument.Load(@"Content/Level1.xml"));
+
+            #region loadAnimations
+            l.AddAnimation(new Animation("antibody.anim"));
+            l.AddAnimation(new Animation("shield_opaque.anim"));
+            l.AddAnimation(new Animation("golem-idle-down.anim"));
+            l.AddAnimation(new Animation("golem-idle-right.anim"));
+            l.AddAnimation(new Animation("golem-idle-up.anim"));
+            l.AddAnimation(new Animation("golem-idle-diagup.anim"));
+            l.AddAnimation(new Animation("golem-idle-diagdown.anim"));
+            #endregion loadAnimations
+
+            #region Load us some enemies
+            List<Animation> anims = new List<Animation>(){
+                l.GetAnimation("golem-idle-down.anim"),
+                l.GetAnimation("golem-idle-right.anim"),
+                l.GetAnimation("golem-idle-up.anim"),
+                l.GetAnimation("golem-idle-diagup.anim"),
+                l.GetAnimation("golem-idle-diagdown.anim"),
+            };
+            FerociousEnemy golem = new FerociousEnemy("Golem", new Actor(anims), 1, 1000);
+            golem.Speed = 1;
+
+            #endregion Load us some enemies
+
 
             LevelFunctions.Spawn(delegate()
             {
-                return new FerociousEnemy("e1", new Actor(new Animation("antibody.anim")), 1f, 10);
+                return new FerociousEnemy("e1", new Actor(l.GetAnimation("antibody.anim")), 1f, 10);
             }, 1, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             /*LevelFunctions.Spawn(delegate()
@@ -29,10 +54,10 @@ namespace Frostbyte.Levels
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
             }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            Sprite ally = new TestAlly("a1", new Actor(new Animation("antibody.anim")));
-            ally.Pos = new Vector2(250, 260);
+            //Sprite ally = new TestAlly("a1", new Actor(l.GetAnimation("antibody.anim")));
+            //ally.Pos = new Vector2(250, 260);
 
-            Characters.Mage mage = new Characters.Mage("mage", new Actor(new Animation("shield_opaque.anim")));
+            Characters.Mage mage = new Characters.Mage("mage", new Actor(l.GetAnimation("shield_opaque.anim")));
             mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
             /*Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
 
@@ -79,6 +104,7 @@ namespace Frostbyte.Levels
             emitter3.Static = true;
             emitter4.Static = true;
             #endregion particles
+
         }
 
         internal static void Update()
@@ -216,7 +242,7 @@ namespace Frostbyte.Levels
 
         protected override void updateAttack()
         {
-           // throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 }
