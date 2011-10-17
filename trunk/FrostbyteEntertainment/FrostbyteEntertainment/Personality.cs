@@ -46,13 +46,13 @@ namespace Frostbyte
             while (true)
             {
                 float dist = Vector2.DistanceSquared(master.GetClosestTarget(targets).CenterPos, master.CenterPos);
-                while (dist > 200 * 200)
+                while (dist > 150 * 150)
                 {
                     master.charge(targets, 1000f, 1f);
                     dist = Vector2.DistanceSquared(master.GetClosestTarget(targets).CenterPos, master.CenterPos);
                     yield return null;
                 }
-                while (!master.stealthCamp(targets, 100f))
+                while (!master.stealthCamp(targets, 100f, 150f))
                 {
                     yield return null;
                 }
@@ -184,7 +184,7 @@ namespace Frostbyte
         /// <summary>
         /// Be Invisible and still until certain distance from player - complete
         /// </summary>
-        internal static bool stealthCamp(this Enemy ths, List<Sprite> targets, float aggroDistance)
+        internal static bool stealthCamp(this Enemy ths, List<Sprite> targets, float aggroDistance, float ignoreDistance)
         {
             Sprite target = ths.GetClosestTarget(targets, aggroDistance);
 
@@ -196,6 +196,14 @@ namespace Frostbyte
             }
             else
             {
+                target = ths.GetClosestTarget(targets);
+                if(target != null && (Vector2.DistanceSquared(target.Pos, ths.CenterPos) >
+                    (ignoreDistance * ignoreDistance))){
+                        ths.Personality.Status = EnemyStatus.Wander;
+                        ths.mVisible = true;
+                        return true;
+                }
+
                 ths.Personality.Status = EnemyStatus.Frozen;
                 ths.mVisible = false;
             }
