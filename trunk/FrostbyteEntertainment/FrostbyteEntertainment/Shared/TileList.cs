@@ -903,7 +903,7 @@ namespace Frostbyte
                     return true;
                 }
             }
-            value = new Tile();
+            value = new Tile() { GridCell = new Index2D(x, y) };
             return false;
         }
 

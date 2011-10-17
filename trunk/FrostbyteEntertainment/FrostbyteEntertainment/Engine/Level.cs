@@ -355,7 +355,7 @@ namespace Frostbyte
         /// </summary>
         /// <param name="name">Name of the texture</param>
         /// <returns>The requested texture</returns>
-        internal Texture2D GetTexture(string name)
+        internal Texture2D GetTexture(string name, string path = "")
         {
             Texture2D output;
             if (mTextures.TryGetValue(name, out output))
@@ -364,7 +364,7 @@ namespace Frostbyte
             {
                 try
                 {
-                    Texture2D tex = This.Game.Content.Load<Texture2D>(string.Format("Textures/{0}", name));
+                    Texture2D tex = This.Game.Content.Load<Texture2D>(string.Format("Textures/{1}{0}", name, path == "" ? "" : path + @"/"));
                     mTextures[name] = tex;
                     return tex;
                 }
