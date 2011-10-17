@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Animation>
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="0,0" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="128,0" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="256,0" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="384,0" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="512,0" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="0,128" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="128,128" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="256,128" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="384,128" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="512,128" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="0,256" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="128,256" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="256,256" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="384,256" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="512,256" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="0,384" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="128,384" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="256,384" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="384,384" AnimationPeg="0,0" />
+  <Frame SpriteSheet="beetle-idle-right" FrameDelay="20" Width="128" Height="128" TLPos="512,384" AnimationPeg="0,0" />
+</Animation>

@@ -156,6 +156,26 @@
       <Link>Content\Level1.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagdown.png">
+      <Link>Content\Sprites\beetle-idle-diagdown.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagup.png">
+      <Link>Content\Sprites\beetle-idle-diagup.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-down.png">
+      <Link>Content\Sprites\beetle-idle-down.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-right.png">
+      <Link>Content\Sprites\beetle-idle-right.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-up.png">
+      <Link>Content\Sprites\beetle-idle-up.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>
@@ -196,6 +216,26 @@
   <ItemGroup>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\antibody.anim">
       <Link>Content\Sprites\antibody.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagdown.anim">
+      <Link>Content\Sprites\beetle-idle-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagup.anim">
+      <Link>Content\Sprites\beetle-idle-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-down.anim">
+      <Link>Content\Sprites\beetle-idle-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-right.anim">
+      <Link>Content\Sprites\beetle-idle-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-up.anim">
+      <Link>Content\Sprites\beetle-idle-up.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-diagdown.anim">
