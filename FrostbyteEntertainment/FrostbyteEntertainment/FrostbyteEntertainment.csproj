@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{FA83C6ED-A939-42D5-BE14-3874814FA1D9}</ProjectGuid>
@@ -196,6 +196,26 @@
   <ItemGroup>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\antibody.anim">
       <Link>Content\Sprites\antibody.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-diagdown.anim">
+      <Link>Content\Sprites\golem-idle-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-diagup.anim">
+      <Link>Content\Sprites\golem-idle-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-down.anim">
+      <Link>Content\Sprites\golem-idle-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-right.anim">
+      <Link>Content\Sprites\golem-idle-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-up.anim">
+      <Link>Content\Sprites\golem-idle-up.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\shield_opaque.anim">

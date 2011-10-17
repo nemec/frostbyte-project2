@@ -35,6 +35,11 @@ namespace Frostbyte
         {
             Animations.Add(anim);
         }
+
+        public Actor(List<Animation> anims)
+        {
+            Animations = anims;
+        }
         #endregion
     }
 }
