@@ -91,7 +91,17 @@ namespace Frostbyte
         /// <summary>
         /// Sprite's scale for drawing
         /// </summary>
-        internal Vector2 Scale = new Vector2(1, 1);
+        internal float Scale = 1;
+
+        /// <summary>
+        /// Whether or not we should do horizontal flip
+        /// </summary>
+        internal bool Hflip { get; set; }
+
+        /// <summary>
+        /// Whether or not we should do a vertical flip
+        /// </summary>
+        internal bool Vflip { get; set; }
 
         /// <summary>
         /// Determines whether or not the WorldObject is transformed by the camera or not

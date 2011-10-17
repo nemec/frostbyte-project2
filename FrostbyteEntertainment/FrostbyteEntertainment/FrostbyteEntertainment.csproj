@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{FA83C6ED-A939-42D5-BE14-3874814FA1D9}</ProjectGuid>
@@ -202,8 +202,9 @@
       <Link>Content\Sprites\shield_opaque.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="..\FrostbyteEntertainmentContent\Tiles\Earth.png.spsh">
-      <Link>Content\Tiles\Earth.png.spsh</Link>
+    <None Include="..\FrostbyteEntertainmentContent\Textures\Earth.spsh">
+      <Link>Content\Textures\Earth.spsh</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\Sprites\boxen.anim">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -57,19 +57,6 @@ namespace Frostbyte
     /// </summary>
     class FrostbyteLevel : Level
     {
-        #region Constructors
-        internal Vector2[] PlayerSpawnPoint = new Vector2[2]{
-            new Vector2(50, 50),
-            new Vector2(60, 50)
-        };
-
-        internal FrostbyteLevel(string n, Behavior loadBehavior, Behavior updateBehavior,
-            Behavior endBehavior, Condition winCondition)
-            : base(n, loadBehavior, updateBehavior, endBehavior, winCondition)
-        {
-        }
-        #endregion
-
         #region Variables
         /// <summary>
         /// Target lists
@@ -79,17 +66,8 @@ namespace Frostbyte
         internal List<Sprite> obstacles = new List<Sprite>();
 
         internal TileList TileMap = new TileList();
-        private Vector3 StartDraw;
-        private Vector3 EndDraw;
-        private Polygon viewportPolygon = null;
-        #endregion
 
-        #region Constants
-        private readonly float MAX_ZOOM = 1.0f;
-        private readonly float MIN_ZOOM = 0.8f;
-        private readonly int BORDER_WIDTH = 200;
-        private readonly int BORDER_HEIGHT = 200;
-        #endregion
+        private Polygon viewportPolygon = null;
 
         /// <summary>
         /// A list of levels in the order they should be played through
@@ -102,6 +80,43 @@ namespace Frostbyte
             "Fire",
             "Heart"
         };
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// TL of area that will be visible on screen
+        /// </summary>
+        private Vector3 StartDraw { get; set; }
+        /// <summary>
+        /// BR of the area that will be visible on screen
+        /// </summary>
+        private Vector3 EndDraw { get; set; }
+        /// <summary>
+        /// The level's theme defaults to Earth
+        /// </summary>
+        public Element Theme { get; set; }
+        #endregion Properties
+
+        #region Constants
+        private readonly float MAX_ZOOM = 1.0f;
+        private readonly float MIN_ZOOM = 0.8f;
+        private readonly int BORDER_WIDTH = 200;
+        private readonly int BORDER_HEIGHT = 200;
+        #endregion
+
+        #region Constructors
+        internal Vector2[] PlayerSpawnPoint = new Vector2[2]{
+            new Vector2(50, 50),
+            new Vector2(60, 50)
+        };
+
+        internal FrostbyteLevel(string n, Behavior loadBehavior, Behavior updateBehavior,
+            Behavior endBehavior, Condition winCondition)
+            : base(n, loadBehavior, updateBehavior, endBehavior, winCondition)
+        {
+        }
+        #endregion
+                
 
         /// <summary>
         /// Retains progress through our levels

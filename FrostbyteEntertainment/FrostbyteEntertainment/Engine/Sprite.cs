@@ -155,7 +155,25 @@ namespace Frostbyte
             }
             if (mVisible == true)
             {
-                This.Game.spriteBatch.Draw(frame.Image, Pos + frame.AnimationPeg, new Rectangle((int)frame.StartPos.X, (int)frame.StartPos.Y, frame.Width, frame.Height), Color.White, Angle, GetAnimation().AnimationPeg, Scale, SpriteEffects.None, 0);
+                This.Game.spriteBatch.Draw(
+                        frame.Image,
+                        Pos + frame.AnimationPeg,
+                        new Rectangle((int)frame.StartPos.X, (int)frame.StartPos.Y, frame.Width, frame.Height),
+                        Color.White,
+                        Angle,
+                        GetAnimation().AnimationPeg,
+                        Scale,
+                        Hflip?
+                            Vflip?
+                                SpriteEffects.FlipHorizontally&SpriteEffects.FlipVertically
+                                :SpriteEffects.FlipHorizontally
+                            :
+                            Vflip ?
+                                 SpriteEffects.FlipVertically
+                                : SpriteEffects.None
+                        ,
+                        0
+                    );
             }
         }
 

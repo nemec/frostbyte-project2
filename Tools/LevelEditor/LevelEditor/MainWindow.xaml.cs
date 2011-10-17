@@ -660,7 +660,7 @@ namespace LevelEditor
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
                         UndoableAction ua = new UndoableAction() { Added = true, OldState = TileMap.GetCurrentState(new Index2D(StartCell.X, StartCell.Y), new Index2D(EndCell.X, EndCell.Y)) };
-                        foreach (Tile item in AddTile(GetCell(EndCell)))
+                        foreach (Tile item in AddTile(GetCell(StartCell)))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -676,7 +676,7 @@ namespace LevelEditor
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
                         UndoableAction ua = new UndoableAction() { Added = false, OldState = TileMap.GetCurrentState(new Index2D(GridCell.X, GridCell.Y), new Index2D(GridCell.X, GridCell.Y)) };
-                        foreach (Tile item in RemoveTile(GetCell(EndCell)))
+                        foreach (Tile item in RemoveTile(GetCell(StartCell)))
                         {
                             lo.Add(item.TileValue);
                         }

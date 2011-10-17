@@ -29,8 +29,8 @@ namespace Frostbyte.Levels
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
             }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            Sprite ally = new TestAlly("a1", new Actor(new Animation("antibody.anim")));
-            ally.Pos = new Vector2(250, 260);
+            //Sprite ally = new TestAlly("a1", new Actor(new Animation("antibody.anim")));
+            //ally.Pos = new Vector2(250, 260);
 
             Characters.Mage mage = new Characters.Mage("mage", new Actor(new Animation("shield_opaque.anim")));
             mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
