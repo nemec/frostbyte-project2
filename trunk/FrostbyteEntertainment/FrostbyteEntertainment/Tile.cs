@@ -210,6 +210,18 @@ namespace Frostbyte
             //Texture2D image = This.Game.Content.Load<Texture2D>("corner");
             if (GridCell != null && Image != null)
             {
+                if (Type == TileTypes.Bottom || Type == TileTypes.BottomConvexCorner)
+                {
+                    //if it's somethign that needs floor draw me a floor piece
+                    Tile t = new Tile()
+                    {
+                        Type = TileTypes.Floor,
+                        FloorType = TileTypes.Floor,
+                        Orientation = Orientations.Down,
+                        GridCell=this.GridCell,
+                    };
+                    t.Draw();
+                }
                 This.Game.spriteBatch.Draw(
                         Image,
                         GridCell.Pos,
