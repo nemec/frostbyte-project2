@@ -259,7 +259,21 @@ namespace Frostbyte
                     if (!(toDraw.Type == TileTypes.Bottom || toDraw.Type == TileTypes.BottomConvexCorner))
                         toDraw.Draw();
                     else
+                    {
                         drawLater.Add(toDraw);
+                        if (toDraw.Type == TileTypes.Bottom || toDraw.Type == TileTypes.BottomConvexCorner)
+                        {
+                            //if it's somethign that needs floor draw me a floor piece
+                            Tile t = new Tile()
+                            {
+                                Type = TileTypes.Floor,
+                                FloorType = TileTypes.Floor,
+                                Orientation = Orientations.Down,
+                                GridCell = toDraw.GridCell,
+                            };
+                            t.Draw();
+                        }
+                    }
                 }
             }
             This.Game.spriteBatch.End();
