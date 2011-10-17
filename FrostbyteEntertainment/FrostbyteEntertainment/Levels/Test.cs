@@ -28,6 +28,11 @@ namespace Frostbyte.Levels
             l.AddAnimation(new Animation("golem-idle-up.anim"));
             l.AddAnimation(new Animation("golem-idle-diagup.anim"));
             l.AddAnimation(new Animation("golem-idle-diagdown.anim"));
+            l.AddAnimation(new Animation("beetle-idle-down.anim"));
+            l.AddAnimation(new Animation("beetle-idle-right.anim"));
+            l.AddAnimation(new Animation("beetle-idle-up.anim"));
+            l.AddAnimation(new Animation("beetle-idle-diagup.anim"));
+            l.AddAnimation(new Animation("beetle-idle-diagdown.anim"));
             #endregion loadAnimations
 
             #region Load us some enemies
@@ -40,6 +45,16 @@ namespace Frostbyte.Levels
             };
             FerociousEnemy golem = new FerociousEnemy("Golem", new Actor(anims), 1, 1000);
             golem.Speed = 1;
+
+            anims = new List<Animation>(){
+                l.GetAnimation("beetle-idle-down.anim"),
+                l.GetAnimation("beetle-idle-right.anim"),
+                l.GetAnimation("beetle-idle-up.anim"),
+                l.GetAnimation("beetle-idle-diagup.anim"),
+                l.GetAnimation("beetle-idle-diagdown.anim"),
+            };
+            FerociousEnemy beetle = new FerociousEnemy("Beetle", new Actor(anims), 1, 1000);
+            beetle.Speed = 1;
 
             #endregion Load us some enemies
 
