@@ -26,20 +26,65 @@ namespace Frostbyte
         //protected enum movementTypes { Charge, PulseCharge, Ram, StealthCharge, StealthCamp, StealthRetreat, Retreat, TeaseRetreat, Swap, Freeze };
         //protected movementTypes currentMovementType = 0;
         internal TimeSpan movementStartTime;
-        /// <summary>
-        /// \todo make this into an enum with bits or w/e it's called (Dan knows)
-        /// </summary>
-        //protected bool isRamming, isCharging, isStealth=false, isFrozen, isAttacking = false;
+
         //protected EnemyStatus Status = EnemyStatus.Wander;
         internal IPersonality Personality;
-        internal Vector2 direction;
-
+        private Vector2 mDirection = new Vector2();
         #endregion Variables
+
+        #region Properties
+        internal Vector2 direction
+        {
+            get
+            {
+                return mDirection;
+            }
+            set
+            {
+                mDirection = value;
+                mDirection.Normalize();
+                double angle = Math.Atan2(mDirection.Y, mDirection.X);
+                if (-Math.PI / 8 < angle && angle < Math.PI / 8)
+                {
+                    Orientation = Orientations.Right;
+                }
+                else if (Math.PI / 8 < angle && angle < 3 * Math.PI / 8)
+                {
+                    Orientation = Orientations.Up_Right;
+                }
+                else if (3 * Math.PI / 8 < angle && angle < 5 * Math.PI / 8)
+                {
+                    Orientation = Orientations.Up;
+                }
+                else if (5 * Math.PI / 8 < angle && angle < 7 * Math.PI / 8)
+                {
+                    Orientation = Orientations.Up_Left;
+                }
+                else if (-3 * Math.PI / 8 < angle && angle < -Math.PI / 8)
+                {
+                    Orientation = Orientations.Down_Right;
+                }
+                else if (-5 * Math.PI / 8 < angle && angle < -3 * Math.PI / 8)
+                {
+                    Orientation = Orientations.Down;
+                }
+                else if (-7 * Math.PI / 8 < angle && angle < -5 * Math.PI / 8)
+                {
+                    Orientation = Orientations.Down_Left;
+                }
+                else
+                {
+                    Orientation = Orientations.Right;
+                }
+            }
+        }
+        #endregion
+
 
         public Enemy(string name, Actor actor, float speed, int _health)
             : base(name, actor) 
         {
-            Personality = new AmbushPersonality(this);
+            Personality = new WanderingMinstrelPersonality(this);
             UpdateBehavior = update;
             (This.Game.CurrentLevel as FrostbyteLevel).enemies.Add(this);
             Speed = speed;
@@ -84,10 +129,10 @@ namespace Frostbyte
                     continue;
                 }
                 if (min == null ||
-                    Vector2.DistanceSquared(target.Pos, CenterPos) <
-                    Vector2.DistanceSquared(min.Pos, CenterPos))
+                    Vector2.DistanceSquared(target.CenterPos, CenterPos) <
+                    Vector2.DistanceSquared(min.CenterPos, CenterPos))
                 {
-                    if (Vector2.DistanceSquared(target.Pos, CenterPos) <= aggroDistance * aggroDistance)
+                    if (Vector2.DistanceSquared(target.CenterPos, CenterPos) <= aggroDistance * aggroDistance)
                     {
                         min = target;
                     }
@@ -99,7 +144,6 @@ namespace Frostbyte
         
 
         //todo:
-        //fill in AI Movement Functions
         //create projectile class (projectiles modify health of enemies/players) 
         //complete checkBackgroundCollisions
     }

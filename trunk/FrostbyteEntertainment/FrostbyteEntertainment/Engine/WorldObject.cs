@@ -11,7 +11,7 @@ namespace Frostbyte
         internal WorldObject(int z = 0)
         {
             ZOrder = z;
-            mVisible = true;
+            Visible = true;
             mTransparency = 1;
             mAngle = 0;
             Static = false;
@@ -113,6 +113,8 @@ namespace Frostbyte
         /// </summary>
         internal Vector2 Center { get; set; }
 
+        internal Orientations Orientation { get; set; }
+
         /// <summary>
         /// Returns the actual world position of the centerpoint
         /// </summary>
@@ -134,7 +136,7 @@ namespace Frostbyte
         /// <summary>
         /// Determine if Object should be visible
         /// </summary>
-        internal bool mVisible;
+        internal bool Visible;
         /// <summary>
         /// Transparency!
         /// </summary>

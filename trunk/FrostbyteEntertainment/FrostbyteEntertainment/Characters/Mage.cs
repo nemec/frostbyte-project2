@@ -33,7 +33,7 @@ namespace Frostbyte.Characters
             keyboard = new KeyboardController();
             currentTargetAlignment = TargetAlignment.None;
             target = new Frostbyte.Levels.Target("target");
-            target.mVisible = false;
+            target.Visible = false;
             sortType = new DistanceSort(this);
 
             UpdateBehavior = mUpdate;
@@ -68,7 +68,7 @@ namespace Frostbyte.Characters
             for (int x = 0; x < list.Count; x++)
             {
                 Sprite target = list[(next + 1 + x) % list.Count];
-                if (target.mVisible)
+                if (target.Visible)
                 {
                     return target;
                 }
@@ -80,7 +80,7 @@ namespace Frostbyte.Characters
 
         private void cancelTarget()
         {
-            target.mVisible = false;
+            target.Visible = false;
             currentTarget = null;
             currentTargetAlignment = TargetAlignment.None;
         }
@@ -89,7 +89,7 @@ namespace Frostbyte.Characters
         {
             controller.Update();
 
-            if (currentTarget != null && !currentTarget.mVisible)
+            if (currentTarget != null && !currentTarget.Visible)
             {
                 cancelTarget();
             }
@@ -133,7 +133,7 @@ namespace Frostbyte.Characters
 
                 if (currentTarget != null)
                 {
-                    target.mVisible = true;
+                    target.Visible = true;
                     target.CenterOn(currentTarget);
                 }
                 #endregion Targeting
