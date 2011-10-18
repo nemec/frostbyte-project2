@@ -153,7 +153,7 @@ namespace Frostbyte
                     mLastUpdate = new GameTime(gameTime.TotalGameTime, gameTime.ElapsedGameTime);
                 }
             }
-            if (mVisible == true)
+            if (Visible == true)
             {
                 This.Game.spriteBatch.Draw(
                         frame.Image,

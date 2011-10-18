@@ -92,7 +92,7 @@ namespace Frostbyte
                     mLastUpdate = new GameTime(gameTime.TotalGameTime, gameTime.ElapsedGameTime);
                 }
             }
-            if (mVisible == true)
+            if (Visible == true)
             {
                 SpriteFrame f = Frames[Frame];
                 This.Game.spriteBatch.Draw(f.Image, Pos + f.AnimationPeg, new Rectangle((int)f.StartPos.X, (int)f.StartPos.Y, f.Width, f.Height), Color.White, Angle, GetAnimation().AnimationPeg, Scale, SpriteEffects.None, 0);

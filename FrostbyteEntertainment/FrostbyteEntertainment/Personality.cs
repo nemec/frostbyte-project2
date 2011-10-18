@@ -23,6 +23,50 @@ namespace Frostbyte
         void Update();
     }
 
+    internal class ImmobilePersonality : IPersonality
+    {
+        public EnemyStatus Status { get; set; }
+        public void Update()
+        {
+            // Do Nothing
+        }
+    }
+
+    internal class WanderingMinstrelPersonality : IPersonality
+    {
+        public EnemyStatus Status { get; set; }
+        private Enemy master;
+        private IEnumerator mStates;
+
+        internal WanderingMinstrelPersonality(Enemy master)
+        {
+            this.master = master;
+            mStates = States().GetEnumerator();
+        }
+
+        public void Update()
+        {
+            mStates.MoveNext();
+        }
+
+        public IEnumerable States()
+        {
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            float[] transitionDistances = new float[1] { 50f };
+            while (true)
+            {
+                while (!EnemyAI.wander(master, targets, TimeSpan.MaxValue, transitionDistances[0], (float)Math.PI / 8))
+                {
+                    yield return null;
+                }
+                while (!EnemyAI.camp(master, targets, 0f, transitionDistances[0]))
+                {
+                    yield return null;
+                }
+            }
+        }
+    }
+
     internal class AmbushPersonality : IPersonality
     {
         public EnemyStatus Status { get; set; }
@@ -43,20 +87,18 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            float[] distances = new float[3] { 1000f, 150f, 100f };
             while (true)
             {
-                float dist = Vector2.DistanceSquared(master.GetClosestTarget(targets).CenterPos, master.CenterPos);
-                while (dist > 150 * 150)
-                {
-                    master.charge(targets, 1000f, 1f);
-                    dist = Vector2.DistanceSquared(master.GetClosestTarget(targets).CenterPos, master.CenterPos);
-                    yield return null;
-                }
-                while (!master.stealthCamp(targets, 100f, 150f))
+                while (!master.stealthCharge(targets, TimeSpan.MaxValue, distances[1], distances[0], 1f))
                 {
                     yield return null;
                 }
-                while (!master.charge(targets, 100f, 2))
+                while (!master.stealthCamp(targets, distances[2], distances[1]))
+                {
+                    yield return null;
+                }
+                while (!master.charge(targets, distances[2], 2))
                 {
                     yield return null;
                 }
@@ -67,6 +109,8 @@ namespace Frostbyte
     internal static class EnemyAI
     {
         //These are only to update position of enemy
+
+        private static Random RNG = new Random();
 
         /// <summary>
         /// Update enemy position directly toward target for given duration - complete
@@ -81,8 +125,7 @@ namespace Frostbyte
             }
 
             float chargeSpeed = ths.Speed * speedMultiplier;
-            ths.direction = min.Pos - ths.CenterPos;
-            ths.direction.Normalize();
+            ths.direction = min.CenterPos - ths.CenterPos;
             ths.Pos += ths.direction * chargeSpeed;
 
             return false;
@@ -110,8 +153,7 @@ namespace Frostbyte
                 Sprite target = ths.GetClosestTarget(targets, aggroDistance);
                 if (target != null)
                 {
-                    ths.direction = target.Pos - ths.CenterPos;
-                    ths.direction.Normalize();
+                    ths.direction = target.CenterPos - ths.CenterPos;
                     ths.Personality.Status = EnemyStatus.Ram;
                 }
             }
@@ -137,7 +179,7 @@ namespace Frostbyte
         /// <summary>
         /// Hide and follow player until certain distance from player - complete
         /// </summary>
-        internal static bool stealthCharge(this Enemy ths, List<Sprite> targets, TimeSpan duration, float aggroDistance, float visibleDistance, float speedMultiplier)
+        internal static bool stealthCharge(this Enemy ths, List<Sprite> targets, TimeSpan duration, float visibleDistance, float aggroDistance, float speedMultiplier)
         {
             if (ths.Personality.Status != EnemyStatus.Charge)
             {
@@ -148,15 +190,15 @@ namespace Frostbyte
             if (target != null)
             {
                 ths.Personality.Status = EnemyStatus.Charge;
-                if (Vector2.DistanceSquared(target.Pos, ths.CenterPos) <= visibleDistance * visibleDistance)
+                if (Vector2.DistanceSquared(target.CenterPos, ths.CenterPos) <= visibleDistance * visibleDistance)
                 {
                     ths.Personality.Status = EnemyStatus.Wander;
-                    ths.mVisible = true;
+                    ths.Visible = true;
                     return true;
                 }
                 else
                 {
-                    ths.mVisible = false;
+                    ths.Visible = false;
                 }
             }
 
@@ -166,14 +208,13 @@ namespace Frostbyte
             {
                 if (duration == TimeSpan.MaxValue || This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.direction = target.Pos - ths.CenterPos;
-                    ths.direction.Normalize();
+                    ths.direction = target.CenterPos - ths.CenterPos;
                     ths.Pos += ths.direction * chargeSpeed;
                 }
                 else
                 {
                     ths.Personality.Status = EnemyStatus.Wander;
-                    ths.mVisible = true;
+                    ths.Visible = true;
                     return true;
                 }
             }
@@ -182,42 +223,30 @@ namespace Frostbyte
         }
 
         /// <summary>
-        /// Be Invisible and still until certain distance from player - complete
+        /// Be still until a certain distance from a player
         /// </summary>
-        internal static bool stealthCamp(this Enemy ths, List<Sprite> targets, float aggroDistance, float ignoreDistance)
+        internal static bool camp(this Enemy ths, List<Sprite> targets, float aggroDistance, float ignoreDistance)
         {
             Sprite target = ths.GetClosestTarget(targets, aggroDistance);
 
             if (target != null)
             {
                 ths.Personality.Status = EnemyStatus.Wander;
-                ths.mVisible = true;
                 return true;
             }
             else
             {
                 target = ths.GetClosestTarget(targets);
-                if(target != null && (Vector2.DistanceSquared(target.Pos, ths.CenterPos) >
+                if (target != null && (Vector2.DistanceSquared(target.CenterPos, ths.CenterPos) >
                     (ignoreDistance * ignoreDistance))){
                         ths.Personality.Status = EnemyStatus.Wander;
-                        ths.mVisible = true;
                         return true;
                 }
 
                 ths.Personality.Status = EnemyStatus.Frozen;
-                ths.mVisible = false;
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Be Invisible and move away until you are y distance away
-        /// </summary>
-        internal static bool stealthRetreat(this Enemy ths, List<Sprite> targets, float safeDistance, float speedMultiplier)
-        {
-            ths.mVisible = ths.retreat(targets, safeDistance, speedMultiplier);
-            return ths.mVisible;
         }
 
         internal static bool retreat(this Enemy ths, List<Sprite> targets, float safeDistance, float speedMultiplier)
@@ -252,8 +281,7 @@ namespace Frostbyte
             {
                 if (This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.direction = target.Pos - ths.CenterPos;
-                    ths.direction.Normalize();
+                    ths.direction = target.CenterPos - ths.CenterPos;
                     ths.Pos -= ths.direction * fleeSpeed;
                 }
                 else
@@ -264,6 +292,24 @@ namespace Frostbyte
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Be Invisible and still until certain distance from player
+        /// </summary>
+        internal static bool stealthCamp(this Enemy ths, List<Sprite> targets, float aggroDistance, float ignoreDistance)
+        {
+            ths.Visible = camp(ths, targets, aggroDistance, ignoreDistance);
+            return ths.Visible;
+        }
+
+        /// <summary>
+        /// Be Invisible and move away until you are y distance away
+        /// </summary>
+        internal static bool stealthRetreat(this Enemy ths, List<Sprite> targets, float safeDistance, float speedMultiplier)
+        {
+            ths.Visible = ths.retreat(targets, safeDistance, speedMultiplier);
+            return ths.Visible;
         }
 
         /// <summary>
@@ -306,13 +352,11 @@ namespace Frostbyte
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
                     ths.direction = P1Coord - ths.CenterPos;
-                    ths.direction.Normalize();
                     Pos -= ths.direction * fleeSpeed;
                 }
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
                     ths.direction = P2Coord - ths.CenterPos;
-                    ths.direction.Normalize();
                     Pos -= ths.direction * fleeSpeed;
                 }
 
@@ -357,15 +401,13 @@ namespace Frostbyte
             {
                 return true;
             }
-            Random r = new Random();
-            double angle = Math.Atan2(ths.direction.Y, ths.direction.X) + (2 * r.NextDouble() - 1) * arcAngle;
-            ths.direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+            if (RNG.NextDouble() < 0.9)
+            {
+                double angle = Math.Atan2(ths.direction.Y, ths.direction.X) + (2 * RNG.NextDouble() - 1) * arcAngle;
+                ths.direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-            /*float chargeSpeed = Speed;
-            ths.direction = min.Pos - ths.CenterPos;
-            ths.direction.Normalize();*/
-            ths.Pos += ths.direction * ths.Speed / 2;  // Wandering should be *slow*
-
+                ths.Pos += ths.direction * ths.Speed / 4;  // Wandering should be *slow*
+            }
             return false;
         }
 

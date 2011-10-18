@@ -238,26 +238,17 @@ namespace Frostbyte.Levels
             }
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
             Personality.Update();
-            // Tests for Movement Patterns
-            // Ram for 5 sec, charge for 5 sec, stealth charge for five sec, stealth camp 10 sec, retreat indefinitely
-            //if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 5)))
-            //        changeState = stealthCamp(targets, 100f);
-            //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 10)))
-            //      changeState = charge(targets, 1000f, 1f);
-            //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 15)))
-            //    changeState = stealthCharge(targets, new TimeSpan(0, 0, 2), 1000f, 30f, 1.1f);
-            //else if (!changeState && (This.gameTime.TotalGameTime - movementStartTime < new TimeSpan(0, 0, 25)))
-            //     changeState = teaseRetreat(Player1.Pos, Vector2.Zero, 30f, 1000f, 1.1f);
-            //else if (!changeState)
-            //    changeState = retreat(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, 2.0f);
-            // else
-            //    changeState = !freeze(idleTime);
-            //changeState = wander(targets, new TimeSpan(0, 0, 0, 0, 5), 50f, (float)Math.PI/8);
         }
 
         protected override void updateAttack()
         {
-            // throw new NotImplementedException();
+            float range = 10f;
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            Sprite target = GetClosestTarget(targets, range);
+            if (target != null)
+            {
+                // Attack!
+            }
         }
     }
 }

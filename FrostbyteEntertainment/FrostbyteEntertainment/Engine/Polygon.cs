@@ -61,7 +61,7 @@ namespace Frostbyte
 
         internal override void Draw(GameTime gameTime)
         {
-            if (mVisible)
+            if (Visible)
             {
                 float height = This.Game.GraphicsDevice.Viewport.Height;
                 float width = This.Game.GraphicsDevice.Viewport.Width;
