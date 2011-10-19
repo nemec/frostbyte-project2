@@ -6,22 +6,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
-
+using System.Xml.Linq;
 
 namespace Frostbyte
 {
-    internal abstract class Enemy : Sprite
+    internal abstract partial class Enemy : Sprite
     {
-        
-
         #region Variables
-
-        //State
-        public float health;
-        
-        //Elemental Properties
-        protected Element elementType = Element.DEFAULT;
-
         //Movement
         //protected enum movementTypes { Charge, PulseCharge, Ram, StealthCharge, StealthCamp, StealthRetreat, Retreat, TeaseRetreat, Swap, Freeze };
         //protected movementTypes currentMovementType = 0;
@@ -29,11 +20,14 @@ namespace Frostbyte
 
         //protected EnemyStatus Status = EnemyStatus.Wander;
         internal IPersonality Personality;
-        private Vector2 mDirection = new Vector2();
+        protected Vector2 mDirection = new Vector2();
         #endregion Variables
 
         #region Properties
-        internal Vector2 direction
+        //State
+        internal float Health { get; set; }
+
+        internal Vector2 Direction
         {
             get
             {
@@ -78,17 +72,20 @@ namespace Frostbyte
                 }
             }
         }
+
+        //Elemental Properties
+        protected Element ElementType { get; set; }
         #endregion
 
 
         public Enemy(string name, Actor actor, float speed, int _health)
-            : base(name, actor) 
+            : base(name, actor)
         {
             Personality = new WanderingMinstrelPersonality(this);
             UpdateBehavior = update;
             (This.Game.CurrentLevel as FrostbyteLevel).enemies.Add(this);
             Speed = speed;
-            health = _health;
+            Health = _health;
         }
 
         public void update()
@@ -96,7 +93,7 @@ namespace Frostbyte
             //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
             updateMovement();
             checkBackgroundCollisions();
-            updateAttack();            
+            updateAttack();
         }
 
         /// \todo what is this for?
@@ -138,10 +135,13 @@ namespace Frostbyte
             return min;
         }
 
-        
+        /// <summary>
+        /// Turns the object into a line of xml
+        /// </summary>
+        /// <returns>XML representing the object</returns>
+        internal abstract XElement ToXML();
 
-        //todo:
-        //create projectile class (projectiles modify health of enemies/players) 
-        //complete checkBackgroundCollisions
+        /// \todo create projectile class (projectiles modify health of enemies/players) 
+        /// \todo complete checkBackgroundCollisions
     }
 }

@@ -31,5 +31,10 @@ namespace LevelEditor
             Tiles.ItemsSource = tiles;
         }
 
+        public TileGroup(ObservableCollection<GameObject> objects)
+        {
+            Tiles.ItemsSource = objects;
+        }
+
     }
 }
