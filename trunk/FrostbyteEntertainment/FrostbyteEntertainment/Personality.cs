@@ -106,6 +106,86 @@ namespace Frostbyte
         }
     }
 
+    internal class DontGetNearMePersonality : IPersonality
+    {
+        public EnemyStatus Status { get; set; }
+        private Enemy master;
+        private IEnumerator mStates;
+
+        internal DontGetNearMePersonality(Enemy master)
+        {
+            this.master = master;
+            mStates = States().GetEnumerator();
+        }
+
+        public void Update()
+        {
+            mStates.MoveNext();
+        }
+
+        public IEnumerable States()
+        {
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            while (true)
+            {
+                if ( !master.charge(targets, 200.0f, 5.0f) )
+                {
+                    yield return null;
+                }
+
+                if ( !master.charge(targets, float.PositiveInfinity, 1.0f) ) 
+                {
+                    yield return null;
+                }
+            }
+        }
+    }
+
+    internal class DartPersonality : IPersonality
+    {
+        public EnemyStatus Status { get; set; }
+        private Enemy master;
+        private IEnumerator mStates;
+
+        internal DartPersonality(Enemy master)
+        {
+            this.master = master;
+            mStates = States().GetEnumerator();
+        }
+
+        public void Update()
+        {
+            mStates.MoveNext();
+        }
+
+        public IEnumerable States()
+        {
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            while (true)
+            {
+                if ( !master.dart(targets, 1.0f) )
+                {
+                    yield return null;
+                }
+
+                //if (master.Personality.Status != EnemyStatus.Frozen)
+                //{
+                //    if (master.movementStartTime == new TimeSpan(0, 0, 0))
+                //        master.movementStartTime = This.gameTime.TotalGameTime;
+                //    if (This.gameTime.TotalGameTime < master.movementStartTime + new TimeSpan(0, 0, 5))
+                //        master.wander(targets, new TimeSpan(0, 0, 5), 50f, (float)Math.PI / 8);
+                //}
+
+                //else if (!master.freeze(new TimeSpan(0, 0, 5)))
+                //{
+                //    yield return null;
+                //}
+
+
+            }
+        }
+    }
+
     internal static class EnemyAI
     {
         //These are only to update position of enemy
@@ -408,6 +488,63 @@ namespace Frostbyte
 
                 ths.Pos += ths.direction * ths.Speed / 4;  // Wandering should be *slow*
             }
+            return false;
+        }
+
+        /// <summary>
+        ///  Go quickly to a new location within (radius == distance from target ) idle there, repeat
+        /// </summary
+        internal static bool dart(this Enemy ths, List<Sprite> targets, float dartSpeedMultiplier)
+        {
+            #region crap!
+            Sprite target = ths.GetClosestTarget(targets);
+            Vector2 nextHoverPoint = Vector2.Zero;
+
+            float dartSpeed = ths.Speed * dartSpeedMultiplier;
+
+
+            if (ths.Personality.Status == EnemyStatus.Wander)
+            {
+                if (ths.movementStartTime < This.gameTime.TotalGameTime + new TimeSpan(0, 0, 5))
+                    ths.Personality.Status = EnemyStatus.Charge;
+
+                nextHoverPoint = new Vector2(
+                       RNG.Next(0, (int)(target.Pos.X)),
+                       RNG.Next(0, (int)(target.Pos.Y))
+                );
+
+                ths.direction = nextHoverPoint - ths.CenterPos;
+            }
+
+            
+
+            if (ths.Personality.Status == EnemyStatus.Charge)
+            {
+                if (ths.Pos != nextHoverPoint && nextHoverPoint != Vector2.Zero)
+                {
+                    ths.Pos += ths.direction * dartSpeed;
+                }
+                else
+                {
+                    if (freeze(ths, new TimeSpan(0, 0, 5)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            
+            //ths.freeze(new TimeSpan(0, 0, 5));
+
+            //if (ths.Personality.Status != EnemyStatus.Frozen)
+            //{
+            //    if (ths.movementStartTime > This.gameTime.TotalGameTime + new TimeSpan(0, 0, 10))
+            //        ths.movementStartTime = This.gameTime.TotalGameTime;
+
+            //    if (This.gameTime.TotalGameTime < ths.movementStartTime + new TimeSpan(0,0,5))
+            //        ths.wander(targets, new TimeSpan(0, 0, 5), 50f, (float)Math.PI / 8);
+            //}
+            #endregion crap!
+
             return false;
         }
 
