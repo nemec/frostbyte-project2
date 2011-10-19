@@ -25,7 +25,7 @@ namespace Frostbyte
         //Movement
         //protected enum movementTypes { Charge, PulseCharge, Ram, StealthCharge, StealthCamp, StealthRetreat, Retreat, TeaseRetreat, Swap, Freeze };
         //protected movementTypes currentMovementType = 0;
-        internal TimeSpan movementStartTime;
+        internal TimeSpan movementStartTime = TimeSpan.MaxValue;
 
         //protected EnemyStatus Status = EnemyStatus.Wander;
         internal IPersonality Personality;
@@ -116,9 +116,6 @@ namespace Frostbyte
         /// Returns a sprite in targets that is closest to the enemy's current position
         /// and within aggroDistance distance from the current position.
         /// </summary>
-        /// <param name="targets"></param>
-        /// <param name="aggroDistance"></param>
-        /// <returns></returns>
         internal Sprite GetClosestTarget(List<Sprite> targets, float aggroDistance)
         {
             Sprite min = null;

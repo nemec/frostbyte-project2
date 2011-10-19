@@ -36,24 +36,18 @@ namespace Frostbyte.Levels
             #endregion loadAnimations
 
             #region Load us some enemies
-            List<Animation> anims = new List<Animation>(){
-                l.GetAnimation("golem-idle-down.anim"),
-                l.GetAnimation("golem-idle-right.anim"),
-                l.GetAnimation("golem-idle-up.anim"),
-                l.GetAnimation("golem-idle-diagup.anim"),
-                l.GetAnimation("golem-idle-diagdown.anim"),
-            };
-            FerociousEnemy golem = new FerociousEnemy("Golem", new Actor(anims), 1, 1000);
-            golem.Speed = 1;
 
-            anims = new List<Animation>(){
+            Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 0.5f, 1000);
+            Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 1.0f, 50);
+
+            List <Animation> anims = new List<Animation>(){
                 l.GetAnimation("beetle-idle-down.anim"),
                 l.GetAnimation("beetle-idle-right.anim"),
                 l.GetAnimation("beetle-idle-up.anim"),
                 l.GetAnimation("beetle-idle-diagup.anim"),
                 l.GetAnimation("beetle-idle-diagdown.anim"),
             };
-            FerociousEnemy beetle = new FerociousEnemy("Beetle", new Actor(anims), 1, 1000);
+            FerociousEnemy beetle = new FerociousEnemy("Beetle", new Actor(anims), 1.0f, 10);
             beetle.Speed = 1;
 
             #endregion Load us some enemies
@@ -61,7 +55,7 @@ namespace Frostbyte.Levels
 
             LevelFunctions.Spawn(delegate()
             {
-                return new FerociousEnemy("e1", new Actor(l.GetAnimation("antibody.anim")), 1f, 10);
+                return new FerociousEnemy("e1", new Actor(l.GetAnimation("antibody.anim")), 1.0f, 10);
             }, 1, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             /*LevelFunctions.Spawn(delegate()
@@ -224,8 +218,8 @@ namespace Frostbyte.Levels
 
         #endregion Variables
 
-        internal FerociousEnemy(string name, Actor actor, float speed, int health)
-            : base(name, actor, speed, health)
+        internal FerociousEnemy(string name, Actor actor, float speed, int _health)
+            : base(name, actor, speed, _health)
         {
             movementStartTime = new TimeSpan(0, 0, 1);
         }

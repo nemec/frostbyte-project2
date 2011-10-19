@@ -234,7 +234,7 @@ namespace Frostbyte
                                                 viewport.Y + viewport.Height / zoom, 0)) / Tile.TileSize;
             foreach (ParticleEmitter emitter in mWorldObjects.FindAll(delegate(WorldObject o) { return o is ParticleEmitter; }))
             {
-                createParticlesInCircle(emitter, 10, 150, new Vector2(200, 200));
+                createParticlesInCircle(emitter, 10, 150, new Vector2(-300, -300));
                 //createParticlesLikeFlamingRing(emitter2, 10, 150, new Vector2(150, 100));
                 //createParticlesLikeFlame(emitter3, 10, new Vector2(-150, 100));
                 //createParticlesInCircle(emitter4, 10, 125, new Vector2(200, -200));
