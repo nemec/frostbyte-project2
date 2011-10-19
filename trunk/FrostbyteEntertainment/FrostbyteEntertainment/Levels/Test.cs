@@ -63,8 +63,8 @@ namespace Frostbyte.Levels
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
             }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            //Sprite ally = new TestAlly("a1", new Actor(l.GetAnimation("antibody.anim")));
-            //ally.Pos = new Vector2(250, 260);
+            Sprite ally = new TestAlly("a1", new Actor(l.GetAnimation("antibody.anim")));
+            ally.Pos = new Vector2(250, 260);
 
             Characters.Mage mage = new Characters.Mage("mage", new Actor(l.GetAnimation("shield_opaque.anim")));
             mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
@@ -243,6 +243,17 @@ namespace Frostbyte.Levels
             {
                 // Attack!
             }
+        }
+
+        internal override XElement ToXML()
+        {
+            XElement e = new XElement("Enemy");
+            e.SetAttributeValue("Type", this.GetType().ToString());
+            e.SetAttributeValue("Name", Name);
+            e.SetAttributeValue("Speed", Speed);
+            e.SetAttributeValue("Health", Health);
+            //add other data about this type of enemy here
+            return e;
         }
     }
 }

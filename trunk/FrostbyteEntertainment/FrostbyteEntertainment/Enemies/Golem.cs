@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace Frostbyte.Enemies
 {
-    class Golem : Frostbyte.Enemy
+    internal partial class Golem : Frostbyte.Enemy
     {
         #region Variables
 
         bool changeState = false;
         TimeSpan idleTime = new TimeSpan(0, 0, 2);
 
-        static List<Animation> anims = new List<Animation>(){
+        static List<Animation> Animations = new List<Animation>(){
                 This.Game.CurrentLevel.GetAnimation("golem-idle-down.anim"),
                 This.Game.CurrentLevel.GetAnimation("golem-idle-right.anim"),
                 This.Game.CurrentLevel.GetAnimation("golem-idle-up.anim"),
@@ -23,10 +24,11 @@ namespace Frostbyte.Enemies
         #endregion Variables
 
         internal Golem(string name, float speed, int health)
-            : base(name, new Actor(anims), speed, health)
+            : base(name, new Actor(Animations), speed, health)
         {
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new DontGetNearMePersonality(this);
+            ElementType = Element.Normal;
         }
 
         protected override void updateMovement()

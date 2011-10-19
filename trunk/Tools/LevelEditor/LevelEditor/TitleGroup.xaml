@@ -19,6 +19,6 @@
         <TextBlock x:Name="textBlock" Text="{Binding GroupName, FallbackValue=Test}" Grid.Row="0" HorizontalAlignment="Left" ToolTip="{Binding Text, ElementName=textBlock}" />
         <TreeView x:Name="Tiles" Grid.Row="1" ItemsSource="{Binding Tiles, ElementName=userControl}"/>
     </Grid>-->
-	<TreeView x:Name="Tiles" Grid.Row="1" ItemsSource="{Binding Tiles, ElementName=userControl}"/>
+	<TreeView x:Name="Tiles" Grid.Row="1"/>
 	</TreeViewItem>
 </UserControl>

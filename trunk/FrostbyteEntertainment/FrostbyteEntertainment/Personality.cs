@@ -205,8 +205,8 @@ namespace Frostbyte
             }
 
             float chargeSpeed = ths.Speed * speedMultiplier;
-            ths.direction = min.CenterPos - ths.CenterPos;
-            ths.Pos += ths.direction * chargeSpeed;
+            ths.Direction = min.CenterPos - ths.CenterPos;
+            ths.Pos += ths.Direction * chargeSpeed;
 
             return false;
         }
@@ -233,7 +233,7 @@ namespace Frostbyte
                 Sprite target = ths.GetClosestTarget(targets, aggroDistance);
                 if (target != null)
                 {
-                    ths.direction = target.CenterPos - ths.CenterPos;
+                    ths.Direction = target.CenterPos - ths.CenterPos;
                     ths.Personality.Status = EnemyStatus.Ram;
                 }
             }
@@ -244,7 +244,7 @@ namespace Frostbyte
             {
                 if (duration == TimeSpan.MaxValue || This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.Pos += ths.direction * ramSpeed;
+                    ths.Pos += ths.Direction * ramSpeed;
                 }
                 else
                 {
@@ -288,8 +288,8 @@ namespace Frostbyte
             {
                 if (duration == TimeSpan.MaxValue || This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.direction = target.CenterPos - ths.CenterPos;
-                    ths.Pos += ths.direction * chargeSpeed;
+                    ths.Direction = target.CenterPos - ths.CenterPos;
+                    ths.Pos += ths.Direction * chargeSpeed;
                 }
                 else
                 {
@@ -361,8 +361,8 @@ namespace Frostbyte
             {
                 if (This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.direction = target.CenterPos - ths.CenterPos;
-                    ths.Pos -= ths.direction * fleeSpeed;
+                    ths.Direction = target.CenterPos - ths.CenterPos;
+                    ths.Pos -= ths.Direction * fleeSpeed;
                 }
                 else
                 {
@@ -483,10 +483,10 @@ namespace Frostbyte
             }
             if (RNG.NextDouble() < 0.9)
             {
-                double angle = Math.Atan2(ths.direction.Y, ths.direction.X) + (2 * RNG.NextDouble() - 1) * arcAngle;
-                ths.direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+                double angle = Math.Atan2(ths.Direction.Y, ths.Direction.X) + (2 * RNG.NextDouble() - 1) * arcAngle;
+                ths.Direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-                ths.Pos += ths.direction * ths.Speed / 4;  // Wandering should be *slow*
+                ths.Pos += ths.Direction * ths.Speed / 4;  // Wandering should be *slow*
             }
             return false;
         }
@@ -513,7 +513,7 @@ namespace Frostbyte
                        RNG.Next(0, (int)(target.Pos.Y))
                 );
 
-                ths.direction = nextHoverPoint - ths.CenterPos;
+                ths.Direction = nextHoverPoint - ths.CenterPos;
             }
 
             
@@ -522,7 +522,7 @@ namespace Frostbyte
             {
                 if (ths.Pos != nextHoverPoint && nextHoverPoint != Vector2.Zero)
                 {
-                    ths.Pos += ths.direction * dartSpeed;
+                    ths.Pos += ths.Direction * dartSpeed;
                 }
                 else
                 {

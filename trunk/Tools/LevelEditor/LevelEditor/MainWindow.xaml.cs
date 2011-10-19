@@ -25,7 +25,10 @@ namespace LevelEditor
         #region MapStuff
         public ObservableCollection<TileGroup> TileGroups { get; set; }
 
-        public LevelPart SelectedObject { get; set; }
+        /// <summary>
+        /// selected Room etc
+        /// </summary>
+        public LevelPart SelectedLevelPart { get; set; }
 
         public Vector Grid_Size
         {
@@ -49,7 +52,15 @@ namespace LevelEditor
 
         public int Cellsize = 64;
 
+        /// <summary>
+        /// Currently selected tile
+        /// </summary>
         public Tile SelectedTile { get; set; }
+
+        /// <summary>
+        /// Selected game object
+        /// </summary>
+        public GameObject SelectedGameObject { get; set; }
 
         public static Frostbyte.TileList TileMap = new TileList();
         #endregion MapStuff
@@ -207,6 +218,13 @@ namespace LevelEditor
             };
             #endregion Rooms
 
+            #region OtherStuff
+            ObservableCollection<GameObject> objects = new ObservableCollection<GameObject>()
+            {
+
+            };
+            #endregion OtherStuff
+
             var stuff = new ObservableCollection<TileGroup>(){
                 
                 new TileGroup(rooms){
@@ -215,6 +233,9 @@ namespace LevelEditor
                 new TileGroup(tiles){
                     GroupName="Tiles"
                 },
+                new TileGroup(objects){
+                    GroupName="Objects"
+                }
             };
 
 
@@ -275,7 +296,7 @@ namespace LevelEditor
             //        e.IsSelected = false;
             //    }
             //}
-            SelectedObject = null;
+            SelectedLevelPart = null;
             SelectedTile = null;
             StartCell = new Point(-1, -1);
             EndCell = new Point(-1, -1);
@@ -562,7 +583,7 @@ namespace LevelEditor
             {
                 if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
                 {
-                    if (SelectedObject == null)
+                    if (SelectedLevelPart == null)
                     {
                         StartCell = e.GetPosition(Level);
                         GridCell = GetCell(StartCell);
@@ -570,28 +591,28 @@ namespace LevelEditor
                         // fill the pieces
                         if (SelectedTile.Name == "Room")
                         {
-                            SelectedObject = new Room(i)
+                            SelectedLevelPart = new Room(i)
                             {
                                 FloorType = SelectedTile.FloorType,
                             };
                         }
                         else if (SelectedTile.Name == "Walls")
                         {
-                            SelectedObject = new BorderWalls(i)
+                            SelectedLevelPart = new BorderWalls(i)
                             {
                                 FloorType = SelectedTile.FloorType,
                             };
                         }
                         else if (SelectedTile.Name == "Wall")
                         {
-                            SelectedObject = new Wall(i)
+                            SelectedLevelPart = new Wall(i)
                             {
                                 FloorType = SelectedTile.FloorType,
                             };
                         }
                         else if (SelectedTile.Name == "Floor")
                         {
-                            SelectedObject = new Floor(i)
+                            SelectedLevelPart = new Floor(i)
                             {
                                 Type = TileTypes.Floor,
                                 FloorType = SelectedTile.FloorType,
@@ -603,30 +624,30 @@ namespace LevelEditor
                         EndCell = e.GetPosition(Level);
                         GridCell = GetCell(EndCell);
 
-                        SelectedObject.EndCell = new Index2D(GridCell.X, GridCell.Y);
+                        SelectedLevelPart.EndCell = new Index2D(GridCell.X, GridCell.Y);
 
                         //determine orientation
                         Point change = EndCell - (Vector)StartCell;
                         Index2D diff = new Index2D(change.X, change.Y);
-                        if (SelectedObject.Type == TileTypes.Wall)
+                        if (SelectedLevelPart.Type == TileTypes.Wall)
                         {
                             if (diff.MagX > diff.MagY)
                             {
-                                SelectedObject.Type = diff.Y >= 0 ? TileTypes.Wall : TileTypes.Bottom;
+                                SelectedLevelPart.Type = diff.Y >= 0 ? TileTypes.Wall : TileTypes.Bottom;
                             }
                             else
                             {
-                                SelectedObject.Orientation = diff.X >= 0 ? Orientations.Left : Orientations.Right;
+                                SelectedLevelPart.Orientation = diff.X >= 0 ? Orientations.Left : Orientations.Right;
                             }
                         }
                         //add it to the undo list
-                        UndoTiles.Push(new UndoableAction() { Added = true, Objects = new List<LevelObject>() { SelectedObject }, OldState = TileMap.GetCurrentState(new Index2D(SelectedObject.StartCell.X, SelectedObject.StartCell.Y), new Index2D(SelectedObject.EndCell.X, SelectedObject.EndCell.Y)) });
+                        UndoTiles.Push(new UndoableAction() { Added = true, Objects = new List<LevelObject>() { SelectedLevelPart }, OldState = TileMap.GetCurrentState(new Index2D(SelectedLevelPart.StartCell.X, SelectedLevelPart.StartCell.Y), new Index2D(SelectedLevelPart.EndCell.X, SelectedLevelPart.EndCell.Y)) });
                         //add it to the tile list
-                        List<Tile> tiles = ToListTile(TileMap.Add(SelectedObject));
+                        List<Tile> tiles = ToListTile(TileMap.Add(SelectedLevelPart));
                         //add it to visible grid
                         AddToGrid(tiles);
 
-                        SelectedObject = null;
+                        SelectedLevelPart = null;
                     }
                 }
                 else if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
