@@ -37,37 +37,37 @@ namespace Frostbyte.Levels
 
             #region Load us some enemies
 
-            Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 0.5f, 1000);
-            Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 1.0f, 50);
+            //Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 0.5f, 1000);
+            //Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 1.0f, 50);
 
-            List <Animation> anims = new List<Animation>(){
-                l.GetAnimation("beetle-idle-down.anim"),
-                l.GetAnimation("beetle-idle-right.anim"),
-                l.GetAnimation("beetle-idle-up.anim"),
-                l.GetAnimation("beetle-idle-diagup.anim"),
-                l.GetAnimation("beetle-idle-diagdown.anim"),
-            };
-            FerociousEnemy beetle = new FerociousEnemy("Beetle", new Actor(anims), 1.0f, 10);
-            beetle.Speed = 1;
+            //List <Animation> anims = new List<Animation>(){
+            //    l.GetAnimation("beetle-idle-down.anim"),
+            //    l.GetAnimation("beetle-idle-right.anim"),
+            //    l.GetAnimation("beetle-idle-up.anim"),
+            //    l.GetAnimation("beetle-idle-diagup.anim"),
+            //    l.GetAnimation("beetle-idle-diagdown.anim"),
+            //};
+            //FerociousEnemy beetle = new FerociousEnemy("Beetle", new Actor(anims), 1.0f, 10);
+            //beetle.Speed = 1;
 
             #endregion Load us some enemies
 
 
-            LevelFunctions.Spawn(delegate()
-            {
-                return new FerociousEnemy("e1", new Actor(l.GetAnimation("antibody.anim")), 1.0f, 10);
-            }, 1, new Microsoft.Xna.Framework.Vector2(50, 50));
+            //LevelFunctions.Spawn(delegate()
+            //{
+            //    return new FerociousEnemy("e1", new Actor(l.GetAnimation("antibody.anim")), 1.0f, 10);
+            //}, 1, new Microsoft.Xna.Framework.Vector2(50, 50));
 
             /*LevelFunctions.Spawn(delegate()
             {
                 return new TestObstacle("e1", new Actor(new DummyAnimation("obstacle", 10, 10)));
             }, 3, new Microsoft.Xna.Framework.Vector2(50, 50));*/
 
-            Sprite ally = new TestAlly("a1", new Actor(l.GetAnimation("antibody.anim")));
-            ally.Pos = new Vector2(250, 260);
+            //Sprite ally = new TestAlly("a1", new Actor(l.GetAnimation("antibody.anim")));
+            //ally.Pos = new Vector2(250, 260);
 
             Characters.Mage mage = new Characters.Mage("mage", new Actor(l.GetAnimation("shield_opaque.anim")));
-            mage.Pos = new Microsoft.Xna.Framework.Vector2(50, 50);
+            mage.Pos = new Microsoft.Xna.Framework.Vector2(200, 200);
             /*Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
 
             This.Game.CurrentLevel.AddAnimation(new Animation("boxen.anim"));

@@ -89,7 +89,7 @@ namespace Frostbyte
         {
             //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
             updateMovement();
-            checkBackgroundCollisions();
+            //checkBackgroundCollisions();
             updateAttack();
         }
 

@@ -548,50 +548,5 @@ namespace Frostbyte
             return false;
         }
 
-        /// <summary>
-        /// Switch Position with the target
-        /// </summary>
-        /*internal static bool swap(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance)
-        {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, Pos);
-            double distToP2 = Vector2.DistanceSquared(P2Coord, Pos);
-            int playerToSwap = 0;
-
-            // choose which player to run from
-            if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance))
-            {
-                // charge P1
-                playerToSwap = 1;
-
-            }
-
-            else if ((distToP2 < distToP1) && (distToP2 <= aggroDistance * aggroDistance))
-            {
-                // charge P2
-                playerToSwap = 2;
-            }
-
-            else
-            {
-                return false;
-            }
-
-
-            if ((playerToSwap == 1) && (distToP1 < aggroDistance * aggroDistance))
-            {
-                This.Game.CurrentLevel.GetSpritesByType("Mage")[0].Pos = Pos;
-                Pos = P1Coord;
-                return true;
-            }
-            else if ((playerToSwap == 2) && (distToP2 < aggroDistance * aggroDistance))
-            {
-                This.Game.CurrentLevel.GetSpritesByType("Mage")[1].Pos = Pos;
-                Pos = P2Coord;
-                return true;
-            }
-
-            return false;
-
-        }*/
     }
 }

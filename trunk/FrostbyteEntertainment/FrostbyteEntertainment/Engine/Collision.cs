@@ -355,9 +355,9 @@ namespace Frostbyte
                 regionCode += 1; // 0001
             if (centerPoint.X > bottomRightPoint.X)
                 regionCode += 2; // 0010
-            if (centerPoint.Y > topLeftPoint.Y)
+            if (centerPoint.Y < topLeftPoint.Y)
                 regionCode += 4; // 0100
-            if (centerPoint.Y < bottomRightPoint.Y)
+            if (centerPoint.Y > bottomRightPoint.Y)
                 regionCode += 8;
 
             float radius = o.Radius;
@@ -382,11 +382,17 @@ namespace Frostbyte
                         return true;
                     break;
                 case 5: //0101
-                case 9: //1001
                     if (Collision.DistanceSquared(centerPoint, topLeftPoint) <= radius * radius)
                         return true;
                     break;
+                case 9: //1001
+                    if (Collision.DistanceSquared(centerPoint, new Vector2(topLeftPoint.X,bottomRightPoint.Y)) <= radius * radius)
+                        return true;
+                    break;
                 case 6: //0110
+                    if (Collision.DistanceSquared(centerPoint, new Vector2(bottomRightPoint.X,topLeftPoint.Y)) <= radius * radius)
+                        return true;
+                    break;
                 case 10: //1010
                     if (Collision.DistanceSquared(centerPoint, bottomRightPoint) <= radius * radius)
                         return true;
@@ -510,5 +516,34 @@ namespace Frostbyte
         }
 
 
+    }
+
+    internal class CollisionHelper : WorldObject
+    {
+
+
+        internal Collision_AABB bgCollision = null;
+
+
+
+        internal override void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void Update()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override List<CollisionObject> GetCollision()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override List<Vector2> GetHotSpots()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
