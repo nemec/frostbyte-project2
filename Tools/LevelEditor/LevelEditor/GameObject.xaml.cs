@@ -20,13 +20,45 @@ namespace LevelEditor
     /// </summary>
     public partial class GameObject : UserControl
     {
+        Enemy e = new Enemy();
+
         public bool InMenu { get; set; }
 
-        public string InstanceName { get; set; }
+        public string InstanceName
+        {
+            get
+            {
+                return e.Name;
+            }
+            set
+            {
+                e.Name = value;
+            }
+        }
 
-        public int Speed { get; set; }
+        public float Speed
+        {
+            get
+            {
+                return e.Speed;
+            }
+            set
+            {
+                e.Speed = value;
+            }
+        }
 
-        public int Health { get; set; }
+        public float Health
+        {
+            get
+            {
+                return e.Health;
+            }
+            set
+            {
+                e.Health = value;
+            }
+        }
 
         public GameObject()
         {
