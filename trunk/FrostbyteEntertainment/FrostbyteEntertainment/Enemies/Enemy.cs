@@ -24,9 +24,6 @@ namespace Frostbyte
         #endregion Variables
 
         #region Properties
-        //State
-        internal float Health { get; set; }
-
         internal Vector2 Direction
         {
             get
@@ -134,12 +131,6 @@ namespace Frostbyte
             }
             return min;
         }
-
-        /// <summary>
-        /// Turns the object into a line of xml
-        /// </summary>
-        /// <returns>XML representing the object</returns>
-        internal abstract XElement ToXML();
 
         /// \todo create projectile class (projectiles modify health of enemies/players) 
         /// \todo complete checkBackgroundCollisions

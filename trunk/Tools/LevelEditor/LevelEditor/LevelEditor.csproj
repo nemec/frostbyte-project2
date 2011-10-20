@@ -56,8 +56,53 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Beetle.cs">
+      <Link>EnemyStuff\Beetle.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\ElectricBat.cs">
+      <Link>EnemyStuff\ElectricBat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\ElectricGolem.cs">
+      <Link>EnemyStuff\ElectricGolem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Enemy.cs">
+      <Link>EnemyStuff\Enemy.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Enums.cs">
       <Link>Enums.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\FinalBoss.cs">
+      <Link>EnemyStuff\FinalBoss.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\FireAnt.cs">
+      <Link>EnemyStuff\FireAnt.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\FireBat.cs">
+      <Link>EnemyStuff\FireBat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\FireGolem.cs">
+      <Link>EnemyStuff\FireGolem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\FireMan.cs">
+      <Link>EnemyStuff\FireMan.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\FrostWolf.cs">
+      <Link>EnemyStuff\FrostWolf.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Golem.cs">
+      <Link>EnemyStuff\Golem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\IceGolem.cs">
+      <Link>EnemyStuff\IceGolem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\ManInCrystalBoss.cs">
+      <Link>EnemyStuff\ManInCrystalBoss.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\RockGolem.cs">
+      <Link>EnemyStuff\RockGolem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Sparky.cs">
+      <Link>EnemyStuff\Sparky.cs</Link>
     </Compile>
     <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Tile.cs">
       <Link>Tile.cs</Link>
@@ -67,6 +112,18 @@
     </Compile>
     <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\TileHelper.cs">
       <Link>TileHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Wasp.cs">
+      <Link>EnemyStuff\Wasp.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\WaterBlobBoss.cs">
+      <Link>EnemyStuff\WaterBlobBoss.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Worm.cs">
+      <Link>EnemyStuff\Worm.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Yeti.cs">
+      <Link>EnemyStuff\Yeti.cs</Link>
     </Compile>
     <Compile Include="GameObject.xaml.cs">
       <DependentUpon>GameObject.xaml</DependentUpon>
@@ -161,9 +218,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="EnemyStuff\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath32)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	     Other similar extension points exist, see Microsoft.Common.targets.
