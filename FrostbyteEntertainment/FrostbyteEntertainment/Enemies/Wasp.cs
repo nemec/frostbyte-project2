@@ -23,7 +23,7 @@ namespace Frostbyte.Enemies
             : base(name, new Actor(Animations), speed, health)
         {
             movementStartTime = new TimeSpan(0, 0, 1);
-            Personality = new DartPersonality(this);
+            Personality = new DontGetNearMePersonality(this);
             ElementType = Element.Normal;
         }
 
