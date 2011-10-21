@@ -37,9 +37,9 @@ namespace Frostbyte.Levels
 
             #region Load us some enemies
 
-            Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 0.5f, 1000, new Vector2(250, 250));
+            //Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 0.5f, 1000, new Vector2(250, 250));
             Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 1.0f, 50, new Vector2(200, 200));
-            Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 0.5f, 10, new Vector2(300,300));
+            //Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 0.5f, 10, new Vector2(300,300));
             //beetle.Speed = 1;
 
             #endregion Load us some enemies
