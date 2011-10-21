@@ -88,7 +88,15 @@ namespace Frostbyte.Characters
         public void mUpdate()
         {
             controller.Update();
-
+            ProgressBar p = This.Game.CurrentLevel.GetSprite("health") as ProgressBar;
+            if (p != null)
+            {
+                if (p.Value == 300)
+                {
+                    p.Value = 0;
+                }
+                p.Value++;
+            }
             if (currentTarget != null && !currentTarget.Visible)
             {
                 cancelTarget();

@@ -21,8 +21,8 @@ namespace Frostbyte.Levels
             l.TileMap = new TileList(XDocument.Load(@"Content/Level1.xml"));
 
             #region loadAnimations
-            l.AddAnimation(new Animation("antibody.anim"));
             l.AddAnimation(new Animation("shield_opaque.anim"));
+            l.AddAnimation(new Animation("antibody.anim"));
             l.AddAnimation(new Animation("golem-idle-down.anim"));
             l.AddAnimation(new Animation("golem-idle-right.anim"));
             l.AddAnimation(new Animation("golem-idle-up.anim"));
@@ -42,6 +42,11 @@ namespace Frostbyte.Levels
             //Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 0.5f, 10, new Vector2(300,300));
             //beetle.Speed = 1;
 
+            ProgressBar p = new ProgressBar("health", 300, Color.PaleTurquoise, Color.MediumPurple);
+            p.Pos = new Vector2(80, 80);
+            p.Static = true;
+            p.Value = 150;
+            
             #endregion Load us some enemies
 
 
@@ -87,7 +92,7 @@ namespace Frostbyte.Levels
             //virus = This.Game.Content.Load<Texture2D>("virus2");
             //fire = This.Game.Content.Load<Texture2D>("fire");
             //blueFire = This.Game.Content.Load<Texture2D>("blue fire");
-            Effect particleEffect = l.GetEffect("ParticleSystem");
+            /*Effect particleEffect = l.GetEffect("ParticleSystem");
             Texture2D fire = l.GetTexture("fire");
             Texture2D blueFire = l.GetTexture("blue fire");
             ParticleEmitter emitter1 = new ParticleEmitter(1000, particleEffect, l.GetTexture("virus2"));
@@ -103,7 +108,7 @@ namespace Frostbyte.Levels
             emitter1.Static = true;
             emitter2.Static = true;
             emitter3.Static = true;
-            emitter4.Static = true;
+            emitter4.Static = true;*/
             #endregion particles
 
         }

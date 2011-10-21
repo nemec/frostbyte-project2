@@ -77,15 +77,11 @@ namespace Frostbyte
 
                 basicEffect.Projection = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width,
                     This.Game.GraphicsDevice.Viewport.Height, 1, 20);
-                
-                if (Static)
+
+                basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0));
+                if (!Static)
                 {
-                    basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0));
-                }
-                else
-                {
-                    basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) *
-                        This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
+                    basicEffect.World *= This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
                 }
 
                 foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
