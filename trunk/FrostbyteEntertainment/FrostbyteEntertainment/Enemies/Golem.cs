@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework;
 
 namespace Frostbyte.Enemies
 {
@@ -23,12 +24,13 @@ namespace Frostbyte.Enemies
 
         #endregion Variables
 
-        internal Golem(string name, float speed, int health)
+        internal Golem(string name, float speed, int health, Vector2 initialPos)
             : base(name, new Actor(Animations), speed, health)
         {
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new DontGetNearMePersonality(this);
             ElementType = Element.Normal;
+            Pos = initialPos;
         }
 
         protected override void updateMovement()

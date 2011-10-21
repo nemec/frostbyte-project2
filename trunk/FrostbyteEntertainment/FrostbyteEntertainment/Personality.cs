@@ -161,28 +161,32 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            //while (true)
+            //{
+            //    if ( !master.dart(targets, 1.0f) )
+            //    {
+            //        yield return null;
+            //    }
+            
+
             while (true)
             {
-                if ( !master.dart(targets, 1.0f) )
+                TimeSpan snapshot = This.gameTime.TotalGameTime;
+
+                // Charge for five seconds
+                while (!master.dart(targets, 2.0f))
                 {
                     yield return null;
                 }
 
-                //if (master.Personality.Status != EnemyStatus.Frozen)
-                //{
-                //    if (master.movementStartTime == new TimeSpan(0, 0, 0))
-                //        master.movementStartTime = This.gameTime.TotalGameTime;
-                //    if (This.gameTime.TotalGameTime < master.movementStartTime + new TimeSpan(0, 0, 5))
-                //        master.wander(targets, new TimeSpan(0, 0, 5), 50f, (float)Math.PI / 8);
-                //}
-
-                //else if (!master.freeze(new TimeSpan(0, 0, 5)))
-                //{
-                //    yield return null;
-                //}
-
-
+                // Freeze for five seconds
+                while (!master.freeze(new TimeSpan(0, 0, 0, 0, 300)))
+                {
+                    yield return null;
+                }
             }
+
+            //}
         }
     }
 
@@ -191,6 +195,7 @@ namespace Frostbyte
         //These are only to update position of enemy
 
         private static Random RNG = new Random();
+        private static Vector2 nextHoverPoint = Vector2.Zero;
 
         /// <summary>
         /// Update enemy position directly toward target for given duration - complete
@@ -492,58 +497,81 @@ namespace Frostbyte
         }
 
         /// <summary>
-        ///  Go quickly to a new location within (radius == distance from target ) idle there, repeat
+        ///  Go quickly to a new location within (radius == distance from target )
         /// </summary
         internal static bool dart(this Enemy ths, List<Sprite> targets, float dartSpeedMultiplier)
         {
             #region crap!
+            //Sprite target = ths.GetClosestTarget(targets);
+            //Vector2 nextHoverPoint = Vector2.Zero;
+
+            //float dartSpeed = ths.Speed * dartSpeedMultiplier;
+
+
+            //if (ths.Personality.Status == EnemyStatus.Wander)
+            //{
+            //    if (ths.movementStartTime < This.gameTime.TotalGameTime + new TimeSpan(0, 0, 5))
+            //        ths.Personality.Status = EnemyStatus.Charge;
+
+            //    nextHoverPoint = new Vector2(
+            //           RNG.Next(0, (int)(target.Pos.X)),
+            //           RNG.Next(0, (int)(target.Pos.Y))
+            //    );
+
+            //    ths.Direction = nextHoverPoint - ths.CenterPos;
+            //}
+
+            
+
+            //if (ths.Personality.Status == EnemyStatus.Charge)
+            //{
+            //    if (ths.Pos != nextHoverPoint && nextHoverPoint != Vector2.Zero)
+            //    {
+            //        ths.Pos += ths.Direction * dartSpeed;
+            //    }
+
+            //    else return true;
+            //}
+            
+            #endregion crap!
+
+            //5th time through, this returns null?
             Sprite target = ths.GetClosestTarget(targets);
-            Vector2 nextHoverPoint = Vector2.Zero;
-
             float dartSpeed = ths.Speed * dartSpeedMultiplier;
+            
 
-
-            if (ths.Personality.Status == EnemyStatus.Wander)
+            if (ths.Personality.Status != EnemyStatus.Charge)
             {
-                if (ths.movementStartTime < This.gameTime.TotalGameTime + new TimeSpan(0, 0, 5))
-                    ths.Personality.Status = EnemyStatus.Charge;
-
                 nextHoverPoint = new Vector2(
-                       RNG.Next(0, (int)(target.Pos.X)),
-                       RNG.Next(0, (int)(target.Pos.Y))
+                        RNG.Next((int)ths.Pos.X, (int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)ths.Pos.Y, (int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
                 );
 
-                ths.Direction = nextHoverPoint - ths.CenterPos;
+                ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
+                ths.Direction.Normalize();
+                ths.Personality.Status = EnemyStatus.Charge;
             }
 
             
-
-            if (ths.Personality.Status == EnemyStatus.Charge)
+            //if we choose a nextHoverPoint thats beyond a wall, we get stuck...
+            else if (Vector2.Distance(ths.Pos , nextHoverPoint) > 1f && nextHoverPoint != Vector2.Zero)
             {
-                if (ths.Pos != nextHoverPoint && nextHoverPoint != Vector2.Zero)
-                {
-                    ths.Pos += ths.Direction * dartSpeed;
-                }
-                else
-                {
-                    if (freeze(ths, new TimeSpan(0, 0, 5)))
-                    {
-                        return true;
-                    }
-                }
+                
+                ths.Pos += ths.Direction * dartSpeed;
             }
-            
-            //ths.freeze(new TimeSpan(0, 0, 5));
 
-            //if (ths.Personality.Status != EnemyStatus.Frozen)
-            //{
-            //    if (ths.movementStartTime > This.gameTime.TotalGameTime + new TimeSpan(0, 0, 10))
-            //        ths.movementStartTime = This.gameTime.TotalGameTime;
+            else 
+            {
+                ths.Personality.Status = EnemyStatus.Wander;
+                nextHoverPoint = new Vector2(
+                        RNG.Next((int)ths.Pos.X, (int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)ths.Pos.Y, (int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
+                );
 
-            //    if (This.gameTime.TotalGameTime < ths.movementStartTime + new TimeSpan(0,0,5))
-            //        ths.wander(targets, new TimeSpan(0, 0, 5), 50f, (float)Math.PI / 8);
-            //}
-            #endregion crap!
+                ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
+                ths.Direction.Normalize();
+                return true;
+            }
 
             return false;
         }
