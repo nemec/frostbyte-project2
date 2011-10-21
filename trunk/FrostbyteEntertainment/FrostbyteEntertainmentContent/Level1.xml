@@ -51,8 +51,8 @@
   <Tile Type="Floor" Collision="true" Theme="Earth" Orientation="Up" GridCell="9,6" />
   <Tile Type="ConvexCorner" Collision="false" Theme="Earth" Orientation="Down" GridCell="18,2" />
   <Tile Type="ConvexCorner" Collision="false" Theme="Earth" Orientation="Right" GridCell="8,2" />
-  <Tile Type="BottomConvexCorner" Collision="false" Theme="Earth" Orientation="Right" GridCell="18,7" />
-  <Tile Type="BottomConvexCorner" Collision="false" Theme="Earth" Orientation="Down" GridCell="8,7" />
+  <Tile Type="BottomConvexCorner" Collision="false" Theme="Earth" Orientation="Down" GridCell="18,7" />
+  <Tile Type="BottomConvexCorner" Collision="false" Theme="Earth" Orientation="Right" GridCell="8,7" />
   <Tile Type="TopArea" Collision="false" Theme="Earth" Orientation="Left" GridCell="9,0" />
   <Tile Type="TopArea" Collision="false" Theme="Earth" Orientation="Left" GridCell="10,0" />
   <Tile Type="TopArea" Collision="false" Theme="Earth" Orientation="Left" GridCell="11,0" />
