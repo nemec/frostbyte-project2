@@ -135,7 +135,9 @@
     <Compile Include="Enemies\Yeti.cs" />
     <Compile Include="Engine\ParticleEmitter.cs" />
     <Compile Include="Engine\Polygon.cs" />
+    <Compile Include="Engine\ProgressBar.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="HUD.cs" />
     <Compile Include="Personality.cs" />
     <Compile Include="Shared\Beetle.cs" />
     <Compile Include="Shared\ElectricBat.cs" />
