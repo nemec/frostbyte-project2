@@ -161,21 +161,13 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
-            //while (true)
-            //{
-            //    if ( !master.dart(targets, 1.0f) )
-            //    {
-            //        yield return null;
-            //    }
             
-
             while (true)
             {
                 TimeSpan snapshot = This.gameTime.TotalGameTime;
-
-                // Charge for five seconds
-                while (!master.dart(targets, 2.0f))
-                {
+                //master.Personality.Status = EnemyStatus.Wander;
+                while (!master.dart(targets, 5.0f))
+                {   
                     yield return null;
                 }
 
@@ -196,6 +188,7 @@ namespace Frostbyte
 
         private static Random RNG = new Random();
         private static Vector2 nextHoverPoint = Vector2.Zero;
+        private static TimeSpan dartTimeout = new TimeSpan();
 
         /// <summary>
         /// Update enemy position directly toward target for given duration - complete
@@ -535,28 +528,31 @@ namespace Frostbyte
             
             #endregion crap!
 
-            //5th time through, this returns null?
             Sprite target = ths.GetClosestTarget(targets);
+
+            if (target == null) return false;
+
             float dartSpeed = ths.Speed * dartSpeedMultiplier;
             
 
             if (ths.Personality.Status != EnemyStatus.Charge)
             {
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)ths.Pos.X, (int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)ths.Pos.Y, (int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
+                        RNG.Next((int)ths.CenterPos.X - 35, (int)ths.CenterPos.X + 35),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)ths.CenterPos.Y - 35, (int)ths.CenterPos.Y + 35)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
                 );
 
                 ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
                 ths.Direction.Normalize();
                 ths.Personality.Status = EnemyStatus.Charge;
+                dartTimeout = This.gameTime.TotalGameTime + new TimeSpan(0,0,1);
+                ths.movementStartTime = This.gameTime.TotalGameTime;
             }
 
             
             //if we choose a nextHoverPoint thats beyond a wall, we get stuck...
-            else if (Vector2.Distance(ths.Pos , nextHoverPoint) > 1f && nextHoverPoint != Vector2.Zero)
+            else if (Vector2.Distance(ths.Pos , nextHoverPoint) > 3f && nextHoverPoint != Vector2.Zero && This.gameTime.TotalGameTime < ths.movementStartTime + dartTimeout)
             {
-                
                 ths.Pos += ths.Direction * dartSpeed;
             }
 
@@ -564,11 +560,11 @@ namespace Frostbyte
             {
                 ths.Personality.Status = EnemyStatus.Wander;
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)ths.Pos.X, (int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)ths.Pos.Y, (int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
+                        RNG.Next((int)ths.CenterPos.X - 35, (int)ths.CenterPos.X + 35),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)ths.CenterPos.Y - 35, (int)ths.CenterPos.Y - 35)
                 );
 
-                ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
+                ths.Direction = (ths.Pos - nextHoverPoint);// -ths.CenterPos;
                 ths.Direction.Normalize();
                 return true;
             }

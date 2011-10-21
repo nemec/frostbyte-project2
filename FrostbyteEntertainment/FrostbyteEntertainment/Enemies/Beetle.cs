@@ -30,7 +30,7 @@ namespace Frostbyte.Enemies
         {
             Pos = initialPos;
             movementStartTime = new TimeSpan(0, 0, 1);
-            Personality = new ImmobilePersonality();
+            Personality = new DartPersonality(this);
             
         }
 
