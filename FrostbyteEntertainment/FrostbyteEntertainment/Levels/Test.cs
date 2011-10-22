@@ -112,7 +112,8 @@ namespace Frostbyte.Levels
             emitter4.Static = true;*/
             #endregion particles
 
-            new Beetle("asdf", 1, 100, new Vector2(10, 10));
+            Beetle b =new Beetle("asdf", 1, 100, new Vector2(10, 10));
+            b.Orientation = Orientations.Right;
         }
 
         internal static void Update()

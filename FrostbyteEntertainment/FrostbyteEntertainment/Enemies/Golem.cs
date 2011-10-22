@@ -16,10 +16,10 @@ namespace Frostbyte.Enemies
 
         static List<Animation> Animations = new List<Animation>(){
                 This.Game.CurrentLevel.GetAnimation("golem-idle-down.anim"),
-                This.Game.CurrentLevel.GetAnimation("golem-idle-right.anim"),
-                This.Game.CurrentLevel.GetAnimation("golem-idle-up.anim"),
-                This.Game.CurrentLevel.GetAnimation("golem-idle-diagup.anim"),
-                This.Game.CurrentLevel.GetAnimation("golem-idle-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("golem-idle-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("golem-idle-right.anim"),
+            This.Game.CurrentLevel.GetAnimation("golem-idle-diagup.anim"),
+            This.Game.CurrentLevel.GetAnimation("golem-idle-up.anim"),
         };
 
         #endregion Variables

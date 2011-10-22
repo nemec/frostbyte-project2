@@ -17,10 +17,10 @@ namespace Frostbyte.Enemies
 
         static List<Animation> Animations = new List<Animation>(){
             This.Game.CurrentLevel.GetAnimation("beetle-idle-down.anim"),
-            This.Game.CurrentLevel.GetAnimation("beetle-idle-right.anim"),
-            This.Game.CurrentLevel.GetAnimation("beetle-idle-up.anim"),
-            This.Game.CurrentLevel.GetAnimation("beetle-idle-diagup.anim"),
             This.Game.CurrentLevel.GetAnimation("beetle-idle-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-idle-right.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-idle-diagup.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-idle-up.anim"),
         };
 
         #endregion Variables

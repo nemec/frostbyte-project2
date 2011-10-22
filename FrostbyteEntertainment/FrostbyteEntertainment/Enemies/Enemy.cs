@@ -89,6 +89,29 @@ namespace Frostbyte
         {
             //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
             updateMovement();
+            //update animation facing direction
+            switch(Orientation)
+            {
+                case Orientations.Down:
+                    SetAnimation(0);
+                    break;
+                case Orientations.Down_Right:
+                case Orientations.Down_Left:
+                    SetAnimation(1);
+                    break;
+                case Orientations.Right:
+                case Orientations.Left:
+                    SetAnimation(2);
+                    break;
+                case Orientations.Up_Right:
+                case Orientations.Up_Left:
+                    SetAnimation(3);
+                    break;
+                case Orientations.Up:
+                    SetAnimation(4);
+                    break;
+            }
+
             //checkBackgroundCollisions();
             updateAttack();
         }
