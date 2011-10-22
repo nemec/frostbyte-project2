@@ -21,7 +21,7 @@ namespace LevelEditor
     public partial class GameObject : UserControl
     {
         Enemy e = new Enemy();
-
+        
         public bool InMenu { get; set; }
 
         public string InstanceName
@@ -57,6 +57,18 @@ namespace LevelEditor
             set
             {
                 e.Health = value;
+            }
+        }
+
+        public Point Pos
+        {
+            get
+            {
+                return e.Pos;
+            }
+            set
+            {
+                e.Pos = value;
             }
         }
 

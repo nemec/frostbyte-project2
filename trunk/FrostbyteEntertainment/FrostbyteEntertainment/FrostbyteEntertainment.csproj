@@ -195,26 +195,6 @@
       <Link>Content\Level1.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagdown.png">
-      <Link>Content\Sprites\beetle-idle-diagdown.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagup.png">
-      <Link>Content\Sprites\beetle-idle-diagup.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-down.png">
-      <Link>Content\Sprites\beetle-idle-down.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-right.png">
-      <Link>Content\Sprites\beetle-idle-right.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-up.png">
-      <Link>Content\Sprites\beetle-idle-up.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
   </ItemGroup>

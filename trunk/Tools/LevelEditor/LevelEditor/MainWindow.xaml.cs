@@ -221,7 +221,12 @@ namespace LevelEditor
             #region OtherStuff
             ObservableCollection<GameObject> objects = new ObservableCollection<GameObject>()
             {
+                new GameObject(){
+                    InstanceName="Golem",
+                    Speed=1,
+                    Health=100,
 
+                },
             };
             #endregion OtherStuff
 
@@ -658,7 +663,7 @@ namespace LevelEditor
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
                         UndoableAction ua = new UndoableAction() { Added = false, OldState = TileMap.GetCurrentState(new Index2D(GridCell.X, GridCell.Y), new Index2D(GridCell.X, GridCell.Y)) };
-                        foreach (Tile item in RemoveTile(GetCell(EndCell)))
+                        foreach (Tile item in RemoveTile(GridCell))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -697,7 +702,7 @@ namespace LevelEditor
                         //add to undo list
                         List<LevelObject> lo = new List<LevelObject>();
                         UndoableAction ua = new UndoableAction() { Added = false, OldState = TileMap.GetCurrentState(new Index2D(GridCell.X, GridCell.Y), new Index2D(GridCell.X, GridCell.Y)) };
-                        foreach (Tile item in RemoveTile(GetCell(StartCell)))
+                        foreach (Tile item in RemoveTile(GridCell))
                         {
                             lo.Add(item.TileValue);
                         }
@@ -1087,7 +1092,15 @@ namespace LevelEditor
                         file = "error.png";
                         break;
                 }
-                return new BitmapImage(new Uri(file, UriKind.RelativeOrAbsolute));
+                try
+                {
+                    return new BitmapImage(new Uri(file, UriKind.RelativeOrAbsolute));
+                }
+                catch
+                {
+                    Console.WriteLine("File {0} does not exist.", file);
+                    return new BitmapImage(new Uri("error.png", UriKind.RelativeOrAbsolute));
+                }
             }
             return new RotateTransform(0);
         }
