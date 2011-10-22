@@ -35,7 +35,7 @@ namespace Frostbyte
         }
 
         internal Sprite(string name, Actor actor, int collisionlist)
-            :this(name,actor)
+            : this(name, actor)
         {
             CollisionList = collisionlist;
         }
@@ -100,7 +100,13 @@ namespace Frostbyte
         /// changes to the specified animation beginning at 0.
         /// </summary>
         /// <param name="animation">The animation to select (begins at 0)</param>
-        internal void SetAnimation(int animation) { mActor.CurrentAnimation = animation; mActor.Frame = 0; }
+        internal void SetAnimation(int animation)
+        {
+            //give us the best one we can
+            mActor.CurrentAnimation = mActor.Animations.Count > animation ? animation : mActor.Animations.Count - 1;
+            //continue on same frame uncomment to start anim from beginning
+            //mActor.Frame = 0; 
+        }
 
         /// <summary>
         /// Pauses or resumes an animation.
@@ -130,7 +136,7 @@ namespace Frostbyte
         /// <summary>
         /// Check for collision with background and move enemy out of collision with background until no collisions exist
         /// </summary>
-        protected void checkBackgroundCollisions() 
+        protected void checkBackgroundCollisions()
         {
             List<Vector2> gridLocations = new List<Vector2>();
             List<CollisionObject> collisionObjects = this.GetCollision();
@@ -138,7 +144,7 @@ namespace Frostbyte
 
             foreach (CollisionObject collisionObject in collisionObjects)
             {
-                gridLocations.AddRange( collisionObject.GridLocations(this) );
+                gridLocations.AddRange(collisionObject.GridLocations(this));
             }
 
             foreach (Vector2 tile in gridLocations)
@@ -148,11 +154,11 @@ namespace Frostbyte
                 {
                     CollisionHelper collisionHelper = new CollisionHelper();
                     collisionHelper.Pos = new Vector2(tile.X * This.CellSize, tile.Y * This.CellSize);
-                    switch ( output.Type ) 
+                    switch (output.Type)
                     {
                         case TileTypes.Bottom:
                         case TileTypes.BottomConvexCorner:
-                            collisionHelper.bgCollision = new Collision_AABB(0, new Vector2(0.0f,  0.5f * This.CellSize), new Vector2( This.CellSize, This.CellSize));
+                            collisionHelper.bgCollision = new Collision_AABB(0, new Vector2(0.0f, 0.5f * This.CellSize), new Vector2(This.CellSize, This.CellSize));
                             break;
 
                         case TileTypes.BottomCorner:
@@ -177,7 +183,7 @@ namespace Frostbyte
                     {
                         if (Collision.DetectCollision(collisionHelper, collisionHelper.bgCollision, this, (dynamic)collisionObject))
                         {
-                            Vector2[] testPoints= new Vector2[4];  
+                            Vector2[] testPoints = new Vector2[4];
                             Vector2 direction = Pos - previousPos;
                             direction.Normalize();
                             float slope = direction.Y / direction.X;
@@ -189,15 +195,15 @@ namespace Frostbyte
                             testPoints[3] = new Vector2(collisionHelper.Pos.X + This.CellSize, slope * (collisionHelper.Pos.X + This.CellSize - centerPos.X) + centerPos.Y);
 
                             int closestPointIndex = 0;
-                            for(int i=1; i<testPoints.Length; i++)
+                            for (int i = 1; i < testPoints.Length; i++)
                             {
-                                if (Vector2.DistanceSquared(previousPos, testPoints[i]) < Vector2.DistanceSquared(previousPos,testPoints[closestPointIndex]))
+                                if (Vector2.DistanceSquared(previousPos, testPoints[i]) < Vector2.DistanceSquared(previousPos, testPoints[closestPointIndex]))
                                 {
                                     closestPointIndex = i;
                                 }
                             }
 
-                            if ( closestPointIndex == 0)
+                            if (closestPointIndex == 0)
                             {
                                 if ((output.Type == TileTypes.SideWall || output.Type == TileTypes.BottomCorner || output.Type == TileTypes.ConvexCorner) && output.Hflip == true)
                                     Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.TL.X - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
@@ -238,7 +244,7 @@ namespace Frostbyte
 
                         }
                     }
-                   
+
                 }
             }
         }
@@ -280,10 +286,10 @@ namespace Frostbyte
                         Angle,
                         GetAnimation().AnimationPeg,
                         Scale,
-                        Hflip?
-                            Vflip?
-                                SpriteEffects.FlipHorizontally&SpriteEffects.FlipVertically
-                                :SpriteEffects.FlipHorizontally
+                        Hflip ?
+                            Vflip ?
+                                SpriteEffects.FlipHorizontally & SpriteEffects.FlipVertically
+                                : SpriteEffects.FlipHorizontally
                             :
                             Vflip ?
                                  SpriteEffects.FlipVertically
