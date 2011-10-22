@@ -18,6 +18,10 @@ namespace Frostbyte
         /// </summary>
         internal float Speed { get; set; }
 
+        /// <summary>
+        /// make sure we take into account the centerpoint when we use this
+        /// </summary>
+        public System.Windows.Point Pos { get; set; }
 #else
     //seen by other things
     internal abstract partial class Enemy : Sprite

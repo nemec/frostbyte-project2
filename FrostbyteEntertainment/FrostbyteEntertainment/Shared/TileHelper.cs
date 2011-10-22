@@ -396,7 +396,12 @@ namespace Frostbyte
         }
     }
 
-    public class LevelObject
+    public interface ILevelSaveable
+    {
+        XElement ToXML();
+    }
+
+    public class LevelObject : ILevelSaveable
     {
         public TileTypes Type { get; set; }
 

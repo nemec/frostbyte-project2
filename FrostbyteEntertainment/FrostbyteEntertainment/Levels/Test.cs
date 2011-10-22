@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Input;
+using Frostbyte.Enemies;
 
 namespace Frostbyte.Levels
 {
@@ -111,6 +112,7 @@ namespace Frostbyte.Levels
             emitter4.Static = true;*/
             #endregion particles
 
+            new Beetle("asdf", 1, 100, new Vector2(10, 10));
         }
 
         internal static void Update()

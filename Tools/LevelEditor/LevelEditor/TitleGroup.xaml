@@ -10,7 +10,7 @@
 	<UserControl.Resources>
 		<local:TransformConverter x:Key="NameConverter"/>
 	</UserControl.Resources>
-    <TreeViewItem Header="{Binding GroupName, FallbackValue=Test}" ToolTip="{Binding Text, ElementName=textBlock}" IsExpanded="True">
+    <TreeViewItem Header="{Binding GroupName, FallbackValue=Test}" ToolTip="{Binding Text, ElementName=textBlock}" IsExpanded="True" HorizontalAlignment="Left" VerticalAlignment="Top">
     	<!--<Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="16"/>
@@ -19,6 +19,6 @@
         <TextBlock x:Name="textBlock" Text="{Binding GroupName, FallbackValue=Test}" Grid.Row="0" HorizontalAlignment="Left" ToolTip="{Binding Text, ElementName=textBlock}" />
         <TreeView x:Name="Tiles" Grid.Row="1" ItemsSource="{Binding Tiles, ElementName=userControl}"/>
     </Grid>-->
-	<TreeView x:Name="Tiles" Grid.Row="1"/>
+	<TreeView x:Name="Tiles" Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 	</TreeViewItem>
 </UserControl>
