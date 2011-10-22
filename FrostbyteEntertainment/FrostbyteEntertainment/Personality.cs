@@ -128,12 +128,12 @@ namespace Frostbyte
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
             while (true)
             {
-                if ( !master.charge(targets, 200.0f, 5.0f) )
+                if ( !master.charge(targets, 200.0f, 3.0f) )
                 {
                     yield return null;
                 }
 
-                if ( !master.charge(targets, float.PositiveInfinity, 1.0f) ) 
+                if ( !master.charge(targets, float.PositiveInfinity, 0.5f) ) 
                 {
                     yield return null;
                 }
@@ -166,7 +166,7 @@ namespace Frostbyte
             {
                 TimeSpan snapshot = This.gameTime.TotalGameTime;
                 //master.Personality.Status = EnemyStatus.Wander;
-                while (!master.dart(targets, 5.0f))
+                while (!master.dart(targets, 5.0f, 400))
                 {   
                     yield return null;
                 }
@@ -179,6 +179,45 @@ namespace Frostbyte
             }
 
             //}
+        }
+    }
+
+    internal class CowardlyPersonality : IPersonality
+    {
+         public EnemyStatus Status { get; set; }
+        private Enemy master;
+        private IEnumerator mStates;
+
+        internal CowardlyPersonality(Enemy master)
+        {
+            this.master = master;
+            mStates = States().GetEnumerator();
+        }
+
+        public void Update()
+        {
+            mStates.MoveNext();
+        }
+
+        public IEnumerable States()
+        {
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            float[] distances = new float[3] { 1000f, 150f, 100f };
+            while (true)
+            {
+                while (!master.charge(targets, distances[0], 5f) && Vector2.Distance(this.master.CenterPos, this.master.GetClosestTarget(targets).CenterPos) > 20)
+                {
+                    yield return null;
+                }
+                while (!master.retreat(targets, new TimeSpan(0, 0, 0, 2) , 250f, 15.0f))
+                {
+                    yield return null;
+                }
+                //while (!master.charge(targets, distances[2], 2))
+                //{
+                //    yield return null;
+                //}
+            }
         }
     }
 
@@ -393,14 +432,12 @@ namespace Frostbyte
         /// <summary>
         /// Move away when x distance from target until z distance from player
         /// </summary>
-        /*internal static bool teaseRetreat(Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float safeDistance, float speedMultiplier)
+        internal static bool teaseRetreat(this Enemy ths, Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float safeDistance, float speedMultiplier)
         {
             double distToP1 = Vector2.DistanceSquared(P1Coord, ths.CenterPos);
             double distToP2 = Vector2.DistanceSquared(P2Coord, ths.CenterPos);
-            float fleeSpeed = Speed * speedMultiplier;
+            float fleeSpeed = ths.Speed * speedMultiplier;
             int playerToFlee = 0;
-
-
 
             // choose which player to run from
             if ((distToP1 <= distToP2) && (distToP1 <= aggroDistance * aggroDistance) || (ths.Personality.Status == EnemyStatus.Charge && (distToP1 < safeDistance * safeDistance)))
@@ -429,13 +466,13 @@ namespace Frostbyte
 
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
-                    ths.direction = P1Coord - ths.CenterPos;
-                    Pos -= ths.direction * fleeSpeed;
+                    ths.Direction = P1Coord - ths.CenterPos;
+                    ths.Pos -= ths.Direction * fleeSpeed;
                 }
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
-                    ths.direction = P2Coord - ths.CenterPos;
-                    Pos -= ths.direction * fleeSpeed;
+                    ths.Direction = P2Coord - ths.CenterPos;
+                    ths.Pos -= ths.Direction * fleeSpeed;
                 }
 
             }
@@ -445,7 +482,7 @@ namespace Frostbyte
                 ths.movementStartTime = This.gameTime.TotalGameTime;
             }
             return false;
-        }*/
+        }
 
         /// <summary>
         /// Stop moving for x seconds - complete
@@ -492,7 +529,7 @@ namespace Frostbyte
         /// <summary>
         ///  Go quickly to a new location within 100 pixels from the target
         /// </summary
-        internal static bool dart(this Enemy ths, List<Sprite> targets, float dartSpeedMultiplier)
+        internal static bool dart(this Enemy ths, List<Sprite> targets, float dartSpeedMultiplier, int flyRadius)
         {
             #region crap!
             //Sprite target = ths.GetClosestTarget(targets);
@@ -538,8 +575,8 @@ namespace Frostbyte
             if (ths.Personality.Status != EnemyStatus.Charge)
             {
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)target.CenterPos.X - 100, (int)target.CenterPos.X + 100),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)target.CenterPos.Y - 100, (int)target.CenterPos.Y + 100)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
+                        RNG.Next((int)target.CenterPos.X - flyRadius, (int)target.CenterPos.X + flyRadius),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)target.CenterPos.Y - flyRadius, (int)target.CenterPos.Y + flyRadius)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
                 );
 
                 ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
@@ -560,8 +597,8 @@ namespace Frostbyte
             {
                 ths.Personality.Status = EnemyStatus.Wander;
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)target.CenterPos.X - 100, (int)target.CenterPos.X + 100),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)target.CenterPos.Y - 100, (int)target.CenterPos.Y + 100)
+                        RNG.Next((int)target.CenterPos.X - flyRadius, (int)target.CenterPos.X + flyRadius),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)target.CenterPos.Y - flyRadius, (int)target.CenterPos.Y + flyRadius)
                 );
 
                 ths.Direction = (ths.Pos - nextHoverPoint);// -ths.CenterPos;
