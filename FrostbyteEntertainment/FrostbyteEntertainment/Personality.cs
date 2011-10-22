@@ -490,7 +490,7 @@ namespace Frostbyte
         }
 
         /// <summary>
-        ///  Go quickly to a new location within (radius == distance from target )
+        ///  Go quickly to a new location within 100 pixels from the target
         /// </summary
         internal static bool dart(this Enemy ths, List<Sprite> targets, float dartSpeedMultiplier)
         {
@@ -538,14 +538,14 @@ namespace Frostbyte
             if (ths.Personality.Status != EnemyStatus.Charge)
             {
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)ths.CenterPos.X - 35, (int)ths.CenterPos.X + 35),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)ths.CenterPos.Y - 35, (int)ths.CenterPos.Y + 35)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
+                        RNG.Next((int)target.CenterPos.X - 100, (int)target.CenterPos.X + 100),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)target.CenterPos.Y - 100, (int)target.CenterPos.Y + 100)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
                 );
 
                 ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
                 ths.Direction.Normalize();
                 ths.Personality.Status = EnemyStatus.Charge;
-                dartTimeout = This.gameTime.TotalGameTime + new TimeSpan(0,0,1);
+                dartTimeout = new TimeSpan(0, 0, 0, 0, 300);
                 ths.movementStartTime = This.gameTime.TotalGameTime;
             }
 
@@ -560,17 +560,18 @@ namespace Frostbyte
             {
                 ths.Personality.Status = EnemyStatus.Wander;
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)ths.CenterPos.X - 35, (int)ths.CenterPos.X + 35),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)ths.CenterPos.Y - 35, (int)ths.CenterPos.Y - 35)
+                        RNG.Next((int)target.CenterPos.X - 100, (int)target.CenterPos.X + 100),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)target.CenterPos.Y - 100, (int)target.CenterPos.Y + 100)
                 );
 
                 ths.Direction = (ths.Pos - nextHoverPoint);// -ths.CenterPos;
                 ths.Direction.Normalize();
+                dartTimeout = new TimeSpan(0, 0, 0, 0, 300);
+                ths.movementStartTime = This.gameTime.TotalGameTime;
                 return true;
             }
 
             return false;
         }
-
     }
 }
