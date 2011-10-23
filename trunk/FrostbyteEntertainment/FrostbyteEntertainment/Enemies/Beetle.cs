@@ -40,14 +40,14 @@ namespace Frostbyte.Enemies
             {
                 movementStartTime = TimeSpan.MaxValue;
             }
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             Personality.Update();
         }
 
         protected override void updateAttack()
         {
             float range = 100.0f;
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             Sprite target = GetClosestTarget(targets, range);
             if (target != null)
             {

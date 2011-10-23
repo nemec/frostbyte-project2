@@ -30,9 +30,8 @@ namespace Frostbyte.Characters
         {
             //controller = new GamePadController(input);
             controller = new KeyboardController();
-            keyboard = new KeyboardController();
             currentTargetAlignment = TargetAlignment.None;
-            target = new Frostbyte.Levels.Target("target");
+            target = new Levels.Target("target", Color.Red);
             target.Visible = false;
             sortType = new DistanceSort(this);
 
@@ -44,10 +43,10 @@ namespace Frostbyte.Characters
         private Sprite currentTarget = null;
         private TargetAlignment currentTargetAlignment;
         private IController controller;
-        private IController keyboard;
         private Sprite target;
         BasicEffect basicEffect = new BasicEffect(This.Game.GraphicsDevice);
         private IComparer<Sprite> sortType;
+        private int spellManaCost = 10;
         #endregion
 
         #region Methods
@@ -85,18 +84,51 @@ namespace Frostbyte.Characters
             currentTargetAlignment = TargetAlignment.None;
         }
 
+        /// <summary>
+        /// Chooses and executes the attack.
+        /// Ensures that only one attack is performed per update (eg. no sword *and* magic)
+        /// </summary>
+        private void attack()
+        {
+            if (Mana >= spellManaCost)
+            {
+                if (controller.Earth == ReleasableButtonState.Clicked)
+                {
+                    Mana -= spellManaCost;
+                    return;
+                }
+                else if (controller.Fire == ReleasableButtonState.Clicked)
+                {
+                    Mana -= spellManaCost;
+                    return;
+                }
+                else if (controller.Lightning == ReleasableButtonState.Clicked)
+                {
+                    Mana -= spellManaCost;
+                    return;
+                }
+                else if (controller.Water == ReleasableButtonState.Clicked)
+                {
+                    Mana -= spellManaCost;
+                    return;
+                }
+            }
+            if (controller.Sword > 0)
+            {
+
+                return;
+            }
+        }
+
         public void mUpdate()
         {
             controller.Update();
-            ProgressBar p = This.Game.CurrentLevel.GetSprite("health") as ProgressBar;
-            if (p != null)
+            if (Health == 100)
             {
-                if (p.Value == 300)
-                {
-                    p.Value = 0;
-                }
-                p.Value++;
+                Health = 0;
             }
+            Health++;
+            
             if (currentTarget != null && !currentTarget.Visible)
             {
                 cancelTarget();
@@ -152,41 +184,10 @@ namespace Frostbyte.Characters
                 Pos.Y -= controller.Movement.Y * 3;
 
                 #endregion Movement
-            }
-            else
-            {
-                #region Movement
 
-                keyboard.Update();
-                Pos.X += keyboard.Movement.X * 3;
-                Pos.Y += keyboard.Movement.Y * 3;
-
-                #endregion Movement
+                attack();
             }
         }
-
-        /*internal override void Draw(GameTime gameTime)
-        {
-
-            float height = This.Game.GraphicsDevice.Viewport.Height;
-            float width = This.Game.GraphicsDevice.Viewport.Width;
-            basicEffect.View = Matrix.CreateLookAt(new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, -10),
-                                                   new Vector3(This.Game.GraphicsDevice.Viewport.X + width / 2, This.Game.GraphicsDevice.Viewport.Y + height / 2, 0), new Vector3(0, -1, 0));
-            basicEffect.Projection = Matrix.CreateOrthographic(This.Game.GraphicsDevice.Viewport.Width, This.Game.GraphicsDevice.Viewport.Height, 1, 20);
-            basicEffect.VertexColorEnabled = true;
-            basicEffect.World = Matrix.CreateTranslation(new Vector3(Pos, 0)) * This.Game.CurrentLevel.Camera.GetTransformation(This.Game.GraphicsDevice);
-            int size = 10;
-            VertexPositionColor[] points = new VertexPositionColor[4]{
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y, 0), Color.AliceBlue),
-                new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y, 0), Color.AliceBlue),
-                new VertexPositionColor(new Vector3(Pos.X + size, Pos.Y + size, 0), Color.AliceBlue),
-                new VertexPositionColor(new Vector3(Pos.X, Pos.Y + size, 0), Color.AliceBlue)};
-            foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                This.Game.GraphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleStrip, points, 0, 1);
-            }
-        }*/
         #endregion
     }
 }

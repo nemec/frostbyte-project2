@@ -15,10 +15,6 @@ namespace Frostbyte
     /// </summary>
     static class GameData
     {
-        internal static int Score { get; set; }
-        internal static int NumberOfLives { get; set; }
-        internal static readonly int DefaultNumberOfLives = 4;
-        internal static int livesAwarded = 0;
     }
 
     /// <summary>
@@ -68,6 +64,8 @@ namespace Frostbyte
         internal TileList TileMap = new TileList();
 
         private Polygon viewportPolygon = null;
+
+        internal HUD HUD = new HUD();
 
         /// <summary>
         /// A list of levels in the order they should be played through

@@ -6,16 +6,42 @@ using Microsoft.Xna.Framework;
 
 namespace Frostbyte
 {
-    internal abstract class Player : Sprite
+    public delegate void ManaChangedHandler(object obj, int value);
+
+    internal abstract class Player : OurSprite
     {
+        public event ManaChangedHandler ManaChanged = delegate { };
+
         internal Player(string name, Actor actor)
             : base(name, actor)
         {
             (This.Game.CurrentLevel as FrostbyteLevel).allies.Add(this);
+            Mana = MaxMana;
+        }
+
+        internal int MaxMana { get { return 100; } }
+
+        /// <summary>
+        /// Player's Mana value
+        /// </summary>
+        private int mMana;
+        internal int Mana
+        {
+            get
+            {
+                return mMana;
+            }
+            set
+            {
+                mMana = value < 0 ? 0 :
+                    (value > MaxMana ? MaxMana :
+                        value);
+                ManaChanged(this, mMana);
+            }
         }
     }
 
-    internal abstract class Obstacle : Sprite
+    internal abstract class Obstacle : OurSprite
     {
         internal Obstacle(string name, Actor actor)
             : base(name, actor)
@@ -24,7 +50,7 @@ namespace Frostbyte
         }
     }
 
-    class OurSprite : Sprite
+    internal abstract partial class OurSprite : Sprite
     {
         internal OurSprite(string name, Actor actor)
             : base(name, actor) { }
@@ -44,7 +70,6 @@ namespace Frostbyte
                 return new Vector2(Center.X, Center.Y) * 2;
             }
         }
-
         #endregion Properties
     }
 }

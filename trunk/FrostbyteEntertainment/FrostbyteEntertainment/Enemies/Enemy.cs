@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Frostbyte
 {
-    internal abstract partial class Enemy : Sprite
+    internal abstract partial class Enemy : OurSprite
     {
         #region Variables
         //Movement

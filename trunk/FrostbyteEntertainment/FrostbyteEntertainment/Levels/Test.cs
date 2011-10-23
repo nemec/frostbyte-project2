@@ -42,11 +42,6 @@ namespace Frostbyte.Levels
             Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 1.0f, 50, new Vector2(1000, 500));
             Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 0.5f, 10, new Vector2(1000,400));
             //beetle.Speed = 1;
-
-            ProgressBar p = new ProgressBar("health", 300, Color.PaleTurquoise, Color.MediumPurple);
-            p.Pos = new Vector2(80, 80);
-            p.Static = true;
-            p.Value = 150;
             
             #endregion Load us some enemies
 
@@ -124,13 +119,13 @@ namespace Frostbyte.Levels
 
     internal class Target : Polygon
     {
-        internal Target(string name)
-            : this(name, 15)
+        internal Target(string name, Color c)
+            : this(name, c, 15)
         {
         }
 
-        internal Target(string name, int size)
-            : base(name, new Actor(new DummyAnimation("target", size, size)), Color.Red,
+        internal Target(string name, Color color, int size)
+            : base(name, new Actor(new DummyAnimation(name, size, size)), color,
                 new Vector3(0, 0, 0),
                 new Vector3(size, 0, 0),
                 new Vector3(size, size, 0),
@@ -230,14 +225,13 @@ namespace Frostbyte.Levels
             {
                 movementStartTime = TimeSpan.MaxValue;
             }
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
             Personality.Update();
         }
 
         protected override void updateAttack()
         {
             float range = 10f;
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             Sprite target = GetClosestTarget(targets, range);
             if (target != null)
             {

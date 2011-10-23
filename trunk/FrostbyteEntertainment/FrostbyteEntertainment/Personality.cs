@@ -51,7 +51,7 @@ namespace Frostbyte
 
         public IEnumerable States()
         {
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             float[] transitionDistances = new float[1] { 50f };
             while (true)
             {
@@ -86,7 +86,7 @@ namespace Frostbyte
 
         public IEnumerable States()
         {
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             float[] distances = new float[3] { 1000f, 150f, 100f };
             while (true)
             {
@@ -125,7 +125,7 @@ namespace Frostbyte
 
         public IEnumerable States()
         {
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             while (true)
             {
                 if ( !master.charge(targets, 200.0f, 3.0f) )
@@ -160,7 +160,7 @@ namespace Frostbyte
 
         public IEnumerable States()
         {
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             
             while (true)
             {
@@ -201,7 +201,7 @@ namespace Frostbyte
 
         public IEnumerable States()
         {
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType("Mage");
+            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             float[] distances = new float[3] { 1000f, 150f, 100f };
             while (true)
             {

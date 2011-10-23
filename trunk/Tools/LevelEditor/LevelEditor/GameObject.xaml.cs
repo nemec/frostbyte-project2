@@ -48,7 +48,7 @@ namespace LevelEditor
             }
         }
 
-        public float Health
+        public int Health
         {
             get
             {
