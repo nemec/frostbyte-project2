@@ -122,4 +122,15 @@ namespace Frostbyte
         Fire,
         Normal
     }
+
+    /// <summary>
+    /// Different states a sprite can be in.
+    /// </summary>
+    public enum SpriteState
+    {
+        Idle=0,
+        Moving,
+        Attacking
+    }
+
 }

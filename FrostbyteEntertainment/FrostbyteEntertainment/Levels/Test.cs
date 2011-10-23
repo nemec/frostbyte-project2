@@ -34,6 +34,11 @@ namespace Frostbyte.Levels
             l.AddAnimation(new Animation("beetle-idle-up.anim"));
             l.AddAnimation(new Animation("beetle-idle-diagup.anim"));
             l.AddAnimation(new Animation("beetle-idle-diagdown.anim"));
+            l.AddAnimation(new Animation("beetle-walk-down.anim"));
+            l.AddAnimation(new Animation("beetle-walk-right.anim"));
+            l.AddAnimation(new Animation("beetle-walk-up.anim"));
+            l.AddAnimation(new Animation("beetle-walk-diagup.anim"));
+            l.AddAnimation(new Animation("beetle-walk-diagdown.anim"));
             #endregion loadAnimations
 
             #region Load us some enemies

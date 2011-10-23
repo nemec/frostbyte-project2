@@ -242,8 +242,9 @@ namespace Frostbyte
             }
 
             float chargeSpeed = ths.Speed * speedMultiplier;
-            ths.Direction = min.CenterPos - ths.CenterPos;
             ths.Pos += ths.Direction * chargeSpeed;
+            //This must be set after because determining the animation is dependent on the new position ( I know it's not optimal but I'm not sure where to put it)
+            ths.Direction = min.CenterPos - ths.CenterPos;
 
             return false;
         }
