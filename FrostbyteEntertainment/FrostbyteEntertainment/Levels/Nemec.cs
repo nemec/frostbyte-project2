@@ -22,15 +22,12 @@ namespace Frostbyte.Levels
 
             l.AddAnimation(new Animation("shield_opaque.anim"));
             l.AddAnimation(new Animation("antibody.anim"));
-            HUD hud = new HUD();
+
+            l.HUD.LoadCommon();
 
             Characters.Mage mage = new Characters.Mage("mage", new Actor(l.GetAnimation("shield_opaque.anim")));
             mage.Pos = new Microsoft.Xna.Framework.Vector2(200, 200);
-            hud.AddPlayer(mage);
-
-            Characters.Mage mage2 = new Characters.Mage("mage2", new Actor(l.GetAnimation("shield_opaque.anim")));
-            mage.Pos = new Microsoft.Xna.Framework.Vector2(200, 200);
-            hud.AddPlayer(mage2);
+            l.HUD.AddPlayer(mage);
         }
 
         internal static void Update()

@@ -96,10 +96,10 @@ namespace Frostbyte
         #endregion Properties
 
         #region Constants
-        private readonly float MAX_ZOOM = 1.0f;
-        private readonly float MIN_ZOOM = 0.8f;
-        private readonly int BORDER_WIDTH = 200;
-        private readonly int BORDER_HEIGHT = 200;
+        private static readonly float MAX_ZOOM = 1.0f;
+        private static readonly float MIN_ZOOM = 0.8f;
+        internal static readonly int BORDER_WIDTH = 200;
+        internal static readonly int BORDER_HEIGHT = 200;
         #endregion
 
         #region Constructors
@@ -133,11 +133,11 @@ namespace Frostbyte
             {
                 Viewport viewport = This.Game.GraphicsDevice.Viewport;
                 viewportPolygon = new Polygon("viewport", Color.DarkRed, new Vector3[5]{
-                    new Vector3(200, 200, 0), 
-                    new Vector3(viewport.Width - 200, 200, 0), 
-                    new Vector3(viewport.Width - 200, viewport.Height - 200, 0), 
-                    new Vector3(200, viewport.Height - 200, 0),
-                    new Vector3(200, 200, 0)
+                    new Vector3(BORDER_WIDTH, BORDER_HEIGHT, 0), 
+                    new Vector3(viewport.Width - BORDER_WIDTH, BORDER_HEIGHT, 0), 
+                    new Vector3(viewport.Width - BORDER_WIDTH, viewport.Height - BORDER_HEIGHT, 0), 
+                    new Vector3(BORDER_WIDTH, viewport.Height - BORDER_HEIGHT, 0),
+                    new Vector3(BORDER_WIDTH, BORDER_HEIGHT, 0)
                 });
                 viewportPolygon.Static = true;
             }
