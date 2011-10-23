@@ -32,6 +32,8 @@ namespace Frostbyte
             }
             set
             {
+                State = PreviousPos == Pos ? SpriteState.Idle : SpriteState.Moving;
+
                 mDirection = value;
                 mDirection.Normalize();
                 double angle = Math.Atan2(mDirection.Y, mDirection.X);
@@ -93,34 +95,34 @@ namespace Frostbyte
             switch(Orientation)
             {
                 case Orientations.Down:
-                    SetAnimation(0);
+                    SetAnimation(0+5*State.GetHashCode());
                     break;
                 case Orientations.Down_Right:
                     Hflip = false;
-                    SetAnimation(1);
+                    SetAnimation(1 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Down_Left:
                     Hflip = true;
-                    SetAnimation(1);
+                    SetAnimation(1 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Right:
                     Hflip = false;
-                    SetAnimation(2);
+                    SetAnimation(2 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Left:
                     Hflip = true;
-                    SetAnimation(2);
+                    SetAnimation(2 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Up_Right:
                     Hflip = false;
-                    SetAnimation(3);
+                    SetAnimation(3 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Up_Left:
                     Hflip = true;
-                    SetAnimation(3);
+                    SetAnimation(3 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Up:
-                    SetAnimation(4);
+                    SetAnimation(4 + 5 * State.GetHashCode());
                     break;
             }
 

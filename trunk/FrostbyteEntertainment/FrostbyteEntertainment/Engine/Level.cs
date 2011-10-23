@@ -324,7 +324,15 @@ namespace Frostbyte
             }
             else
             {
-                throw new AnimationDoesNotExistException(name);
+                try
+                {
+                    AddAnimation(new Animation(name));
+                    return GetAnimation(name);
+                }
+                catch
+                {
+                    throw new AnimationDoesNotExistException(name);
+                }
             }
         }
 

@@ -51,11 +51,16 @@ namespace Frostbyte
         /// </summary>
         internal float Speed { get; set; }
 
+        /// <summary>
+        /// State for moving, idling, or attacking.
+        /// </summary>
+        protected SpriteState State = SpriteState.Idle;
+
         #endregion Properties
 
         #region Variables
 
-        Vector2 previousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
+        protected Vector2 PreviousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
         #endregion Variables
 
@@ -105,7 +110,7 @@ namespace Frostbyte
             //give us the best one we can
             mActor.CurrentAnimation = mActor.Animations.Count > animation ? animation : mActor.Animations.Count - 1;
             //continue on same frame uncomment to start anim from beginning
-            //mActor.Frame = 0; 
+            mActor.Frame = mActor.Frame%mActor.Animations[mActor.CurrentAnimation].Frames.Count; 
         }
 
         /// <summary>
@@ -184,7 +189,7 @@ namespace Frostbyte
                         if (Collision.DetectCollision(collisionHelper, collisionHelper.bgCollision, this, (dynamic)collisionObject))
                         {
                             Vector2[] testPoints = new Vector2[4];
-                            Vector2 direction = Pos - previousPos;
+                            Vector2 direction = Pos - PreviousPos;
                             direction.Normalize();
                             float slope = direction.Y / direction.X;
                             Vector2 centerPos = this.CenterPos;
@@ -197,7 +202,7 @@ namespace Frostbyte
                             int closestPointIndex = 0;
                             for (int i = 1; i < testPoints.Length; i++)
                             {
-                                if (Vector2.DistanceSquared(previousPos, testPoints[i]) < Vector2.DistanceSquared(previousPos, testPoints[closestPointIndex]))
+                                if (Vector2.DistanceSquared(PreviousPos, testPoints[i]) < Vector2.DistanceSquared(PreviousPos, testPoints[closestPointIndex]))
                                 {
                                     closestPointIndex = i;
                                 }
@@ -328,7 +333,7 @@ namespace Frostbyte
 
         internal override void Update()
         {
-            previousPos = Pos;
+            PreviousPos = Pos;
             UpdateBehavior();
             checkBackgroundCollisions();
         }
