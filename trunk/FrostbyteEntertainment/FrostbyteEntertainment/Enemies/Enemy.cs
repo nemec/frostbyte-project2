@@ -35,7 +35,6 @@ namespace Frostbyte
                 mDirection = value;
                 mDirection.Normalize();
                 double angle = Math.Atan2(mDirection.Y, mDirection.X);
-                Console.WriteLine(angle);
                 if (-Math.PI / 8 < angle && angle < Math.PI / 8)
                 {
                     Orientation = Orientations.Right;
@@ -68,7 +67,6 @@ namespace Frostbyte
                 {
                     Orientation = Orientations.Left;
                 }
-                Console.WriteLine(Orientation);
             }
         }
 
