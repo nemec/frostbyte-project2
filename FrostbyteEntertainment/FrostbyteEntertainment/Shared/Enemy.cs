@@ -9,7 +9,7 @@ namespace Frostbyte
 {
 #if LEVELEDITOR
     //seen by editor
-    internal partial class Enemy
+    internal partial class Enemy : OurSprite
     {
         public string Name { get; set; }
 
@@ -24,16 +24,11 @@ namespace Frostbyte
         public System.Windows.Point Pos { get; set; }
 #else
     //seen by other things
-    internal abstract partial class Enemy : Sprite
+    internal abstract partial class Enemy : OurSprite
     {
         
 #endif
         //seen by both
-
-        /// <summary>
-        /// Health of the enemy
-        /// </summary>
-        internal float Health { get; set; }
 
         /// <summary>
         /// Turns the object into a line of xml

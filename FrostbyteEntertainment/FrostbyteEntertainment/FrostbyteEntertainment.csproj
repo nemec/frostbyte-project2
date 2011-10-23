@@ -138,6 +138,7 @@
     <Compile Include="Engine\ProgressBar.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="HUD.cs" />
+    <Compile Include="Levels\Nemec.cs" />
     <Compile Include="Personality.cs" />
     <Compile Include="Shared\Beetle.cs" />
     <Compile Include="Shared\ElectricBat.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Shared\ManInCrystalBoss.cs" />
     <Compile Include="Shared\RockGolem.cs" />
     <Compile Include="Shared\Sparky.cs" />
+    <Compile Include="Shared\SpriteClasses.cs" />
     <Compile Include="Shared\Wasp.cs" />
     <Compile Include="Shared\WaterBlobBoss.cs" />
     <Compile Include="Shared\Worm.cs" />

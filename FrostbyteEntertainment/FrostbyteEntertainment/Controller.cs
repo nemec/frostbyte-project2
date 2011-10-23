@@ -9,8 +9,17 @@ namespace Frostbyte
 {
     internal enum ReleasableButtonState
     {
+        /// <summary>
+        /// Button is held down.
+        /// </summary>
         Pressed,
+        /// <summary>
+        /// Button is not pressed.
+        /// </summary>
         Released,
+        /// <summary>
+        /// Button was pressed and then released.
+        /// </summary>
         Clicked
     }
 

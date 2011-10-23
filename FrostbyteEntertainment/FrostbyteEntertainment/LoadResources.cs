@@ -11,6 +11,7 @@ namespace Frostbyte
 
         void LoadResources(){
             mLevels.Add(new FrostbyteLevel("TitleScreen", Levels.Test.Load, Levels.Test.Update, delegate() { }, delegate() { return false; }));
+            //mLevels.Add(new FrostbyteLevel("TitleScreen", Levels.Nemec.Load, Levels.Nemec.Update, delegate() { }, delegate() { return false; }));
         }
     }
 }

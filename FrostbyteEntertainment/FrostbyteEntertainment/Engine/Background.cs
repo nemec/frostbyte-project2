@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using System.IO;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using Frostbyte.Engine;
 
 namespace Frostbyte
 {

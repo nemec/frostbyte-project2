@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Frostbyte.Engine;
 
 namespace Frostbyte
 {
@@ -22,37 +21,6 @@ namespace Frostbyte
         internal static void ToStageClear()
         {
             This.Game.SetCurrentLevel("stageclear");
-        }
-
-        internal static void MakeHUD()
-        {
-            Text scoreText = new Text("scoreText", "Text", "Score:");
-            scoreText.Pos = new Vector2(50, This.Game.GraphicsDevice.Viewport.Y);
-            scoreText.DisplayColor = Color.AliceBlue;
-            scoreText.Static = true;
-            Text score = new Text("score", "Text", GameData.Score.ToString());
-            score.Pos = new Vector2(scoreText.GetAnimation().Width + 50, This.Game.GraphicsDevice.Viewport.Y);
-            score.DisplayColor = Color.AliceBlue;
-            score.Static = true;
-            score.UpdateBehavior = delegate()
-            {
-                score.Content = GameData.Score.ToString();
-            };
-
-            Text livesText = new Text("livesText", "Text", "Lives Remaining:");
-            livesText.Pos = new Vector2(This.Game.GraphicsDevice.Viewport.X + This.Game.GraphicsDevice.Viewport.Width - livesText.GetAnimation().Width - 50,
-                                        This.Game.GraphicsDevice.Viewport.Y);
-            livesText.DisplayColor = Color.Red;
-            livesText.Static = true;
-            Text lives = new Text("lives", "Text", GameData.NumberOfLives.ToString());
-            lives.Pos = new Vector2(This.Game.GraphicsDevice.Viewport.X + This.Game.GraphicsDevice.Viewport.Width - 50,
-                                    This.Game.GraphicsDevice.Viewport.Y);
-            lives.DisplayColor = Color.Red;
-            lives.Static = true;
-            lives.UpdateBehavior = delegate()
-            {
-                lives.Content = GameData.NumberOfLives.ToString();
-            };
         }
 
         internal static void GoToGameOver()
