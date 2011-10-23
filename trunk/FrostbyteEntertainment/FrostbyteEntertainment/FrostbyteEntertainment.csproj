@@ -239,6 +239,26 @@
       <Link>Content\Sprites\antibody.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-diagdown.anim">
+      <Link>Content\Sprites\beetle-attack-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-diagup.anim">
+      <Link>Content\Sprites\beetle-attack-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-down.anim">
+      <Link>Content\Sprites\beetle-attack-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-right.anim">
+      <Link>Content\Sprites\beetle-attack-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-up.anim">
+      <Link>Content\Sprites\beetle-attack-up.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagdown.anim">
       <Link>Content\Sprites\beetle-idle-diagdown.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
