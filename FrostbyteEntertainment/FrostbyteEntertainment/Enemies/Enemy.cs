@@ -45,7 +45,7 @@ namespace Frostbyte
                 }
                 else if (3 * Math.PI / 8 < angle && angle < 5 * Math.PI / 8)
                 {
-                    Orientation = Orientations.Up;
+                    Orientation = Orientations.Down;
                 }
                 else if (5 * Math.PI / 8 < angle && angle < 7 * Math.PI / 8)
                 {
@@ -57,7 +57,7 @@ namespace Frostbyte
                 }
                 else if (-5 * Math.PI / 8 < angle && angle < -3 * Math.PI / 8)
                 {
-                    Orientation = Orientations.Down;
+                    Orientation = Orientations.Up;
                 }
                 else if (-7 * Math.PI / 8 < angle && angle < -5 * Math.PI / 8)
                 {
@@ -96,15 +96,27 @@ namespace Frostbyte
                     SetAnimation(0);
                     break;
                 case Orientations.Down_Right:
+                    Hflip = false;
+                    SetAnimation(1);
+                    break;
                 case Orientations.Down_Left:
+                    Hflip = true;
                     SetAnimation(1);
                     break;
                 case Orientations.Right:
+                    Hflip = false;
+                    SetAnimation(2);
+                    break;
                 case Orientations.Left:
+                    Hflip = true;
                     SetAnimation(2);
                     break;
                 case Orientations.Up_Right:
+                    Hflip = false;
+                    SetAnimation(3);
+                    break;
                 case Orientations.Up_Left:
+                    Hflip = true;
                     SetAnimation(3);
                     break;
                 case Orientations.Up:
