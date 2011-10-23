@@ -26,6 +26,11 @@ namespace Frostbyte.Enemies
             This.Game.CurrentLevel.GetAnimation("beetle-walk-right.anim"),
             This.Game.CurrentLevel.GetAnimation("beetle-walk-diagup.anim"),
             This.Game.CurrentLevel.GetAnimation("beetle-walk-up.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-attack-down.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-attack-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-attack-right.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-attack-diagup.anim"),
+            This.Game.CurrentLevel.GetAnimation("beetle-attack-up.anim"),
         };
 
         #endregion Variables
