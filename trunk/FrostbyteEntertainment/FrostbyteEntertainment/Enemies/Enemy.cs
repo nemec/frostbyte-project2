@@ -65,7 +65,7 @@ namespace Frostbyte
                 }
                 else
                 {
-                    Orientation = Orientations.Right;
+                    Orientation = Orientations.Left;
                 }
             }
         }
