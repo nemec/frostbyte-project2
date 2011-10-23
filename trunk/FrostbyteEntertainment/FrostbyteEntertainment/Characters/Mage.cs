@@ -109,7 +109,14 @@ namespace Frostbyte.Characters
                 }
                 else if (controller.Water == ReleasableButtonState.Clicked)
                 {
-                    Mana -= spellManaCost;
+                    (This.Game.CurrentLevel as FrostbyteLevel).HUD.ScrollText(
+                        "There was a general clapping of hands at this: it was the first really clever " +
+                            "thing the King had said that day. `That proves his guilt,' said the Queen. " +
+                            "`It proves nothing of the sort!' said Alice. `Why, you don't even know what " +
+                            "they're about!' `Read them,' said the King. The White Rabbit put on his spectacles. "+
+                            "`Where shall I begin, please your Majesty?' he asked. `Begin at the beginning,' "+
+                            "the King said gravely, `and go on till you come to the end: then stop.'");
+                    //Mana -= spellManaCost;
                     return;
                 }
             }
@@ -123,6 +130,7 @@ namespace Frostbyte.Characters
         public void mUpdate()
         {
             controller.Update();
+
             if (Health == 100)
             {
                 Health = 0;

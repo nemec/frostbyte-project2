@@ -64,8 +64,11 @@ namespace Frostbyte.Levels
             //Sprite ally = new TestAlly("a1", new Actor(l.GetAnimation("antibody.anim")));
             //ally.Pos = new Vector2(250, 260);
 
+            l.HUD.LoadCommon();
+
             Characters.Mage mage = new Characters.Mage("mage", new Actor(l.GetAnimation("shield_opaque.anim")));
             mage.Pos = new Microsoft.Xna.Framework.Vector2(200, 200);
+            l.HUD.AddPlayer(mage);
             /*Sprite a = new Sprite("box1", new Actor(new Animation("boxen.anim")),2);
 
             This.Game.CurrentLevel.AddAnimation(new Animation("boxen.anim"));

@@ -35,12 +35,24 @@ namespace Frostbyte
         internal abstract void Update();
 
         /// <summary>
-        /// Aligns the current sprite ('this') with the provided target sprite
+        /// Aligns the current World Object ('this') with the provided target sprite
         /// </summary>
-        /// <param name="target">The sprite to align on</param>
-        internal void CenterOn(Sprite target)
+        /// <param name="target">The World Object to align on</param>
+        internal void CenterOn(WorldObject target)
         {
-            Pos = target.Pos + target.Center - Center;
+            Pos = CenteredOn(target);
+        }
+
+        /// <summary>
+        /// Retrieves the correct upper-left position to place the 
+        /// current world object if you wanted to center it
+        /// directly on the target.
+        /// </summary>
+        /// <param name="target">The World Object to align on</param>
+        /// <returns></returns>
+        internal Vector2 CenteredOn(WorldObject target)
+        {
+            return target.Pos + target.Center - this.Center;
         }
 
         #endregion Methods
