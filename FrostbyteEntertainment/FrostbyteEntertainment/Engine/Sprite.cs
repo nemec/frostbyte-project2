@@ -62,6 +62,25 @@ namespace Frostbyte
 
         protected Vector2 PreviousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
+/// <summary>
+        /// Tells whether to animate or not
+        /// </summary>
+        private bool mAnimating;
+
+        /// <summary>
+        /// Tells if the object has been drawn the first time
+        /// </summary>
+        //private bool mDrawn;
+
+        /// <summary>
+        /// Number that indicates when the Sprite'a animation was last updated.
+        /// </summary>
+        private GameTime mLastUpdate;
+
+        /// <summary>
+        /// This Sprite's Actor.
+        /// </summary>
+        protected Actor mActor;
         #endregion Variables
 
         #region Behaviors
@@ -338,29 +357,5 @@ namespace Frostbyte
             checkBackgroundCollisions();
         }
         #endregion Methods
-
-        #region Variables
-
-        /// <summary>
-        /// Tells whether to animate or not
-        /// </summary>
-        private bool mAnimating;
-
-        /// <summary>
-        /// Tells if the object has been drawn the first time
-        /// </summary>
-        //private bool mDrawn;
-
-        /// <summary>
-        /// Number that indicates when the Sprite'a animation was last updated.
-        /// </summary>
-        private GameTime mLastUpdate;
-
-        /// <summary>
-        /// This Sprite's Actor.
-        /// </summary>
-        protected Actor mActor;
-
-        #endregion Variables
     }
 }

@@ -137,6 +137,17 @@ namespace Frostbyte
                 return Pos + Center;
             }
         }
+
+        /// <summary>
+        /// This will be the base of the world object relative to Pos (for placing in cells) This is defined as Centerpoint + Centerpoint.Y
+        /// </summary>
+        internal Vector2 GroundPos
+        {
+            get
+            {
+                return (Center * 2)+Pos;
+            }
+        }
         #endregion Properties
 
         #region Variables
@@ -185,7 +196,8 @@ namespace Frostbyte
         /// <returns></returns>
         public int CompareTo(WorldObject other)
         {
-            return ZOrder.CompareTo(other.ZOrder);
+            int result = GroundPos.Y.CompareTo(other.GroundPos.Y);
+            return result == 0 ? ZOrder.CompareTo(other.ZOrder) : result;
         }
 
         /// <summary>
