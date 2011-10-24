@@ -129,7 +129,7 @@ namespace Frostbyte
         internal void StopAnim() { mAnimating = false; }
 
         /// <summary>
-        ///  Resets the Sprite's animation to the first frame.
+        ///Resets the Sprite's animation to the first frame.
         /// </summary>
         internal void Rewind() { mActor.Frame = 0; }
 
