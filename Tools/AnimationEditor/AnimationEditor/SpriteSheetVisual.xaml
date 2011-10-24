@@ -1,0 +1,23 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:AnimationEditor"
+	mc:Ignorable="d"
+	x:Class="AnimationEditor.SpriteSheetVisual"
+	>
+    <UserControl.Resources>
+        <local:NameConverter x:Key="NameConverter"/>
+        <local:SpriteSheetConverter x:Key="SpriteSheetConverter"/>
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="textBlock" Text="{Binding FileName, Converter={StaticResource NameConverter}, FallbackValue=TEST}" Grid.Row="0" HorizontalAlignment="Left" MaxWidth="200" ToolTip="{Binding Text, ElementName=textBlock}" />
+        <Image Source="{Binding Frames, Converter={StaticResource SpriteSheetConverter}}" Grid.Row="1" ToolTip="Select to view all Frames in this Spritesheet"/>
+    </Grid>
+</UserControl>
