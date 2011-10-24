@@ -44,7 +44,7 @@
                 <MenuItem Command="{x:Static local:MainWindow.CommandRedo}"/>
             </MenuItem>
             <MenuItem Header="View">
-                <CheckBox x:Name="ShowGrid" Content="Show Grid" Grid.Column="10" IsChecked="True"/>
+                <CheckBox x:Name="ShowGrid" Content="Show Grid" Grid.Column="10" IsChecked="False"/>
             </MenuItem>
         </Menu>
 		<Grid Grid.Row="1" >

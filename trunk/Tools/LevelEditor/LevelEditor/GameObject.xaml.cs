@@ -21,6 +21,7 @@ namespace LevelEditor
     public partial class GameObject : UserControl
     {
         Enemy e = new Enemy();
+        private string p;
         
         public bool InMenu { get; set; }
 
@@ -59,6 +60,17 @@ namespace LevelEditor
                 e.Health = value;
             }
         }
+        public int MaxHealth
+        {
+            get
+            {
+                return e.MaxHealth;
+            }
+            set
+            {
+                e.MaxHealth = value;
+            }
+        }
 
         public Point Pos
         {
@@ -77,6 +89,11 @@ namespace LevelEditor
             InitializeComponent();
             InMenu = true;
             MouseUp += new MouseButtonEventHandler(Tile_MouseUp);
+        }
+
+        public GameObject(string p):this()
+        {
+            TileImage.Source = new BitmapImage(new Uri(p,UriKind.RelativeOrAbsolute));
         }
 
         void Tile_MouseUp(object sender, MouseButtonEventArgs e)
@@ -98,7 +115,9 @@ namespace LevelEditor
                 Pos=Pos,
                 Speed=Speed,
                 InstanceName=InstanceName,
+                MaxHealth=MaxHealth,
                 InMenu=false,
+                TileImage=TileImage,
             };
         }
     }
