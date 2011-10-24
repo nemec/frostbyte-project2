@@ -221,11 +221,10 @@ namespace LevelEditor
             #region OtherStuff
             ObservableCollection<GameObject> objects = new ObservableCollection<GameObject>()
             {
-                new GameObject(){
+                new GameObject("golem.png"){
                     InstanceName="Golem",
                     Speed=1,
                     Health=100,
-
                 },
             };
             #endregion OtherStuff
@@ -243,7 +242,7 @@ namespace LevelEditor
                 }
             };
 
-
+            
             Objects.ItemsSource = stuff;
             Grid_Size = new Vector(100, 100);
             GridSize.DataContext = this;
@@ -683,13 +682,19 @@ namespace LevelEditor
                 //get sposition
                 Point p = e.GetPosition(Level);
                 //calcl offest for centerpoint
-                p.X -= SelectedGameObject.Width / 2;
-                p.Y -= SelectedGameObject.Height / 2;
+                p.X -= SelectedGameObject.TileImage.Source.Width / 2;
+                p.Y -= SelectedGameObject.TileImage.Source.Height / 2;
                 //copy the object and set attributes
                 GameObject obj = SelectedGameObject.Clone();
                 obj.Pos = p;
+                EditFrame ef =new EditFrame() { DataContext = obj };
+                GridCell=GetCell(p);
+                //Grid.SetColumn(ef, GridCell.X);
+                //Grid.SetRow(ef, GridCell.Y);
+                
                 //pop up an edit frame for it
-
+                Level.Children.Add(ef);
+                ClearSelection();
             }
             #endregion Objects
             #region tiles

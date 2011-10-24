@@ -6,98 +6,65 @@
 	xmlns:local="clr-namespace:LevelEditor"
 	mc:Ignorable="d"
 	x:Class="LevelEditor.EditFrame"
-	x:Name="UserControl">
+	x:Name="UserControl" HorizontalAlignment="Left" VerticalAlignment="Top">
     <UserControl.Resources>
         <local:FilenameClipper x:Key="FilenameClipper"/>
     </UserControl.Resources>
     <Grid>
-		<Border x:Name="border1" BorderBrush="#FF26498D" BorderThickness="3" CornerRadius="3" Background="#8D86CCE4" MouseLeftButtonDown="OnDataPopupClicked" MouseLeftButtonUp="OnDataPopupReleased" MouseMove="OnDataPopupMoving" >
-			<Border.RenderTransform>
-				<TransformGroup>
-					<ScaleTransform/>
-					<SkewTransform/>
-					<RotateTransform/>
-					<TranslateTransform x:Name="LocalTranslateTransform"/>
-				</TransformGroup>
-			</Border.RenderTransform>
-			<Border.Effect>
-				<DropShadowEffect/>
-			</Border.Effect>
-			<Grid x:Name="LayoutRoot" Margin="0,0,0,5">
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<Grid x:Name="ButtonClose" HorizontalAlignment="Right" Margin="0,4,3,4" VerticalAlignment="Top" ToolTipService.ToolTip="Close" Visibility="Visible" Grid.Column="{Binding ColumnDefinitions.Count, ElementName=LayoutRoot, Mode=OneWay}">
-					<Border x:Name="CloseBox" BorderBrush="Black" BorderThickness="1" CornerRadius="1" MinWidth="16" MinHeight="16" MaxWidth="16" MaxHeight="16">
-						<Border.Background>
-							<RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
-								<GradientStop Color="#FFF24014"/>
-								<GradientStop Color="#FFB6300E" Offset="1"/>
-							</RadialGradientBrush>
-						</Border.Background>
-					</Border>
-					<TextBlock Text="x" Margin="0,-7,0,0" FontSize="13.333" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="16"/>
-				</Grid>
-				<TextBox Text="{Binding Name, FallbackValue=Instance Name}" ToolTip="Frame's Source File" HorizontalAlignment="Left" Grid.Row="1" IsReadOnly="True" Grid.Column="1" />
-				<TextBox Text="{Binding Health, FallbackValue=100, Mode=TwoWay}" ToolTip="Pause Between Frames" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" />
-				<TextBox Text="{Binding AnimationPeg, FallbackValue=0\,0, Mode=TwoWay}" ToolTip="AnimationPeg" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1" />
-				<Grid Grid.ColumnSpan="3" HorizontalAlignment="Left" >
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-						<ColumnDefinition Width="Auto"/>
-					</Grid.ColumnDefinitions>
-					<Border x:Name="SelectAnimPeg" BorderBrush="Black" BorderThickness="1" CornerRadius="1" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="1,0,1,1" ToolTip="Select Animation Peg">
-						<Border.Background>
-							<RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
-								<GradientStop Color="#FF14F25F"/>
-								<GradientStop Color="#FF0EB62F" Offset="1"/>
-							</RadialGradientBrush>
-						</Border.Background>
-						<TextBlock Text="Peg" Margin="0" FontSize="13.333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-					</Border>
-					<Border x:Name="AddRect" BorderBrush="Black" BorderThickness="1" CornerRadius="1" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="1,0,1,1" ToolTip="Add Collision Rectangle" Grid.Column="1" Margin="3,0,0,0">
-						<Border.Background>
-							<RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
-								<GradientStop Color="#FF14F25F"/>
-								<GradientStop Color="#FF0EB62F" Offset="1"/>
-							</RadialGradientBrush>
-						</Border.Background>
-						<TextBlock Text="+Rect" Margin="0" FontSize="13.333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-					</Border>
-					<Border x:Name="AddCirc" BorderBrush="Black" BorderThickness="1" CornerRadius="1" HorizontalAlignment="Left" VerticalAlignment="Top" Padding="1,0,1,1" ToolTip="Add Collision Circle" Grid.Column="2" Margin="3,0,0,0">
-						<Border.Background>
-							<RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
-								<GradientStop Color="#FF14F25F"/>
-								<GradientStop Color="#FF0EB62F" Offset="1"/>
-							</RadialGradientBrush>
-						</Border.Background>
-						<TextBlock Text="+Circ" Margin="0" FontSize="13.333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-					</Border>
-				</Grid>
-				<ScrollViewer Grid.Column="3" Grid.Row="1" Grid.RowSpan="{Binding RowDefinitions.Count, ElementName=LayoutRoot, Mode=OneWay}" MaxHeight="400" MaxWidth="500" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
-					<Grid>
-						<Image x:Name="FrameImage" Source="{Binding Image}"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
-						<Canvas x:Name="CollisionData" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-					</Grid>
-				</ScrollViewer>
-				<TextBox Text="Name:" ToolTip="Frame's Source File" Grid.Row="1" IsReadOnly="True" TextAlignment="Right" />
-				<TextBox Text="MaxHealth:" ToolTip="Pause Between Frames" Grid.Row="2" TextAlignment="Right" />
-				<TextBox Text="Position:" ToolTip="AnimationPeg" Grid.Row="3" TextAlignment="Right" />
-			</Grid>
-		</Border>
-	</Grid>
+        <Border x:Name="border1" BorderBrush="#FF26498D" BorderThickness="3" CornerRadius="3" Background="#8D86CCE4" MouseLeftButtonDown="OnDataPopupClicked" MouseLeftButtonUp="OnDataPopupReleased" MouseMove="OnDataPopupMoving" >
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform x:Name="LocalTranslateTransform"/>
+                </TransformGroup>
+            </Border.RenderTransform>
+            <Border.Effect>
+                <DropShadowEffect/>
+            </Border.Effect>
+            <Grid x:Name="LayoutRoot" Margin="0,0,0,5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="ButtonClose" HorizontalAlignment="Right" Margin="0,4,3,4" VerticalAlignment="Top" ToolTipService.ToolTip="Close" Visibility="Visible" Grid.Column="{Binding ColumnDefinitions.Count, ElementName=LayoutRoot, Mode=OneWay}">
+                    <Border x:Name="CloseBox" BorderBrush="Black" BorderThickness="1" CornerRadius="1" MinWidth="16" MinHeight="16" MaxWidth="16" MaxHeight="16">
+                        <Border.Background>
+                            <RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
+                                <GradientStop Color="#FFF24014"/>
+                                <GradientStop Color="#FFB6300E" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Border.Background>
+                    </Border>
+                    <TextBlock Text="x" Margin="0,-7,0,0" FontSize="13.333" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="16"/>
+                </Grid>
+                <TextBox Text="{Binding Name, FallbackValue=Instance Name}" ToolTip="Frame's Source File" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" />
+                <TextBox Text="{Binding MaxHealth, FallbackValue=100, Mode=TwoWay}" ToolTip="Pause Between Frames" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" />
+                <TextBox Text="{Binding Pos, FallbackValue=0\,0, Mode=TwoWay}" ToolTip="AnimationPeg" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1" />
+
+                <ScrollViewer Grid.Column="3" Grid.Row="1" Grid.RowSpan="{Binding RowDefinitions.Count, ElementName=LayoutRoot, Mode=OneWay}" MaxHeight="400" MaxWidth="500" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Image x:Name="FrameImage" Source="{Binding Image}"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                        <Canvas x:Name="CollisionData" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    </Grid>
+                </ScrollViewer>
+                <TextBox Text="Name:" ToolTip="Frame's Source File" Grid.Row="1" IsReadOnly="True" TextAlignment="Right" />
+                <TextBox Text="MaxHealth:" ToolTip="Pause Between Frames" Grid.Row="2" TextAlignment="Right" />
+                <TextBox Text="Position:" ToolTip="AnimationPeg" Grid.Row="3" TextAlignment="Right" />
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>

@@ -45,7 +45,7 @@ namespace Frostbyte
         /// <summary>
         /// Position of the top left corner in the image
         /// </summary>
-        internal Vector2 StartPos { get; set; }
+        internal Vector2 ImageStartPos { get; set; }
 
         internal void Draw()
         {
@@ -109,7 +109,7 @@ namespace Frostbyte
                     frames.Add(
                         new Tile()
                         {
-                            StartPos = new Vector2((float)TL.X, (float)TL.Y),
+                            ImageStartPos = new Vector2((float)TL.X, (float)TL.Y),
                             Height = h,
                             Width = w
                         }
@@ -126,43 +126,43 @@ namespace Frostbyte
                     //Floor
                     case TileTypes.Wall:
                         f = frames[0];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.Bottom:
                         f = frames[1];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.Corner:
                         f = frames[2];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.BottomCorner:
                         f = frames[6];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.ConvexCorner:
                         f = frames[3];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.BottomConvexCorner:
                         f = frames[7];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.Floor:
                         f = frames[8];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
@@ -174,7 +174,7 @@ namespace Frostbyte
                     //    break;
                     case TileTypes.SideWall:
                         f = frames[4];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
@@ -190,13 +190,13 @@ namespace Frostbyte
                     //    break;
                     case TileTypes.TopArea:
                         f = frames[5];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
                     case TileTypes.DEFAULT:
                         f = frames[5];
-                        StartPos = f.StartPos;
+                        ImageStartPos = f.ImageStartPos;
                         Width = f.Width;
                         Height = f.Height;
                         break;
@@ -213,7 +213,7 @@ namespace Frostbyte
                 This.Game.spriteBatch.Draw(
                         Image,
                         GridCell.Pos,
-                        new Rectangle((int)StartPos.X, (int)StartPos.Y, Width, Height),
+                        new Rectangle((int)ImageStartPos.X, (int)ImageStartPos.Y, Width, Height),
                         Microsoft.Xna.Framework.Color.White,
                         0,
                         new Vector2(),
