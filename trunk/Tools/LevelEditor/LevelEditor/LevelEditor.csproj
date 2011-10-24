@@ -128,6 +128,9 @@
     <Compile Include="..\..\..\FrostbyteEntertainment\FrostbyteEntertainment\Shared\Yeti.cs">
       <Link>EnemyStuff\Yeti.cs</Link>
     </Compile>
+    <Compile Include="EditFrame.xaml.cs">
+      <DependentUpon>EditFrame.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GameObject.xaml.cs">
       <DependentUpon>GameObject.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
       <DependentUpon>TitleGroup.xaml</DependentUpon>
     </Compile>
     <Compile Include="UndoablePlacement.cs" />
+    <Page Include="EditFrame.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="GameObject.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
