@@ -89,5 +89,17 @@ namespace LevelEditor
                 This.mainWindow.EndCell = new Point(-1, -1);
             }
         }
+
+        public GameObject Clone()
+        {
+            return new GameObject()
+            {
+                Health=Health,
+                Pos=Pos,
+                Speed=Speed,
+                InstanceName=InstanceName,
+                InMenu=false,
+            };
+        }
     }
 }

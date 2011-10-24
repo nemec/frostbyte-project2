@@ -92,10 +92,10 @@ namespace Frostbyte
             //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
             updateMovement();
             //update animation facing direction
-            switch(Orientation)
+            switch (Orientation)
             {
                 case Orientations.Down:
-                    SetAnimation(0+5*State.GetHashCode());
+                    SetAnimation(0 + 5 * State.GetHashCode());
                     break;
                 case Orientations.Down_Right:
                     Hflip = false;

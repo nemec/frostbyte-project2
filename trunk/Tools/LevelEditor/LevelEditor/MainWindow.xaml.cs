@@ -303,6 +303,7 @@ namespace LevelEditor
             //}
             SelectedLevelPart = null;
             SelectedTile = null;
+            SelectedGameObject = null;
             StartCell = new Point(-1, -1);
             EndCell = new Point(-1, -1);
             ClearTile = true;
@@ -584,6 +585,7 @@ namespace LevelEditor
         void Level_MouseDown(object sender, MouseButtonEventArgs e)
         {
             //do some handling here for end of room that skips the rest
+            #region Rooms
             if (SelectedTile != null && SelectedTile.IsSpecialObject)
             {
                 if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
@@ -674,6 +676,23 @@ namespace LevelEditor
                     CancelSelection = true;
                 }
             }
+            #endregion Room
+            #region Objects
+            else if (SelectedGameObject != null)
+            {
+                //get sposition
+                Point p = e.GetPosition(Level);
+                //calcl offest for centerpoint
+                p.X -= SelectedGameObject.Width / 2;
+                p.Y -= SelectedGameObject.Height / 2;
+                //copy the object and set attributes
+                GameObject obj = SelectedGameObject.Clone();
+                obj.Pos = p;
+                //pop up an edit frame for it
+
+            }
+            #endregion Objects
+            #region tiles
             else
             {
                 if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
@@ -713,6 +732,7 @@ namespace LevelEditor
                     CancelSelection = true;
                 }
             }
+            #endregion tiles
         }
         #endregion MouseHandlers
 
