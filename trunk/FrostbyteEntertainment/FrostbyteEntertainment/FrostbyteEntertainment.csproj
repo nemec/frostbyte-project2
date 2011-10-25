@@ -299,6 +299,26 @@
       <Link>Content\Sprites\beetle-walk-up.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-diagdown.anim">
+      <Link>Content\Sprites\golem-attack-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-diagup.anim">
+      <Link>Content\Sprites\golem-attack-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-down.anim">
+      <Link>Content\Sprites\golem-attack-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-right.anim">
+      <Link>Content\Sprites\golem-attack-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-up.anim">
+      <Link>Content\Sprites\golem-attack-up.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-diagdown.anim">
       <Link>Content\Sprites\golem-idle-diagdown.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -317,6 +337,26 @@
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-idle-up.anim">
       <Link>Content\Sprites\golem-idle-up.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-walk-diagdown.anim">
+      <Link>Content\Sprites\golem-walk-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-walk-diagup.anim">
+      <Link>Content\Sprites\golem-walk-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-walk-down.anim">
+      <Link>Content\Sprites\golem-walk-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-walk-right.anim">
+      <Link>Content\Sprites\golem-walk-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-walk-up.anim">
+      <Link>Content\Sprites\golem-walk-up.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\shield_opaque.anim">

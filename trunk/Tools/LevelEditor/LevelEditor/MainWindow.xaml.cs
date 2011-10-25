@@ -689,8 +689,11 @@ namespace LevelEditor
                 obj.Pos = p;
                 EditFrame ef =new EditFrame() { DataContext = obj };
                 GridCell=GetCell(p);
-                //Grid.SetColumn(ef, GridCell.X);
-                //Grid.SetRow(ef, GridCell.Y);
+                //set the cell
+                int y = (int)GridCell.Y;
+                int x = (int)GridCell.X;
+                Grid.SetRow(ef, 0);
+                Grid.SetColumn(ef, 0);
                 
                 //pop up an edit frame for it
                 Level.Children.Add(ef);
