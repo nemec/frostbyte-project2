@@ -59,6 +59,20 @@ namespace LevelEditor
                 e.Health = value;
             }
         }
+
+        public Type Type
+        {
+            get
+            {
+                return e.EnemyType;
+            }
+            set
+            {
+                e.EnemyType = value;
+            }
+        }
+
+
         public int MaxHealth
         {
             get
@@ -75,15 +89,17 @@ namespace LevelEditor
         {
             get
             {
-                return e.Pos;
+                return new Point(e.Pos.X,e.Pos.Y);
             }
             set
             {
-                e.Pos = value;
+                e.Pos = new Index2D(value.X, value.Y);
                 Canvas.SetTop(this, e.Pos.Y);
                 Canvas.SetLeft(this, e.Pos.X);
             }
         }
+        
+        internal Enemy Object { get { return e; } set { e = value; } }
 
         public GameObject()
         {
@@ -141,6 +157,7 @@ namespace LevelEditor
                    Speed = Speed,
                    InstanceName = InstanceName,
                    MaxHealth = MaxHealth,
+                   Type=Type,
                    InMenu = false,
                };
             o.TileImage.Source = TileImage.Source;

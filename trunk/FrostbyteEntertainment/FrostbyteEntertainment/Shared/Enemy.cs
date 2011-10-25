@@ -21,14 +21,9 @@ namespace Frostbyte
         /// <summary>
         /// make sure we take into account the centerpoint when we use this
         /// </summary>
-        public System.Windows.Point Pos { get; set; }
-#else
-    //seen by other things
-    internal abstract partial class Enemy : OurSprite
-    {
-        
-#endif
-        //seen by both
+        public Index2D Pos = new Index2D();
+
+        public Type EnemyType { get; set; }
 
         /// <summary>
         /// Turns the object into a line of xml
@@ -36,7 +31,30 @@ namespace Frostbyte
         /// <returns>XML representing the object</returns>
         internal virtual XElement ToXML()
         {
-            return new XElement("Enemy");
+            XElement e = new XElement("Enemy");
+            e.SetAttributeValue("Type", EnemyType);
+            e.SetAttributeValue("Name", Name);
+            e.SetAttributeValue("Speed", Speed);
+            e.SetAttributeValue("Health", Health);
+            e.SetAttributeValue("Pos", Pos);
+            //add other data about this type of enemy here
+            return e;
         }
+#else
+    //seen by other things
+    internal abstract partial class Enemy : OurSprite
+    {
+        /// <summary>
+        /// Turns the object into a line of xml
+        /// </summary>
+        /// <returns>XML representing the object</returns>
+        internal virtual XElement ToXML()
+        {
+            return  new XElement("Enemy");
+        }
+#endif
+        //seen by both
+
+        
     }
 }

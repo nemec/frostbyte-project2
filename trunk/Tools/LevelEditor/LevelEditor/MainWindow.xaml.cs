@@ -14,6 +14,7 @@ using Frostbyte;
 using System.IO;
 using System.Xml.Linq;
 using Microsoft.Win32;
+using Frostbyte.Enemies;
 
 namespace LevelEditor
 {
@@ -222,19 +223,25 @@ namespace LevelEditor
             ObservableCollection<GameObject> objects = new ObservableCollection<GameObject>()
             {
                 new GameObject("golem.png"){
+                    Object=new Golem(),
                     InstanceName="Golem",
                     Speed=1,
                     Health=100,
+                    Type=typeof(Golem),
                 },
                 new GameObject("wasp.png"){
+                    Object=new Wasp(),
                     InstanceName="Wasp",
                     Speed=1,
                     Health=100,
+                    Type=typeof(Wasp),
                 },
                 new GameObject("beetle.png"){
+                    Object=new Beetle(),
                     InstanceName="Beetle",
                     Speed=1,
                     Health=100,
+                    Type=typeof(Beetle),
                 },
             };
             #endregion OtherStuff
@@ -546,6 +553,49 @@ namespace LevelEditor
                 Level.Children.Remove(elem);
             }
         }
+
+        /// <summary>
+        /// Loads objects onto the Grid
+        /// </summary>
+        /// <param name="doc"></param>
+        private void LoadObjects(XDocument doc)
+        {
+            foreach (XElement e in doc.Descendants("Enemy"))
+            {
+                GameObject obj = new GameObject();
+                if (e.Attribute("Type").Value == "Frostbyte.Enemies.Golem")
+                {
+                    obj = new GameObject("golem.png")
+                    {
+                        InMenu=false,
+                        Object = Golem.Parse(e),
+                        Type=typeof(Golem),
+                    };
+                }
+                else if (e.Attribute("Type").Value == "Frostbyte.Enemies.Beetle")
+                {
+                    obj = new GameObject("beetle.png")
+                    {
+                        InMenu = false,
+                        Object = Beetle.Parse(e),
+                        Type = typeof(Beetle),
+                    };
+                }
+                else if (e.Attribute("Type").Value == "Frostbyte.Enemies.Wasp")
+                {
+                    obj = new GameObject("wasp.png")
+                    {
+                        InMenu = false,
+                        Object = Wasp.Parse(e),
+                        Type = typeof(Wasp),
+                    };
+                }
+                if (!obj.InMenu)
+                {
+                    OtherThings.Children.Add(obj);
+                }
+            }
+        }
         #endregion Helper fns
 
         #region MouseHandlers
@@ -793,7 +843,10 @@ namespace LevelEditor
             if (d.ShowDialog() == true)
             {
                 Level.Children.Clear();
-                LoadGrid(new TileList(XDocument.Load(d.FileName)));
+                OtherThings.Children.Clear();
+                XDocument doc = XDocument.Load(d.FileName);
+                LoadGrid(new TileList(doc));
+                LoadObjects(doc);
             }
         }
 
@@ -814,7 +867,14 @@ namespace LevelEditor
                 {
                     doc.Root.Add(l.ToXML());
                 }
-
+                foreach(var o in OtherThings.Children){
+                    if (o is GameObject)
+                    {
+                        Enemy go = (o as GameObject).Object;
+                        doc.Root.Add(go.ToXML());
+                        
+                    }
+                }
                 TileMap.Save(d.FileName, doc);
             }
         }

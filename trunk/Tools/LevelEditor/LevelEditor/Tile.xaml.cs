@@ -194,15 +194,15 @@ namespace LevelEditor
 
         public XElement ToXML()
         {
-            XElement e = new XElement("Tile");
-            e.SetAttributeValue("Type", Type);
-            e.SetAttributeValue("InstanceName", InstanceName);
-            e.SetAttributeValue("Collision", Traversable);
-            e.SetAttributeValue("Theme", Theme);
-            e.SetAttributeValue("Orientation", Orientation);
-            Point GridCell = new Point(Grid.GetColumn(this), Grid.GetRow(this));
-            e.SetAttributeValue("GridCell", GridCell);
-            return e;
+            //XElement e = new XElement("Tile");
+            //e.SetAttributeValue("Type", Type);
+            //e.SetAttributeValue("InstanceName", InstanceName);
+            //e.SetAttributeValue("Collision", Traversable);
+            //e.SetAttributeValue("Theme", Theme);
+            //e.SetAttributeValue("Orientation", Orientation);
+            //Point GridCell = new Point(Grid.GetColumn(this), Grid.GetRow(this));
+            //e.SetAttributeValue("GridCell", GridCell);
+            return t.ToXML();
         }
 
         public Tile Parse(XElement elem)
