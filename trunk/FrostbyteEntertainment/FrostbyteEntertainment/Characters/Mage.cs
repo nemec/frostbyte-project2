@@ -144,7 +144,10 @@ namespace Frostbyte.Characters
 
             if (controller.IsConnected)
             {
-                previousFootPos = this.GroundPos;   //necessary for collision
+                //necessary for collision
+                if (this.CollidesWithBackground)
+                    previousFootPos = this.GroundPos;
+
                 #region Targeting
                 if (controller.TargetEnemies)
                 {
@@ -194,7 +197,9 @@ namespace Frostbyte.Characters
 
                 #endregion Movement
 
-                checkBackgroundCollisions();    //perform collision detection with background
+                //perform collision detection with background
+                if (this.CollidesWithBackground)
+                    checkBackgroundCollisions();    
 
                 attack();
             }
