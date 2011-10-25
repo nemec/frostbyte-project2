@@ -21,8 +21,7 @@ namespace LevelEditor
     public partial class GameObject : UserControl
     {
         Enemy e = new Enemy();
-        private string p;
-        
+
         public bool InMenu { get; set; }
 
         public string InstanceName
@@ -81,6 +80,8 @@ namespace LevelEditor
             set
             {
                 e.Pos = value;
+                Canvas.SetTop(this, e.Pos.Y);
+                Canvas.SetLeft(this, e.Pos.X);
             }
         }
 
@@ -89,11 +90,21 @@ namespace LevelEditor
             InitializeComponent();
             InMenu = true;
             MouseUp += new MouseButtonEventHandler(Tile_MouseUp);
+            MouseDown += new MouseButtonEventHandler(GameObject_MouseDown);
         }
 
-        public GameObject(string p):this()
+        void GameObject_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            TileImage.Source = new BitmapImage(new Uri(p,UriKind.RelativeOrAbsolute));
+            if (e.MouseDevice.RightButton == MouseButtonState.Pressed)
+                DownOnMe = true;
+            else if (e.MouseDevice.LeftButton == MouseButtonState.Pressed)
+                Dragging = true;
+        }
+
+        public GameObject(string p)
+            : this()
+        {
+            TileImage.Source = new BitmapImage(new Uri(p, UriKind.RelativeOrAbsolute));
         }
 
         void Tile_MouseUp(object sender, MouseButtonEventArgs e)
@@ -105,20 +116,39 @@ namespace LevelEditor
                 This.mainWindow.StartCell = new Point(-1, -1);
                 This.mainWindow.EndCell = new Point(-1, -1);
             }
+            else if (DownOnMe && e.MouseDevice.RightButton == MouseButtonState.Released)
+            {
+                EditFrame ef = new EditFrame() { DataContext = this };
+                Canvas.SetTop(ef, Pos.Y);
+                Canvas.SetLeft(ef, Pos.X);
+
+                //pop up an edit frame for it
+                This.mainWindow.OtherThings.Children.Add(ef);
+                DownOnMe = false;
+            }
+            else if (Dragging && e.MouseDevice.LeftButton == MouseButtonState.Released)
+            {
+                Dragging = false;
+            }
         }
 
         public GameObject Clone()
         {
-            return new GameObject()
-            {
-                Health=Health,
-                Pos=Pos,
-                Speed=Speed,
-                InstanceName=InstanceName,
-                MaxHealth=MaxHealth,
-                InMenu=false,
-                TileImage=TileImage,
-            };
+            GameObject o = new GameObject()
+               {
+                   Health = Health,
+                   Pos = Pos,
+                   Speed = Speed,
+                   InstanceName = InstanceName,
+                   MaxHealth = MaxHealth,
+                   InMenu = false,
+               };
+            o.TileImage.Source = TileImage.Source;
+            return o;
         }
+
+        public bool DownOnMe { get; set; }
+
+        public bool Dragging { get; set; }
     }
 }

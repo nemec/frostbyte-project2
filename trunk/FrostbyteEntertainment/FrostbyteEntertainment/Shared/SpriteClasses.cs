@@ -24,6 +24,8 @@ namespace Frostbyte
             }
             set
             {
+                if ( MaxHealth == 0)
+                    MaxHealth = value;
                 mHealth = value < 0 ? 0 :
                     (value > MaxHealth ? MaxHealth :
                         value);

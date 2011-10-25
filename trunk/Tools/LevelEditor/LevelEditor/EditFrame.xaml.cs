@@ -93,6 +93,11 @@ namespace LevelEditor
             {
                 parent.Children.Remove(this);
             }
+            Canvas layer = (Parent as Canvas);
+            if (layer != null)
+            {
+                layer.Children.Remove(this);
+            }
         }
 
        #endregion Event Handlers

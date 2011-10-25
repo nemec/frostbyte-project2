@@ -226,6 +226,16 @@ namespace LevelEditor
                     Speed=1,
                     Health=100,
                 },
+                new GameObject("wasp.png"){
+                    InstanceName="Wasp",
+                    Speed=1,
+                    Health=100,
+                },
+                new GameObject("beetle.png"){
+                    InstanceName="Beetle",
+                    Speed=1,
+                    Health=100,
+                },
             };
             #endregion OtherStuff
 
@@ -686,17 +696,31 @@ namespace LevelEditor
                 p.Y -= SelectedGameObject.TileImage.Source.Height / 2;
                 //copy the object and set attributes
                 GameObject obj = SelectedGameObject.Clone();
-                obj.Pos = p;
+                obj.Pos = new Point((int)p.X, (int)p.Y);
+
+                //place the object in the grid
+                Canvas.SetTop(obj, p.Y);
+                Canvas.SetLeft(obj, p.X);
+                OtherThings.Children.Add(obj);
+
                 EditFrame ef =new EditFrame() { DataContext = obj };
                 GridCell=GetCell(p);
                 //set the cell
-                int y = (int)GridCell.Y;
-                int x = (int)GridCell.X;
-                Grid.SetRow(ef, 0);
-                Grid.SetColumn(ef, 0);
+                //int y = (int)GridCell.Y;
+                //int x = (int)GridCell.X;
+                //Grid.SetRow(ef, 0);
+                //Grid.SetColumn(ef, 0);
+                //Grid.SetColumn(ef, (int)GridCell.X);
+                //Grid.SetRow(ef, GridCell.Y);
+                Canvas.SetTop(ef, p.Y);
+                Canvas.SetLeft(ef, p.X);
                 
                 //pop up an edit frame for it
-                Level.Children.Add(ef);
+                OtherThings.Children.Add(ef);
+
+               
+
+
                 ClearSelection();
             }
             #endregion Objects
