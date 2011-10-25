@@ -85,12 +85,20 @@ namespace Frostbyte
             (This.Game.CurrentLevel as FrostbyteLevel).enemies.Add(this);
             Speed = speed;
             Health = _health;
+            CollidesWithBackground = true;
         }
 
         public void update()
         {
+            //necessary for collision
+            previousFootPos = this.GroundPos;   
+
             //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
             updateMovement();
+
+            //perform collision detection with background
+            checkBackgroundCollisions();
+
             //update animation facing direction
             switch (Orientation)
             {
