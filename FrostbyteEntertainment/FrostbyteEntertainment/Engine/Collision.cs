@@ -517,33 +517,4 @@ namespace Frostbyte
 
 
     }
-
-    internal class CollisionHelper : WorldObject
-    {
-
-
-        internal Collision_AABB bgCollision = null;
-
-
-
-        internal override void Draw(GameTime gameTime)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override void Update()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override List<CollisionObject> GetCollision()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override List<Vector2> GetHotSpots()
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

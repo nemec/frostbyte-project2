@@ -62,7 +62,7 @@ namespace Frostbyte
 
         protected Vector2 PreviousPos = new Vector2(float.PositiveInfinity, float.PositiveInfinity);
 
-/// <summary>
+        /// <summary>
         /// Tells whether to animate or not
         /// </summary>
         private bool mAnimating;
@@ -157,121 +157,39 @@ namespace Frostbyte
             return Name;
         }
 
+        #region Collision
+
+
         /// <summary>
-        /// Check for collision with background and move enemy out of collision with background until no collisions exist
+        /// checks for collision with sprite of a given name.
         /// </summary>
-        protected void checkBackgroundCollisions()
+        /// <param name="name"></param>
+        /// <returns></returns>
+        internal Sprite CollisionWithSprite(string name)
         {
-            List<Vector2> gridLocations = new List<Vector2>();
-            List<CollisionObject> collisionObjects = this.GetCollision();
-            TileList map = (This.Game.CurrentLevel as FrostbyteLevel).TileMap;
-
-            foreach (CollisionObject collisionObject in collisionObjects)
-            {
-                gridLocations.AddRange(collisionObject.GridLocations(this));
-            }
-
-            foreach (Vector2 tile in gridLocations)
-            {
-                Tile output;
-                if (map.TryGetValue((int)tile.X, (int)tile.Y, out output))
-                {
-                    CollisionHelper collisionHelper = new CollisionHelper();
-                    collisionHelper.Pos = new Vector2(tile.X * This.CellSize, tile.Y * This.CellSize);
-                    switch (output.Type)
-                    {
-                        case TileTypes.Bottom:
-                        case TileTypes.BottomConvexCorner:
-                            collisionHelper.bgCollision = new Collision_AABB(0, new Vector2(0.0f, 0.5f * This.CellSize), new Vector2(This.CellSize, This.CellSize));
-                            break;
-
-                        case TileTypes.BottomCorner:
-                        case TileTypes.Corner:
-                        case TileTypes.ConvexCorner:
-                        case TileTypes.SideWall:
-                        case TileTypes.Wall:
-                            collisionHelper.bgCollision = new Collision_AABB(0, new Vector2(0.0f, 0.0f), new Vector2(This.CellSize, This.CellSize));
-                            break;
-
-                        default:
-                            collisionHelper.bgCollision = null;
-                            break;
-                    }
-
-                    if (collisionHelper.bgCollision == null)
-                    {
-                        continue;
-                    }
-
-                    foreach (CollisionObject collisionObject in collisionObjects)
-                    {
-                        if (Collision.DetectCollision(collisionHelper, collisionHelper.bgCollision, this, (dynamic)collisionObject))
-                        {
-                            Vector2[] testPoints = new Vector2[4];
-                            Vector2 direction = Pos - PreviousPos;
-                            direction.Normalize();
-                            float slope = direction.Y / direction.X;
-                            Vector2 centerPos = this.CenterPos;
-
-                            testPoints[0] = new Vector2((collisionHelper.Pos.Y - centerPos.Y) / slope + centerPos.X, collisionHelper.Pos.Y);
-                            testPoints[1] = new Vector2((collisionHelper.Pos.Y + This.CellSize - centerPos.Y) / slope + centerPos.X, collisionHelper.Pos.Y + This.CellSize);
-                            testPoints[2] = new Vector2(collisionHelper.Pos.X, slope * (collisionHelper.Pos.X - centerPos.X) + centerPos.Y);
-                            testPoints[3] = new Vector2(collisionHelper.Pos.X + This.CellSize, slope * (collisionHelper.Pos.X + This.CellSize - centerPos.X) + centerPos.Y);
-
-                            int closestPointIndex = 0;
-                            for (int i = 1; i < testPoints.Length; i++)
-                            {
-                                if (Vector2.DistanceSquared(PreviousPos, testPoints[i]) < Vector2.DistanceSquared(PreviousPos, testPoints[closestPointIndex]))
-                                {
-                                    closestPointIndex = i;
-                                }
-                            }
-
-                            if (closestPointIndex == 0)
-                            {
-                                if ((output.Type == TileTypes.SideWall || output.Type == TileTypes.BottomCorner || output.Type == TileTypes.ConvexCorner) && output.Hflip == true)
-                                    Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.TL.X - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
-                                else if ((output.Type == TileTypes.SideWall || output.Type == TileTypes.BottomCorner || output.Type == TileTypes.ConvexCorner) && output.Hflip == false)
-                                    Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.BR.X + .001f;
-                                else
-                                    Pos.Y = collisionHelper.Pos.Y + collisionHelper.bgCollision.TL.Y - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
-                            }
-                            else if (closestPointIndex == 1)
-                            {
-                                if ((((output.Type == TileTypes.SideWall || output.Type == TileTypes.BottomCorner) && output.Hflip == true)) ||
-                                    (output.Type == TileTypes.BottomConvexCorner && output.Hflip == false))
-                                    Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.TL.X - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
-                                else if ((((output.Type == TileTypes.SideWall || output.Type == TileTypes.BottomCorner) && output.Hflip == false)) ||
-                                    (output.Type == TileTypes.BottomConvexCorner && output.Hflip == true))
-                                    Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.BR.X + .001f;
-                                else
-                                    Pos.Y = collisionHelper.Pos.Y + collisionHelper.bgCollision.BR.Y + .001f;
-                            }
-                            else if (closestPointIndex == 2)
-                            {
-                                if (output.Type == TileTypes.Wall || (output.Type == TileTypes.ConvexCorner && output.Hflip == false))
-                                    Pos.Y = collisionHelper.Pos.Y + collisionHelper.bgCollision.BR.Y + .001f;
-                                else if (output.Type == TileTypes.Bottom || (output.Type == TileTypes.BottomConvexCorner && output.Hflip == true))
-                                    Pos.Y = collisionHelper.Pos.Y + collisionHelper.bgCollision.TL.Y - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
-                                else
-                                    Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.TL.X - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
-                            }
-                            else
-                            {
-                                if (output.Type == TileTypes.Wall || (output.Type == TileTypes.ConvexCorner && output.Hflip == true))
-                                    Pos.Y = collisionHelper.Pos.Y + collisionHelper.bgCollision.BR.Y + .001f;
-                                else if (output.Type == TileTypes.Bottom || (output.Type == TileTypes.BottomConvexCorner && output.Hflip == false))
-                                    Pos.Y = collisionHelper.Pos.Y + collisionHelper.bgCollision.TL.Y - 2 * (collisionObject as Collision_BoundingCircle).Radius - .001f;
-                                else
-                                    Pos.X = collisionHelper.Pos.X + collisionHelper.bgCollision.BR.X + .001f;
-                            }
-
-                        }
-                    }
-
-                }
-            }
+            //        //get the frame for readability
+            //SpriteFrame frame = GetAnimation();
+            ////get the first sprite with this name
+            //Sprite s= This.Game.getCurrentLevel().findSpriteByName(name);
+            //if(s==null)
+            //    return null;
+            //for(int i=0; i <  frame.CollisionData.Count; i++)
+            //    if(frame.CollisionData[i].checkCollisions(s.getCollisionData(), s.Pos + s.GetAnimation().AnimationPeg, Pos + frame.AnimationPeg))//if there is a collision
+            //        return s;
+            return null;//if there aren't collisions
         }
+        /// <summary>
+        /// Returns collision data
+        /// </summary>
+        /// <returns></returns>
+        //internal vector<Collision> getCollisionData();
+        #endregion Collision
+
+        internal override void Update()
+        {
+            UpdateBehavior();
+        }
+
         #endregion Methods
 
         #region Draw
@@ -323,39 +241,6 @@ namespace Frostbyte
                     );
             }
         }
-
-        #region Collision
-        /// <summary>
-        /// checks for collision with sprite of a given name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        internal Sprite CollisionWithSprite(string name)
-        {
-            //        //get the frame for readability
-            //SpriteFrame frame = GetAnimation();
-            ////get the first sprite with this name
-            //Sprite s= This.Game.getCurrentLevel().findSpriteByName(name);
-            //if(s==null)
-            //    return null;
-            //for(int i=0; i <  frame.CollisionData.Count; i++)
-            //    if(frame.CollisionData[i].checkCollisions(s.getCollisionData(), s.Pos + s.GetAnimation().AnimationPeg, Pos + frame.AnimationPeg))//if there is a collision
-            //        return s;
-            return null;//if there aren't collisions
-        }
-        /// <summary>
-        /// Returns collision data
-        /// </summary>
-        /// <returns></returns>
-        //internal vector<Collision> getCollisionData();
-        #endregion Collision
-
-        internal override void Update()
-        {
-            PreviousPos = Pos;
-            UpdateBehavior();
-            checkBackgroundCollisions();
-        }
-        #endregion Methods
+        #endregion Draw
     }
 }

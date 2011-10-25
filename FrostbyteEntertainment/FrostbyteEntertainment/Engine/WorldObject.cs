@@ -60,6 +60,8 @@ namespace Frostbyte
         internal Behavior CollisionBehavior = () => { };
 
         #region Properties
+        internal bool CollidesWithBackground = false;
+
         /// <summary>
         ///     gets the sprite's name
         /// </summary>
@@ -145,7 +147,11 @@ namespace Frostbyte
         {
             get
             {
-                return (Center * 2)+Pos;
+                return new Vector2(Center.X, Center.Y * 2) + Pos;
+            }
+            set
+            {
+                Pos = value - new Vector2(Center.X, Center.Y * 2);
             }
         }
         #endregion Properties
