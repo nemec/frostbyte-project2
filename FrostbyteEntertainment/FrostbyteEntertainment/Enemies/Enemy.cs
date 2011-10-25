@@ -91,13 +91,15 @@ namespace Frostbyte
         public void update()
         {
             //necessary for collision
-            previousFootPos = this.GroundPos;   
+            if(this.CollidesWithBackground)
+                previousFootPos = this.GroundPos;
 
             //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
             updateMovement();
 
             //perform collision detection with background
-            checkBackgroundCollisions();
+            if (this.CollidesWithBackground)
+                checkBackgroundCollisions();
 
             //update animation facing direction
             switch (Orientation)
