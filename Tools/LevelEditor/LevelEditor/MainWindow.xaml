@@ -81,8 +81,8 @@
 			</Border>-->
 		</Grid>
 		<ScrollViewer Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Auto" >
-			<Grid Height="475.04" Width="652">
-				<Grid x:Name="Level" ShowGridLines="{Binding IsChecked, ElementName=ShowGrid}" Background="#FF000139" >
+			<Grid>
+				<Grid x:Name="Level" ShowGridLines="{Binding IsChecked, ElementName=ShowGrid}" Background="#FF000139" Height="475.04" Width="652">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition/>
 						<ColumnDefinition/>

@@ -18,5 +18,39 @@ namespace Frostbyte.Enemies
             //add other data about this type of enemy here
             return e;
         }
+
+        internal static Wasp Parse(XElement e)
+        {
+#if LEVELEDITOR
+            Wasp g = new Wasp();
+            foreach (XAttribute attr in e.Attributes())
+            {
+                if (attr.Name == "Name")
+                {
+                    g.Name = attr.Value;
+                }
+                else if (attr.Name == "Health")
+                {
+                    g.Health = int.Parse(attr.Value);
+                }
+                else if (attr.Name == "Speed")
+                {
+                    g.Speed = float.Parse(attr.Value);
+                }
+                else if (attr.Name == "Pos")
+                {
+                    g.Pos = Index2D.Parse(attr.Value);
+
+                }
+            }
+#else
+            string name = e.Attribute("Name").Value;
+            int health = int.Parse(e.Attribute("Health").Value);
+            Index2D pos = Index2D.Parse(e.Attribute("Pos").Value);
+            Microsoft.Xna.Framework.Vector2 initpos = new Microsoft.Xna.Framework.Vector2(pos.X, pos.Y);
+            Wasp g = new Wasp(name, health, initpos, 1);
+#endif
+            return g;
+        }
     }
 }

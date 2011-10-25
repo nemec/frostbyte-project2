@@ -20,6 +20,12 @@ namespace Frostbyte
 
     public partial class Index2D
     {
+        public Index2D()
+        {
+            X = 0;
+            Y = 0;
+        }
+
         /// <summary>
         /// Creates an index into a 2D array
         /// </summary>

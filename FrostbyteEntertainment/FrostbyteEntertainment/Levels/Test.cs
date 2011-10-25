@@ -43,9 +43,9 @@ namespace Frostbyte.Levels
 
             #region Load us some enemies
 
-            Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 0.5f, 1000, new Vector2(100, 150));
-            Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 1.0f, 50, new Vector2(1000, 500));
-            Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 0.5f, 10, new Vector2(1000,400));
+            Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 1000, new Vector2(100, 150), 0.5f);
+            Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 50, new Vector2(1000, 500), 1.0f);
+            Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 10, new Vector2(1000, 400), 0.5f);
             //beetle.Speed = 1;
             
             #endregion Load us some enemies
@@ -115,7 +115,7 @@ namespace Frostbyte.Levels
             emitter4.Static = true;*/
             #endregion particles
 
-            Beetle b =new Beetle("asdf", 1, 100, new Vector2(10, 10));
+            Beetle b = new Beetle("asdf", 100, new Vector2(10, 10), 1);
             b.Orientation = Orientations.Right;
         }
 

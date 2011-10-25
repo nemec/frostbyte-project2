@@ -40,8 +40,10 @@ namespace LevelEditor
             //handles mouse down so mouse up can be handled
             ButtonClose.MouseLeftButtonDown += new MouseButtonEventHandler(ButtonClose_MouseLeftButtonDown);
             ButtonClose.MouseLeftButtonUp += new MouseButtonEventHandler(ButtonClose_MouseLeftButtonUp);
-        }
 
+            ButtonDelete.MouseLeftButtonDown += new MouseButtonEventHandler(ButtonClose_MouseLeftButtonDown);
+            ButtonDelete.MouseLeftButtonUp += new MouseButtonEventHandler(ButtonDelete_MouseLeftButtonUp);
+        }
         #endregion Methods
 
         #region Event Handlers
@@ -100,7 +102,21 @@ namespace LevelEditor
             }
         }
 
-       #endregion Event Handlers
+
+        void ButtonDelete_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+
+            Canvas layer = (Parent as Canvas);
+            if (layer != null)
+            {
+                GameObject go = DataContext as GameObject;
+                if (go != null)
+                    layer.Children.Remove(go);
+            }
+        }
+
+        #endregion Event Handlers
     }
     public class FilenameClipper : IValueConverter
     {

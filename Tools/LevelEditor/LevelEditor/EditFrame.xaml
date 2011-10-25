@@ -51,7 +51,19 @@
                     </Border>
                     <TextBlock Text="x" Margin="0,-7,0,0" FontSize="13.333" HorizontalAlignment="Center" VerticalAlignment="Center" MaxHeight="16"/>
                 </Grid>
-                <TextBox Text="{Binding Name, FallbackValue=Instance Name}" ToolTip="Frame's Source File" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" />
+                <Grid x:Name="ButtonDelete" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" ToolTipService.ToolTip="Close" Visibility="Visible" Grid.Column="0">
+                    <Border x:Name="DeleteBox" BorderBrush="Black" BorderThickness="3" CornerRadius="3">
+                        <Border.Background>
+                            <RadialGradientBrush RadiusY="1.25" RadiusX="0.75">
+                                <GradientStop Color="#FFF24014"/>
+                                <GradientStop Color="#FFB6300E" Offset="1"/>
+                            </RadialGradientBrush>
+                        </Border.Background>
+                        <TextBlock Text="Delete" Margin="0" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    
+                </Grid>
+                <TextBox Text="{Binding InstanceName, FallbackValue=Instance Name}" ToolTip="Frame's Source File" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="1" />
                 <TextBox Text="{Binding MaxHealth, FallbackValue=100, Mode=TwoWay}" ToolTip="Pause Between Frames" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="1" />
                 <TextBox Text="{Binding Pos, FallbackValue=0\,0, Mode=TwoWay}" ToolTip="AnimationPeg" HorizontalAlignment="Left" Grid.Row="3" Grid.Column="1" />
 
@@ -64,6 +76,7 @@
                 <TextBox Text="Name:" ToolTip="Frame's Source File" Grid.Row="1" IsReadOnly="True" TextAlignment="Right" />
                 <TextBox Text="MaxHealth:" ToolTip="Pause Between Frames" Grid.Row="2" TextAlignment="Right" />
                 <TextBox Text="Position:" ToolTip="AnimationPeg" Grid.Row="3" TextAlignment="Right" />
+                <TextBlock HorizontalAlignment="Left" Margin="0" Text="{Binding Type}" VerticalAlignment="Top" />
             </Grid>
         </Border>
     </Grid>
