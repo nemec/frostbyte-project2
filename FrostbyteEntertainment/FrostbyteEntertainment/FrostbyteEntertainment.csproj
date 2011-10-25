@@ -112,6 +112,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attacks\Magic.cs" />
     <Compile Include="Characters\Mage.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Enemies\Beetle.cs" />
