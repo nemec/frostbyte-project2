@@ -25,6 +25,20 @@ namespace Frostbyte
 
         public Type EnemyType { get; set; }
 
+#else
+    //seen by other things
+    internal abstract partial class Enemy : OurSprite
+    {
+        /// <summary>
+        /// Turns the object into a line of xml
+        /// </summary>
+        /// <returns>XML representing the object</returns>
+        //internal virtual XElement ToXML()
+        //{
+        //    return  new XElement("Enemy");
+        //}
+#endif
+        //seen by both
         /// <summary>
         /// Turns the object into a line of xml
         /// </summary>
@@ -40,21 +54,6 @@ namespace Frostbyte
             //add other data about this type of enemy here
             return e;
         }
-#else
-    //seen by other things
-    internal abstract partial class Enemy : OurSprite
-    {
-        /// <summary>
-        /// Turns the object into a line of xml
-        /// </summary>
-        /// <returns>XML representing the object</returns>
-        internal virtual XElement ToXML()
-        {
-            return  new XElement("Enemy");
-        }
-#endif
-        //seen by both
-
         
     }
 }
