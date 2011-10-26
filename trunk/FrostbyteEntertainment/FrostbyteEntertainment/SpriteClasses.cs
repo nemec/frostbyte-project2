@@ -129,12 +129,6 @@ namespace Frostbyte
                         previousFootPos = closestIntersection + 0.2f * normal;
                         footPos = newFootPos + 0.2f * normal;
 
-                        //fix floating point discrepancy
-                        //previousFootPos.X = (float)Math.Round(previousFootPos.X, 0);
-                        //previousFootPos.Y = (float)Math.Round(previousFootPos.Y, 0);
-                        //footPos.X = (float)Math.Round(footPos.X, 0);
-                        //footPos.Y = (float)Math.Round(footPos.Y, 0);
-
                         isMoved = true;
                     }
                     else
@@ -204,7 +198,7 @@ namespace Frostbyte
 
                     float tileStartPosX = 0;
                     float tileStartPosY = 0;
-                    if (tile.GridCell != null)
+                    if (tile.GridCell != null)  //protect collision from tileMap code
                     {
                         tileStartPosX = tile.GridCell.Pos.X;
                         tileStartPosY = tile.GridCell.Pos.Y;
