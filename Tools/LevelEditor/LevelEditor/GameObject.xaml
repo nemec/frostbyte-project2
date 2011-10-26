@@ -18,6 +18,5 @@
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding Name}" Visibility="{Binding InMenu, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <Image Grid.Row="1" x:Name="TileImage" Source="{Binding Type, Converter={StaticResource TileConverter}, FallbackValue=error.png}" RenderTransform="{Binding Orientation, Converter={StaticResource TransformConverter}}" RenderTransformOrigin="0.5,0.5" ToolTip="{Binding Name, FallbackValue=Name}"/>
-		
     </Grid>
 </UserControl>
