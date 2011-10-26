@@ -259,7 +259,7 @@ namespace LevelEditor
                 }
             };
 
-            
+
             Objects.ItemsSource = stuff;
             Grid_Size = new Vector(100, 100);
             GridSize.DataContext = this;
@@ -567,9 +567,9 @@ namespace LevelEditor
                 {
                     obj = new GameObject("golem.png")
                     {
-                        InMenu=false,
+                        InMenu = false,
                         Object = Golem.Parse(e),
-                        Type=typeof(Golem),
+                        Type = typeof(Golem),
                     };
                 }
                 else if (e.Attribute("Type").Value == "Frostbyte.Enemies.Beetle")
@@ -753,8 +753,8 @@ namespace LevelEditor
                 Canvas.SetLeft(obj, p.X);
                 OtherThings.Children.Add(obj);
 
-                EditFrame ef =new EditFrame() { DataContext = obj };
-                GridCell=GetCell(p);
+                EditFrame ef = new EditFrame() { DataContext = obj };
+                GridCell = GetCell(p);
                 //set the cell
                 //int y = (int)GridCell.Y;
                 //int x = (int)GridCell.X;
@@ -764,11 +764,11 @@ namespace LevelEditor
                 //Grid.SetRow(ef, GridCell.Y);
                 Canvas.SetTop(ef, p.Y);
                 Canvas.SetLeft(ef, p.X);
-                
+
                 //pop up an edit frame for it
                 OtherThings.Children.Add(ef);
 
-               
+
 
 
                 ClearSelection();
@@ -867,12 +867,13 @@ namespace LevelEditor
                 {
                     doc.Root.Add(l.ToXML());
                 }
-                foreach(var o in OtherThings.Children){
+                foreach (var o in OtherThings.Children)
+                {
                     if (o is GameObject)
                     {
                         Enemy go = (o as GameObject).Object;
                         doc.Root.Add(go.ToXML());
-                        
+
                     }
                 }
                 TileMap.Save(d.FileName, doc);
