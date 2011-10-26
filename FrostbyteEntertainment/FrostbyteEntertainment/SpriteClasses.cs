@@ -194,8 +194,13 @@ namespace Frostbyte
                     Tile tile;
                     tileMap.TryGetValue(x, y, out tile);
 
-                    float tileStartPosX = tile.GridCell.Pos.X;
-                    float tileStartPosY = tile.GridCell.Pos.Y;
+                    float tileStartPosX = 0;
+                    float tileStartPosY = 0;
+                    if (tile.GridCell != null)
+                    {
+                        tileStartPosX = tile.GridCell.Pos.X;
+                        tileStartPosY = tile.GridCell.Pos.Y;
+                    }
 
                     #region Add Tile Boundary Line Segments and Circles to Appropriate Lists
                     switch (tile.Type)
