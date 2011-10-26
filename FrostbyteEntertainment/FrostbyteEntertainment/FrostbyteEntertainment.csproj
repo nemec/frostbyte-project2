@@ -364,6 +364,54 @@
       <Link>Content\Sprites\shield_opaque.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-diagdown.anim">
+      <Link>Content\Sprites\wasp-attack-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-diagup.anim">
+      <Link>Content\Sprites\wasp-attack-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-down.anim">
+      <Link>Content\Sprites\wasp-attack-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-right.anim">
+      <Link>Content\Sprites\wasp-attack-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-up.anim">
+      <Link>Content\Sprites\wasp-attack-up.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack.png.spsh">
+      <Link>Content\Sprites\wasp-attack.png.spsh</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-idle-diagdown.anim">
+      <Link>Content\Sprites\wasp-idle-diagdown.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-idle-diagup.anim">
+      <Link>Content\Sprites\wasp-idle-diagup.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-idle-down.anim">
+      <Link>Content\Sprites\wasp-idle-down.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-idle-right.anim">
+      <Link>Content\Sprites\wasp-idle-right.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-idle-up.anim">
+      <Link>Content\Sprites\wasp-idle-up.anim</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-idle.png.spsh">
+      <Link>Content\Sprites\wasp-idle.png.spsh</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\FrostbyteEntertainmentContent\Textures\Earth.spsh">
       <Link>Content\Textures\Earth.spsh</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

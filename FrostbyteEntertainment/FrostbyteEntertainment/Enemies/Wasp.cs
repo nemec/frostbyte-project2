@@ -15,7 +15,21 @@ namespace Frostbyte.Enemies
         TimeSpan idleTime = new TimeSpan(0, 0, 2);
 
         static List<Animation> Animations = new List<Animation>(){
-            This.Game.CurrentLevel.GetAnimation("antibody.anim")
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-down.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-right.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-diagup.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-up.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-down.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-right.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-diagup.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-idle-up.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-attack-down.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-attack-diagdown.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-attack-right.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-attack-diagup.anim"),
+            This.Game.CurrentLevel.GetAnimation("wasp-attack-up.anim"),
         };
 
         #endregion Variables

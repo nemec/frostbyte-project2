@@ -167,7 +167,6 @@ namespace AnimationEditor
         public void ImportSpriteSheet(Object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog loadAnimDialog = new OpenFileDialog();
-            loadAnimDialog.InitialDirectory = @"C:\Users\Ivan Lloyd\Dropbox\GameDesign\BodilyInfection\BodilyInfection\BodilyInfectionContent\Sprites";
             loadAnimDialog.Title = "Select image file to load.";
             loadAnimDialog.Multiselect = true;
             loadAnimDialog.Filter = "Image Files(*.spsh)|*.spsh|All files (*.*)|*.*";
@@ -262,7 +261,6 @@ namespace AnimationEditor
                         if (spritesheetfile != safename)
                         {
                             OpenFileDialog ofd = new OpenFileDialog();
-                            ofd.InitialDirectory = @"C:\Users\Ivan Lloyd\Dropbox\GameDesign\BodilyInfection\BodilyInfection\BodilyInfectionContent\Sprites";
                             ofd.Title = string.Format("Select Spritesheet for \"{0}\"", filename);
                             ofd.Multiselect = true;
                             ofd.Filter = "Image Files(*.BMP;*PNG;*.JPG;*.GIF)|*.BMP;*.PNG;*.JPG;*.GIF|All files (*.*)|*.*";
