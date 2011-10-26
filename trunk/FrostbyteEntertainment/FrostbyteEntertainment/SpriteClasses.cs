@@ -105,11 +105,12 @@ namespace Frostbyte
             bool isMoved = false;
 
 
-            while (footPos != previousFootPos)
+            while (Vector2.DistanceSquared(footPos,previousFootPos) > 1.1f)//(footPos != previousFootPos)
             {
                 detectBackgroundCollisions(footPos, previousFootPos, out closestObject, out closestIntersection);
 
-
+                if (closestIntersection == positiveInfinity)
+                    break;
 
                 if (closestObject.Item2 == positiveInfinity && closestObject.Item1 != positiveInfinity) //this is for a circle
                 {
@@ -125,8 +126,15 @@ namespace Frostbyte
                     {
                         Vector2 normal = new Vector2(-A1.X, -A1.Y);
                         normal.Normalize();
-                        previousFootPos = closestIntersection + 0.0001f * normal;
-                        footPos = newFootPos + 0.0001f * normal;
+                        previousFootPos = closestIntersection + 0.2f * normal;
+                        footPos = newFootPos + 0.2f * normal;
+
+                        //fix floating point discrepancy
+                        //previousFootPos.X = (float)Math.Round(previousFootPos.X, 0);
+                        //previousFootPos.Y = (float)Math.Round(previousFootPos.Y, 0);
+                        //footPos.X = (float)Math.Round(footPos.X, 0);
+                        //footPos.Y = (float)Math.Round(footPos.Y, 0);
+
                         isMoved = true;
                     }
                     else
@@ -152,8 +160,8 @@ namespace Frostbyte
                         Vector2 tangent = closestObject.Item1 - closestObject.Item2;
                         Vector2 normal = new Vector2(-tangent.Y, tangent.X);
                         normal.Normalize();
-                        previousFootPos = closestIntersection + .0001f * normal;
-                        footPos = newFootPos + .0001f * normal;
+                        previousFootPos = closestIntersection + .2f * normal;
+                        footPos = newFootPos + .2f * normal;
                         isMoved = true;
                     }
                     else
