@@ -22,7 +22,7 @@ namespace Frostbyte.Characters
         public Mage(string name, Actor actor)
             : this(name, actor, PlayerIndex.One)
         {
-
+            CollidesWithBackground = true;
         }
 
         internal Mage(string name, Actor actor, PlayerIndex input)
@@ -36,6 +36,7 @@ namespace Frostbyte.Characters
             sortType = new DistanceSort(this);
 
             UpdateBehavior = mUpdate;
+            CollidesWithBackground = true;
         }
         #endregion
 
