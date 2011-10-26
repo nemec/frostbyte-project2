@@ -23,8 +23,6 @@ namespace Frostbyte
         /// </summary>
         public Index2D Pos = new Index2D();
 
-        public Type EnemyType { get; set; }
-
 #else
     //seen by other things
     internal abstract partial class Enemy : OurSprite
@@ -38,6 +36,8 @@ namespace Frostbyte
         //    return  new XElement("Enemy");
         //}
 #endif
+        public Type EnemyType { get; set; }
+
         //seen by both
         /// <summary>
         /// Turns the object into a line of xml
