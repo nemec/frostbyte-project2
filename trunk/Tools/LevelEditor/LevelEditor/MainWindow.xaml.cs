@@ -104,7 +104,7 @@ namespace LevelEditor
                 },
                 new Tile(){
                     Name="Wall_Top",
-                    Traversable=true,
+                    Traversable=false,
                     Type=TileTypes.Wall,
                     Orientation = Orientations.Down,
                     Active=true
@@ -129,6 +129,14 @@ namespace LevelEditor
                     Name="Concave_Corner",
                     Traversable=false,
                     Type=TileTypes.Corner,
+                    Orientation=Orientations.Left,
+                    Active=true
+                },
+
+                new Tile(){
+                    Name="Bottom_Concave_Corner",
+                    Traversable=false,
+                    Type=TileTypes.BottomCorner,
                     Orientation=Orientations.Left,
                     Active=true
                 },
@@ -167,7 +175,7 @@ namespace LevelEditor
 
                 new Tile(){
                     Name="Rock",
-                    Traversable=false,
+                    Traversable=true,
                     Type=TileTypes.Stone,
                     Orientation=Orientations.Left,
                     Active=true
