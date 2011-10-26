@@ -9,7 +9,7 @@ namespace Frostbyte.Enemies
     internal partial class ElectricGolem : Golem
     {
         internal ElectricGolem(string name, float speed, int health, Vector2 initialPos)
-            : base(name, health, initialPos, speed)
+            : base(name, initialPos)
         {
             ElementType = Element.Lightning;
         }

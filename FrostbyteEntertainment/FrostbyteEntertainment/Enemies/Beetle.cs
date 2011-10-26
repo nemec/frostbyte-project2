@@ -35,8 +35,8 @@ namespace Frostbyte.Enemies
 
         #endregion Variables
 
-        internal Beetle(string name, int health, Vector2 initialPos, float speed)
-            : base(name, new Actor(Animations), speed, health)
+        internal Beetle(string name, Vector2 initialPos)
+            : base(name, new Actor(Animations), 1, 100)
         {
             Pos = initialPos;
             movementStartTime = new TimeSpan(0, 0, 1);

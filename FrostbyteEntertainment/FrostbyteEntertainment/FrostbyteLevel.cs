@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Xml.Linq;
+using Frostbyte.Enemies;
 
 namespace Frostbyte
 {
@@ -365,5 +367,26 @@ namespace Frostbyte
             }
         }
 
+
+        internal void Load(XDocument doc)
+        {
+            TileMap = new TileList(doc);
+            foreach (XElement elem in doc.Descendants("Enemy"))
+            {
+                string type = elem.Attribute("Type").Value;
+                if (type == "Frostbyte.Enemies.Golem")
+                {
+                    new Golem(elem.Attribute("Name").Value,Index2D.Parse(elem.Attribute("Pos").Value).Vector);
+                }
+                else if (type == "Frostbyte.Enemies.Beetle")
+                {
+                    new Beetle(elem.Attribute("Name").Value, Index2D.Parse(elem.Attribute("Pos").Value).Vector);
+                }
+                else if (type == "Frostbyte.Enemies.Wasp")
+                {
+                    new Wasp(elem.Attribute("Name").Value, Index2D.Parse(elem.Attribute("Pos").Value).Vector);
+                }
+            }
+        }
     }
 }

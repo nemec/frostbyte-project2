@@ -49,7 +49,7 @@ namespace Frostbyte.Enemies
             int health = int.Parse(e.Attribute("Health").Value);
             Index2D pos = Index2D.Parse(e.Attribute("Pos").Value);
             Microsoft.Xna.Framework.Vector2 initpos = new Microsoft.Xna.Framework.Vector2(pos.X, pos.Y);
-            Beetle b = new Beetle(name, health, initpos, 1);
+            Beetle b = new Beetle(name, initpos);
 #endif
             return b;
         }

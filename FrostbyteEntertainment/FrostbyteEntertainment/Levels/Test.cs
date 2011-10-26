@@ -19,7 +19,8 @@ namespace Frostbyte.Levels
             FrostbyteLevel l = (This.Game.CurrentLevel != This.Game.NextLevel && This.Game.NextLevel != null ? This.Game.NextLevel : This.Game.CurrentLevel) as FrostbyteLevel;
 
             //load the level
-            l.TileMap = new TileList(XDocument.Load(@"Content/Level1.xml"));
+            XDocument doc = XDocument.Load(@"Content/Level1.xml");
+            l.Load(doc);
 
             #region loadAnimations
             l.AddAnimation(new Animation("shield_opaque.anim"));
@@ -41,14 +42,14 @@ namespace Frostbyte.Levels
             l.AddAnimation(new Animation("beetle-walk-diagdown.anim"));
             #endregion loadAnimations
 
-            #region Load us some enemies
+            //#region Load us some enemies
 
-            Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", 1000, new Vector2(100, 150), 0.5f);
-            Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", 50, new Vector2(1000, 500), 1.0f);
-            Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", 10, new Vector2(1000, 400), 0.5f);
-            //beetle.Speed = 1;
+            //Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", new Vector2(100, 150));
+            //Frostbyte.Enemies.Wasp wasp = new Frostbyte.Enemies.Wasp("Wasp", new Vector2(1000, 500));
+            //Frostbyte.Enemies.Beetle beetle = new Frostbyte.Enemies.Beetle("Beetle", new Vector2(1000, 400));
+            ////beetle.Speed = 1;
             
-            #endregion Load us some enemies
+            //#endregion Load us some enemies
 
 
             //LevelFunctions.Spawn(delegate()
@@ -115,7 +116,7 @@ namespace Frostbyte.Levels
             emitter4.Static = true;*/
             #endregion particles
 
-            Beetle b = new Beetle("asdf", 100, new Vector2(10, 10), 1);
+            Beetle b = new Beetle("asdf", new Vector2(10, 10));
             b.Orientation = Orientations.Right;
         }
 
