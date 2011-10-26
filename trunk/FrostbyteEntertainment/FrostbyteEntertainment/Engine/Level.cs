@@ -175,7 +175,12 @@ namespace Frostbyte
                 }
                 foreach (var item in ToRemove)
                 {
-                    mWorldObjects.Remove(item);
+                    // Try to remove from mWorldObjects,
+                    // if failed see if it's currently pending add
+                    if (!mWorldObjects.Remove(item))
+                    {
+                        ToAdd.Remove(item);
+                    }
                 }
                 ToRemove.Clear();
                 foreach (var item in ToAdd)

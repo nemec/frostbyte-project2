@@ -18,6 +18,11 @@ namespace Frostbyte
         {
             (This.Game.CurrentLevel as FrostbyteLevel).allies.Add(this);
             Mana = MaxMana;
+
+            MaxHealth = 100;
+            Health = MaxHealth;
+
+            ItemBag = new List<Item>();
         }
 
         internal int MaxMana { get { return 100; } }
@@ -40,6 +45,25 @@ namespace Frostbyte
                 ManaChanged(this, mMana);
             }
         }
+
+        internal int ItemBagCapacity { get { return 10; } }
+        internal List<Item> ItemBag;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="i"></param>
+        /// <returns>Returns true if the item was picked up, false if not.</returns>
+        protected bool PickUpItem(Item i)
+        {
+            if (ItemBag.Count < ItemBagCapacity)
+            {
+                This.Game.CurrentLevel.RemoveSprite(i);
+                ItemBag.Add(i);
+                return true;
+            }
+            return false;
+        }
     }
 
     internal abstract class Obstacle : OurSprite
@@ -54,10 +78,16 @@ namespace Frostbyte
     internal abstract partial class OurSprite : Sprite
     {
         internal OurSprite(string name, Actor actor)
-            : base(name, actor) { }
+            : base(name, actor)
+        {
+            Health = MaxHealth;
+        }
 
         internal OurSprite(string name, Actor actor, int collisionlist)
-            : base(name, actor, collisionlist) { }
+            : base(name, actor, collisionlist)
+        {
+            Health = MaxHealth;
+        }
 
         #region Collision
         internal float groundCollisionRadius = 18f;

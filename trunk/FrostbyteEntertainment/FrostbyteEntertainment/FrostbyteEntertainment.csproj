@@ -138,6 +138,7 @@
     <Compile Include="Engine\ProgressBar.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="HUD.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Levels\Nemec.cs" />
     <Compile Include="Personality.cs" />
     <Compile Include="Shared\Beetle.cs" />
