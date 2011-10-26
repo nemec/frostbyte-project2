@@ -220,7 +220,7 @@ namespace Frostbyte
                         Scale,
                         Hflip ?
                             Vflip ?
-                                SpriteEffects.FlipHorizontally & SpriteEffects.FlipVertically
+                                SpriteEffects.FlipHorizontally | SpriteEffects.FlipVertically
                                 : SpriteEffects.FlipHorizontally
                             :
                             Vflip ?
