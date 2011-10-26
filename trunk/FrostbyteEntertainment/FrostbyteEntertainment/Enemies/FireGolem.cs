@@ -9,7 +9,7 @@ namespace Frostbyte.Enemies
     internal partial class FireGolem : Golem
     {
         internal FireGolem(string name, float speed, int health, Vector2 initialPos)
-            : base(name, health, initialPos, speed)
+            : base(name, initialPos)
         {
             ElementType = Element.Fire;
         }

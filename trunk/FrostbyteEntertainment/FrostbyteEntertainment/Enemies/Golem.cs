@@ -34,8 +34,8 @@ namespace Frostbyte.Enemies
 
         #endregion Variables
 
-        internal Golem(string name, int health, Vector2 initialPos, float speed)
-            : base(name, new Actor(Animations), speed, health)
+        internal Golem(string name, Vector2 initialPos)
+            : base(name, new Actor(Animations), 1, 1000)
         {
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new DontGetNearMePersonality(this);

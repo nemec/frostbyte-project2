@@ -980,4 +980,7 @@
   <Tile Type="Bottom" Collision="false" Theme="Earth" Orientation="Right" GridCell="42,37" />
   <Tile Type="Bottom" Collision="false" Theme="Earth" Orientation="Right" GridCell="43,37" />
   <Tile Type="BottomCorner" Collision="true" Theme="Earth" Orientation="Right" GridCell="44,37" />
+  <Enemy Type="Frostbyte.Enemies.Beetle" Name="Beetle" Speed="1" Health="100" Pos="243,340" />
+  <Enemy Type="Frostbyte.Enemies.Golem" Name="Golem" Speed="1" Health="100" Pos="2417,986" />
+  <Enemy Type="Frostbyte.Enemies.Wasp" Name="Wasp" Speed="1" Health="100" Pos="2436,589" />
 </Level>

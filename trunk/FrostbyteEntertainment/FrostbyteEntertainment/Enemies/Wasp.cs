@@ -20,8 +20,8 @@ namespace Frostbyte.Enemies
 
         #endregion Variables
 
-        internal Wasp(string name, int health, Vector2 initialPos, float speed)
-            : base(name, new Actor(Animations), speed, health)
+        internal Wasp(string name, Vector2 initialPos)
+            : base(name, new Actor(Animations), 1, 100)
         {
             Pos = initialPos;
             movementStartTime = new TimeSpan(0, 0, 1);
