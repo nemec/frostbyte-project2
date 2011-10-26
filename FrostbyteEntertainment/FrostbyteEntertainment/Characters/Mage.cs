@@ -123,7 +123,18 @@ namespace Frostbyte.Characters
             }
             if (controller.Sword > 0)
             {
-
+                if (ItemBag.Count > 0)
+                {
+                    ItemBag.RemoveAt(0);
+                }
+                return;
+            }
+            if (controller.Interact == ReleasableButtonState.Clicked)
+            {
+                Item i = new Item("i",
+                    new Actor(This.Game.CurrentLevel.GetAnimation("antibody.anim")),
+                    new Actor(new DummyAnimation()));
+                PickUpItem(i);
                 return;
             }
         }

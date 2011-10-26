@@ -72,14 +72,17 @@ namespace Frostbyte
         {
             internal PlayerHUD(HUDTheme theme, Player p, int xOffset, int yOffset)
             {
+                #region Name
                 Text name = new Text("player_name_" + p.Name, "Text", p.Name);
                 name.DisplayColor = theme.TextColor;
                 name.Pos = new Vector2(xOffset, yOffset);
                 name.Static = true;
+                #endregion
 
+                #region HealthBar
                 healthBar = new ProgressBar("Health_" + p.Name, p.MaxHealth,
                     Color.MidnightBlue, Color.Blue, Color.Black, barSize);
-                healthBar.Pos = new Vector2(xOffset, yOffset + name.GetAnimation().Height);
+                healthBar.Pos = new Vector2(xOffset, name.Pos.Y + name.GetAnimation().Height);
                 healthBar.Static = true;
                 healthBar.Value = p.MaxHealth;
 
@@ -87,11 +90,13 @@ namespace Frostbyte
                 {
                     healthBar.Value = value;
                 };
-                
+                #endregion
+
+                #region ManaBar
                 manaBar = new ProgressBar("Mana_" + p.Name, p.MaxMana,
                     Color.DarkRed, Color.Firebrick, Color.Black, barSize);
                 manaBar.Pos = new Vector2(xOffset,
-                    yOffset + name.GetAnimation().Height + barSize.Y + barSpacing.Y);
+                    healthBar.Pos.Y + barSize.Y + barSpacing.Y);
                 manaBar.Static = true;
                 manaBar.Value = p.MaxMana;
 
@@ -99,6 +104,14 @@ namespace Frostbyte
                 {
                     manaBar.Value = value;
                 };
+                #endregion
+
+                #region ItemBag
+                items = new ItemArea("Items_" + p.Name, theme, p.ItemBag);
+                items.Pos = new Vector2(xOffset,
+                    manaBar.Pos.Y + barSize.Y + barSpacing.Y);
+                items.Static = true;
+                #endregion
             }
 
             ~PlayerHUD()
@@ -110,6 +123,7 @@ namespace Frostbyte
             #region Variables
             internal ProgressBar healthBar;
             internal ProgressBar manaBar;
+            internal ItemArea items;
 
 
             internal int Health
@@ -227,6 +241,57 @@ namespace Frostbyte
                             (int)Pos.Y,
                             (int)GetAnimation().Width,
                             (int)GetAnimation().Height), Color.White);
+                }
+            }
+        }
+
+        private class ItemArea : Sprite
+        {
+            internal ItemArea(string name, HUDTheme theme, List<Item> ItemBag)
+                : base(name, new Actor(new DummyAnimation(name,
+                    (int)HUD.barSize.X, (int)HUD.barSize.Y * 2)))
+            {
+                ZOrder = 100;
+                this.theme = theme;
+                background = new Texture2D(This.Game.GraphicsDevice, 1, 1);
+                Color transp = Color.Black;
+                transp.A = alpha;
+                background.SetData(new Color[] { transp });
+
+                this.ItemBag = ItemBag;
+            }
+
+            private byte alpha = 90;
+            private HUDTheme theme;
+            private Texture2D background;
+
+            private static Vector2 itemSpacing = new Vector2(3, 2);
+            private static int itemsPerRow = 5;
+
+            private List<Item> ItemBag;
+
+            internal override void Draw(GameTime gameTime)
+            {
+                base.Draw(gameTime);
+                
+                This.Game.spriteBatch.Draw(background, new Rectangle(
+                        (int)Pos.X,
+                        (int)Pos.Y,
+                        (int)GetAnimation().Width,
+                        (int)GetAnimation().Height), Color.White);
+
+                if (ItemBag.Count > 0)
+                {
+                    for (int x = 0; x < ItemBag.Count; x++)
+                    {
+                        Sprite icon = ItemBag[x].Icon;
+                        icon.Pos.X = Pos.X + itemSpacing.X + 1 +  // Initial alignment of 1px
+                            (x % itemsPerRow) * (ItemBag[x].GetAnimation().Width + itemSpacing.X);
+                        icon.Pos.Y = Pos.Y + itemSpacing.Y +
+                            (x / itemsPerRow) * (ItemBag[x].GetAnimation().Height + itemSpacing.Y);
+                        icon.Visible = true;
+                        icon.Draw(gameTime);
+                    }
                 }
             }
         }

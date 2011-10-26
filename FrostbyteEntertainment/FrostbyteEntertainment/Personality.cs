@@ -184,7 +184,7 @@ namespace Frostbyte
 
     internal class CowardlyPersonality : IPersonality
     {
-         public EnemyStatus Status { get; set; }
+        public EnemyStatus Status { get; set; }
         private Enemy master;
         private IEnumerator mStates;
 
