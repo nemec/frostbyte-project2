@@ -8,17 +8,17 @@ namespace Frostbyte.Enemies
 {
     internal partial class Golem : Frostbyte.Enemy
     {
-        internal override XElement ToXML()
-        {
-            XElement e = new XElement("Enemy");
-            e.SetAttributeValue("Type", this.GetType().ToString());
-            e.SetAttributeValue("Name", Name);
-            e.SetAttributeValue("Speed", Speed);
-            e.SetAttributeValue("Health", Health);
-            e.SetAttributeValue("Pos", Pos);
-            //add other data about this type of enemy here
-            return e;
-        }
+        //internal override XElement ToXML()
+        //{
+        //    XElement e = new XElement("Enemy");
+        //    e.SetAttributeValue("Type", this.GetType().ToString());
+        //    e.SetAttributeValue("Name", Name);
+        //    e.SetAttributeValue("Speed", Speed);
+        //    e.SetAttributeValue("Health", Health);
+        //    e.SetAttributeValue("Pos", Pos);
+        //    //add other data about this type of enemy here
+        //    return e;
+        //}
 
         internal static Golem Parse(XElement e)
         {
