@@ -53,9 +53,7 @@ namespace Frostbyte
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             float[] transitionDistances = new float[1] { 50f };
-            bool isActing = true;
-
-            while (isActing)
+            while (true)
             {
                 while (!EnemyAI.wander(master, targets, TimeSpan.MaxValue, transitionDistances[0], (float)Math.PI / 8))
                 {
@@ -65,7 +63,8 @@ namespace Frostbyte
                 {
                     yield return null;
                 }
-                isActing = false;
+
+                yield return null;
             }
         }
     }
@@ -91,8 +90,7 @@ namespace Frostbyte
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
             float[] distances = new float[3] { 1000f, 150f, 100f };
-            bool isActing = true;
-            while (isActing)
+            while (true)
             {
                 while (!master.stealthCharge(targets, TimeSpan.MaxValue, distances[1], distances[0], 1f))
                 {
@@ -107,7 +105,7 @@ namespace Frostbyte
                     yield return null;
                 }
 
-                isActing = false;
+                yield return null;
             }
         }
     }
@@ -132,8 +130,7 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
-            bool isActing = true;
-            while (isActing)
+            while (true)
             {
                 if ( !master.charge(targets, 200.0f, 3.0f) )
                 {
@@ -145,7 +142,7 @@ namespace Frostbyte
                     yield return null;
                 }
 
-                isActing = false;
+                yield return null;
             }
         }
     }
@@ -170,12 +167,11 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
-            bool isActing = true;
-            while (isActing)
+            while (true)
             {
                 TimeSpan snapshot = This.gameTime.TotalGameTime;
                 //master.Personality.Status = EnemyStatus.Wander;
-                while (!master.dart(targets, 5.0f, 400))
+                while (!master.dart(targets, 8.0f, 400) && Vector2.Distance(this.master.CenterPos, this.master.GetClosestTarget(targets).CenterPos) < 500)
                 {   
                     yield return null;
                 }
@@ -186,7 +182,7 @@ namespace Frostbyte
                     yield return null;
                 }
 
-                isActing = false;
+                yield return null;
             }
 
             //}
@@ -213,9 +209,8 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
-            float[] distances = new float[3] { 1000f, 150f, 100f };
-            bool isActing = true;
-            while (isActing)
+            float[] distances = new float[3] { 500f, 150f, 100f };
+            while (true)
             {
                 while (!master.charge(targets, distances[0], 5f) && Vector2.Distance(this.master.CenterPos, this.master.GetClosestTarget(targets).CenterPos) > 20)
                 {
@@ -229,7 +224,7 @@ namespace Frostbyte
                 //{
                 //    yield return null;
                 //}
-                isActing = false;
+                yield return null;
             }
         }
     }
