@@ -77,6 +77,7 @@ namespace Frostbyte
 
     internal abstract partial class OurSprite : Sprite
     {
+
         internal OurSprite(string name, Actor actor)
             : base(name, actor)
         {
@@ -104,8 +105,14 @@ namespace Frostbyte
             Vector2 footPos = this.GroundPos;
             bool isMoved = false;
 
+            //This takes care of the controller moving too slow
+            if (Vector2.DistanceSquared(footPos, previousFootPos) <= 0.1f)
+            {
+                footPos = previousFootPos;
+                isMoved = true;
+            }
 
-            while (Vector2.DistanceSquared(footPos,previousFootPos) > 1.1f)//(footPos != previousFootPos)
+            while (Vector2.DistanceSquared(footPos,previousFootPos) > 0.1f)//(footPos != previousFootPos)
             {
                 detectBackgroundCollisions(footPos, previousFootPos, out closestObject, out closestIntersection);
 
