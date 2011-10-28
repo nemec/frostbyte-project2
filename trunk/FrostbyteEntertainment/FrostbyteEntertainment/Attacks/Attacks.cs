@@ -85,7 +85,7 @@ namespace Frostbyte
 
             while (attacker.Frame <= FrameCount - 2)
             {
-                if (attacker.Frame == attackFrame && Vector2.DistanceSquared(target.GroundPos, attacker.GroundPos) < attacker.AttackRange * attacker.AttackRange && !hasAttacked)
+                if (attacker.Frame == attackFrame && Vector2.DistanceSquared(target.GroundPos, attacker.GroundPos) < attacker.AttackRange * attacker.AttackRange + 50*50 && !hasAttacked)
                 {
                     target.Health -= baseDamage;
                     hasAttacked = true;

@@ -212,7 +212,7 @@ namespace Frostbyte
             float[] distances = new float[3] { 500f, 150f, 100f };
             while (true)
             {
-                while (!master.charge(targets, distances[0], 5f) && Vector2.Distance(this.master.GroundPos, this.master.GetClosestTarget(targets).GroundPos) > 20 && master.isAttackingAllowed)
+                while (!master.charge(targets, distances[0], 5f) && master.isAttackingAllowed)
                 {
                     yield return null;
                 }
