@@ -100,11 +100,14 @@ namespace Frostbyte
             {
                 mTiles.Add(new List<Tile>());
             }
-            foreach (var row in mTiles)
+            for (int ypos = 0, yCount = mTiles.Count; ypos < yCount; ypos++)
+            {
+                List<Tile> row = mTiles[ypos];
                 while (row.Count < gridwidth + 1)
                 {
-                    row.Add(new Tile());
+                    row.Add(new Tile() { GridCell = new Index2D(row.Count, ypos) });
                 }
+            }
             Remove(t);
             mTiles[y][x] = t;
             return true;
