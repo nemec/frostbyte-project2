@@ -22,26 +22,6 @@ namespace Frostbyte.Levels
             XDocument doc = XDocument.Load(@"Content/Level1.xml");
             l.Load(doc);
 
-            #region loadAnimations
-            l.AddAnimation(new Animation("shield_opaque.anim"));
-            l.AddAnimation(new Animation("antibody.anim"));
-            l.AddAnimation(new Animation("golem-idle-down.anim"));
-            l.AddAnimation(new Animation("golem-idle-right.anim"));
-            l.AddAnimation(new Animation("golem-idle-up.anim"));
-            l.AddAnimation(new Animation("golem-idle-diagup.anim"));
-            l.AddAnimation(new Animation("golem-idle-diagdown.anim"));
-            l.AddAnimation(new Animation("beetle-idle-down.anim"));
-            l.AddAnimation(new Animation("beetle-idle-right.anim"));
-            l.AddAnimation(new Animation("beetle-idle-up.anim"));
-            l.AddAnimation(new Animation("beetle-idle-diagup.anim"));
-            l.AddAnimation(new Animation("beetle-idle-diagdown.anim"));
-            l.AddAnimation(new Animation("beetle-walk-down.anim"));
-            l.AddAnimation(new Animation("beetle-walk-right.anim"));
-            l.AddAnimation(new Animation("beetle-walk-up.anim"));
-            l.AddAnimation(new Animation("beetle-walk-diagup.anim"));
-            l.AddAnimation(new Animation("beetle-walk-diagdown.anim"));
-            #endregion loadAnimations
-
             //#region Load us some enemies
 
             //Frostbyte.Enemies.Golem golem = new Frostbyte.Enemies.Golem("Golem", new Vector2(100, 150));
