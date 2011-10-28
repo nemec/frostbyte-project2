@@ -84,7 +84,7 @@ namespace Frostbyte.Enemies
                     //set orientation
                     this.Direction = target.GroundPos - this.GroundPos;
 
-                    mAttack = Attacks.EarthT1(target, this, 50, 30, Element.Lightning).GetEnumerator();
+                    mAttack = Attacks.EarthT1(target, this, 5, 30, Element.Lightning).GetEnumerator();
                 }
             }
         }
