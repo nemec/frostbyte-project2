@@ -40,7 +40,7 @@ namespace Frostbyte.Enemies
         internal Wasp(string name, Vector2 initialPos)
             : base(name, new Actor(Animations), 1, 100)
         {
-            Pos = initialPos;
+            GroundPos = initialPos;
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new DartPersonality(this);
             ElementType = Element.Normal;
