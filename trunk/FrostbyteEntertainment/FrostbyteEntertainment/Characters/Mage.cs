@@ -143,12 +143,6 @@ namespace Frostbyte.Characters
         {
             controller.Update();
 
-            if (Health == 100)
-            {
-                Health = 0;
-            }
-            Health++;
-            
             if (currentTarget != null && !currentTarget.Visible)
             {
                 cancelTarget();

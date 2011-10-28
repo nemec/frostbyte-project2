@@ -75,7 +75,7 @@ namespace Frostbyte.Enemies
                     {
                         isAttacking = true;
                         isAttackingAllowed = false;
-                        mAttack = Attacks.Melee(target, this, 50, 15).GetEnumerator();
+                        mAttack = Attacks.Melee(target, this, 5, 15).GetEnumerator();
                     }
                 }
             }

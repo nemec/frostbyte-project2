@@ -77,6 +77,7 @@ namespace Frostbyte
             int baseDamage = _baseDamage;
             int attackFrame = _attackFrame;
             int FrameCount = setAttackAnimation(attacker);
+            bool hasAttacked = false;
 
             attacker.Rewind();
 
@@ -84,9 +85,10 @@ namespace Frostbyte
 
             while (attacker.Frame <= FrameCount - 2)
             {
-                if (attacker.Frame == attackFrame && Vector2.DistanceSquared(target.GroundPos, attacker.GroundPos) < attacker.AttackRange * attacker.AttackRange)
+                if (attacker.Frame == attackFrame && Vector2.DistanceSquared(target.GroundPos, attacker.GroundPos) < attacker.AttackRange * attacker.AttackRange && !hasAttacked)
                 {
                     target.Health -= baseDamage;
+                    hasAttacked = true;
                 }
 
                 yield return false;
@@ -113,6 +115,7 @@ namespace Frostbyte
             Element weakness = _weakness;
             int FrameCount = setAttackAnimation(attacker);
             TimeSpan attackStartTime = This.gameTime.TotalGameTime;
+            Vector2 direction = new Vector2();
             #endregion Variables (Do not Change)
 
             #region Variables (Change)
@@ -134,6 +137,8 @@ namespace Frostbyte
                 if (attacker.Frame == attackFrame)
                 {
                     attackStartTime = This.gameTime.TotalGameTime;
+                    direction = target.GroundPos - attacker.particleEmitter.CenterPos;
+                    direction.Normalize();
                     break;
                 }
 
@@ -152,8 +157,7 @@ namespace Frostbyte
                 if (attacker.Frame >= FrameCount - 2)
                     attacker.isMovingAllowed = true;
 
-                Vector2 direction = target.GroundPos - attacker.particleEmitter.CenterPos;
-                direction.Normalize();
+                
                 attacker.particleEmitter.CenterPos += direction * projectileSpeed;
 
 
