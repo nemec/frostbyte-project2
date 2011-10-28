@@ -151,3 +151,71 @@ technique ChangePicAndFadeAtPercent
         PixelShader = compile ps_2_0 ChangePicAndFadeAtPercentPS();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//This is the struct that will be passed from the vertex shader to the pixel shader
+struct NoSpecialEffectVTP
+{
+    float4 Position     : POSITION;
+    float2 TexCoord     : TEXCOORD0;
+};
+
+//This is the vertex shader for NoSpecialEffect
+//This function takes a position and normal from the application
+NoSpecialEffectVTP NoSpecialEffectVS( float3 inPos : POSITION,
+                                      float3 inVel : TEXCOORD0,
+									  float3 inAcc : TEXCOORD1,
+									  float2 inTex : TEXCOORD2,
+									  float startTime: TEXCOORD3,
+									  float timeToLive: TEXCOORD4)
+{
+	//initilize output object
+    NoSpecialEffectVTP Output = (NoSpecialEffectVTP)0;
+    
+	//Time Since Creating of this Particle in Seconds
+	float deltaT = (xCurrentTime - startTime)/1000.0;
+
+	//Calculate Position
+	float3 newPos = inPos + inVel * deltaT + .5 * inAcc * deltaT * deltaT;
+    Output.Position = mul(float4(newPos,1), xWorldViewProjection);
+
+	Output.TexCoord = inTex;
+
+	return Output;
+}
+
+//This is the pixel shader for NoSpecialEffect
+//This function takes the interpolated output from the vertex shader 
+PixelToFrame NoSpecialEffectPS(NoSpecialEffectVTP PSIn)
+{
+	//initilize output object
+    PixelToFrame Output = (PixelToFrame)0;
+
+	//store color for outputing to the screen
+	Output.Color = tex2D(TextureSampler1, PSIn.TexCoord);
+
+    return Output;
+}
+
+
+technique NoSpecialEffect
+{
+    pass Pass0
+    {
+        VertexShader = compile vs_2_0 NoSpecialEffectVS();
+        PixelShader = compile ps_2_0 NoSpecialEffectPS();
+    }
+}

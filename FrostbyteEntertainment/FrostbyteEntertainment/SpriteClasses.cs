@@ -77,6 +77,12 @@ namespace Frostbyte
 
     internal abstract partial class OurSprite : Sprite
     {
+        #region Attacking Variables
+        public bool isAttackingAllowed = true;
+        public bool isMovingAllowed = true;
+        public int AttackRange = 0;
+        #endregion Attacking Variables
+
 
         internal OurSprite(string name, Actor actor)
             : base(name, actor)

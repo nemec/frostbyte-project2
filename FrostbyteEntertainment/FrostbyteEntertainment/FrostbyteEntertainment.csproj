@@ -112,6 +112,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attacks\Attacks.cs" />
     <Compile Include="Characters\Mage.cs" />
     <Compile Include="Controller.cs" />
     <Compile Include="Enemies\Beetle.cs" />
@@ -239,42 +240,52 @@
     <None Include="..\FrostbyteEntertainmentContent\Sprites\antibody.anim">
       <Link>Content\Sprites\antibody.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-diagdown.anim">
       <Link>Content\Sprites\beetle-attack-diagdown.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-diagup.anim">
       <Link>Content\Sprites\beetle-attack-diagup.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-down.anim">
       <Link>Content\Sprites\beetle-attack-down.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-right.anim">
       <Link>Content\Sprites\beetle-attack-right.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-attack-up.anim">
       <Link>Content\Sprites\beetle-attack-up.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagdown.anim">
       <Link>Content\Sprites\beetle-idle-diagdown.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-diagup.anim">
       <Link>Content\Sprites\beetle-idle-diagup.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-down.anim">
       <Link>Content\Sprites\beetle-idle-down.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-right.anim">
       <Link>Content\Sprites\beetle-idle-right.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\beetle-idle-up.anim">
       <Link>Content\Sprites\beetle-idle-up.anim</Link>
@@ -303,6 +314,7 @@
     <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-diagdown.anim">
       <Link>Content\Sprites\golem-attack-diagdown.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\golem-attack-diagup.anim">
       <Link>Content\Sprites\golem-attack-diagup.anim</Link>
@@ -367,6 +379,7 @@
     <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-diagdown.anim">
       <Link>Content\Sprites\wasp-attack-diagdown.anim</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="..\FrostbyteEntertainmentContent\Sprites\wasp-attack-diagup.anim">
       <Link>Content\Sprites\wasp-attack-diagup.anim</Link>
@@ -418,6 +431,7 @@
     </None>
     <None Include="Content\Sprites\boxen.anim">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Content\Sprites\boxen2.anim">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Frostbyte.Enemies
 {
@@ -13,6 +14,8 @@ namespace Frostbyte.Enemies
 
         bool changeState = false;
         TimeSpan idleTime = new TimeSpan(0, 0, 2);
+
+        private IEnumerator<bool> mAttack;
 
         static List<Animation> Animations = new List<Animation>(){
             This.Game.CurrentLevel.GetAnimation("wasp-idle-down.anim"),
@@ -56,12 +59,33 @@ namespace Frostbyte.Enemies
 
         protected override void updateAttack()
         {
-            float range = 100.0f;
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
-            Sprite target = GetClosestTarget(targets, range);
-            if (target != null)
+            if (isAttacking)
             {
-                // Attack!
+                mAttack.MoveNext();
+                isAttacking = !mAttack.Current;
+                particleEmitter.Update();
+            }
+            else if (isAttackingAllowed)
+            {
+                float range = 400.0f;
+                List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
+                Sprite target = GetClosestTarget(targets, range);
+                if (target != null)
+                {
+                    isAttacking = true;
+
+                    //Create Particle Emmiter
+                    Effect particleEffect = This.Game.CurrentLevel.GetEffect("ParticleSystem");
+                    Texture2D boulder = This.Game.Content.Load<Texture2D>("Textures/boulder");
+                    particleEmitter = new ParticleEmitter(1, particleEffect, boulder);
+                    particleEmitter.effectTechnique = "NoSpecialEffect";
+                    particleEmitter.blendState = BlendState.AlphaBlend;
+
+                    //set orientation
+                    this.Direction = target.GroundPos - this.GroundPos;
+
+                    mAttack = Attacks.EarthT1(target, this, 50, 30, Element.Lightning).GetEnumerator();
+                }
             }
         }
 

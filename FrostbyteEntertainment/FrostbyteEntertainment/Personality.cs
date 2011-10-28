@@ -171,7 +171,7 @@ namespace Frostbyte
             {
                 TimeSpan snapshot = This.gameTime.TotalGameTime;
                 //master.Personality.Status = EnemyStatus.Wander;
-                while (!master.dart(targets, 8.0f, 400) && Vector2.Distance(this.master.CenterPos, this.master.GetClosestTarget(targets).CenterPos) < 500)
+                while (!master.dart(targets, 8.0f, 400) && Vector2.Distance(this.master.GroundPos, this.master.GetClosestTarget(targets).GroundPos) < 500)
                 {   
                     yield return null;
                 }
@@ -212,7 +212,7 @@ namespace Frostbyte
             float[] distances = new float[3] { 500f, 150f, 100f };
             while (true)
             {
-                while (!master.charge(targets, distances[0], 5f) && Vector2.Distance(this.master.CenterPos, this.master.GetClosestTarget(targets).CenterPos) > 20)
+                while (!master.charge(targets, distances[0], 5f) && Vector2.Distance(this.master.GroundPos, this.master.GetClosestTarget(targets).GroundPos) > 20 && master.isAttackingAllowed)
                 {
                     yield return null;
                 }
@@ -220,10 +220,7 @@ namespace Frostbyte
                 {
                     yield return null;
                 }
-                //while (!master.charge(targets, distances[2], 2))
-                //{
-                //    yield return null;
-                //}
+                master.isAttackingAllowed = true;
                 yield return null;
             }
         }
@@ -250,9 +247,9 @@ namespace Frostbyte
             }
 
             float chargeSpeed = ths.Speed * speedMultiplier;
-            ths.Pos += ths.Direction * chargeSpeed;
+            ths.GroundPos += ths.Direction * chargeSpeed;
             //This must be set after because determining the animation is dependent on the new position ( I know it's not optimal but I'm not sure where to put it)
-            ths.Direction = min.CenterPos - ths.CenterPos;
+            ths.Direction = min.GroundPos - ths.GroundPos;
 
             return false;
         }
@@ -279,7 +276,7 @@ namespace Frostbyte
                 Sprite target = ths.GetClosestTarget(targets, aggroDistance);
                 if (target != null)
                 {
-                    ths.Direction = target.CenterPos - ths.CenterPos;
+                    ths.Direction = target.GroundPos - ths.GroundPos;
                     ths.Personality.Status = EnemyStatus.Ram;
                 }
             }
@@ -290,7 +287,7 @@ namespace Frostbyte
             {
                 if (duration == TimeSpan.MaxValue || This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.Pos += ths.Direction * ramSpeed;
+                    ths.GroundPos += ths.Direction * ramSpeed;
                 }
                 else
                 {
@@ -316,7 +313,7 @@ namespace Frostbyte
             if (target != null)
             {
                 ths.Personality.Status = EnemyStatus.Charge;
-                if (Vector2.DistanceSquared(target.CenterPos, ths.CenterPos) <= visibleDistance * visibleDistance)
+                if (Vector2.DistanceSquared(target.GroundPos, ths.GroundPos) <= visibleDistance * visibleDistance)
                 {
                     ths.Personality.Status = EnemyStatus.Wander;
                     ths.Visible = true;
@@ -334,8 +331,8 @@ namespace Frostbyte
             {
                 if (duration == TimeSpan.MaxValue || This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.Direction = target.CenterPos - ths.CenterPos;
-                    ths.Pos += ths.Direction * chargeSpeed;
+                    ths.Direction = target.GroundPos - ths.GroundPos;
+                    ths.GroundPos += ths.Direction * chargeSpeed;
                 }
                 else
                 {
@@ -363,7 +360,7 @@ namespace Frostbyte
             else
             {
                 target = ths.GetClosestTarget(targets);
-                if (target != null && (Vector2.DistanceSquared(target.CenterPos, ths.CenterPos) >
+                if (target != null && (Vector2.DistanceSquared(target.GroundPos, ths.GroundPos) >
                     (ignoreDistance * ignoreDistance))){
                         ths.Personality.Status = EnemyStatus.Wander;
                         return true;
@@ -407,8 +404,8 @@ namespace Frostbyte
             {
                 if (This.gameTime.TotalGameTime <= ths.movementStartTime + duration)
                 {
-                    ths.Direction = target.CenterPos - ths.CenterPos;
-                    ths.Pos -= ths.Direction * fleeSpeed;
+                    ths.Direction = target.GroundPos - ths.GroundPos;
+                    ths.GroundPos -= ths.Direction * fleeSpeed;
                 }
                 else
                 {
@@ -443,8 +440,8 @@ namespace Frostbyte
         /// </summary>
         internal static bool teaseRetreat(this Enemy ths, Vector2 P1Coord, Vector2 P2Coord, float aggroDistance, float safeDistance, float speedMultiplier)
         {
-            double distToP1 = Vector2.DistanceSquared(P1Coord, ths.CenterPos);
-            double distToP2 = Vector2.DistanceSquared(P2Coord, ths.CenterPos);
+            double distToP1 = Vector2.DistanceSquared(P1Coord, ths.GroundPos);
+            double distToP2 = Vector2.DistanceSquared(P2Coord, ths.GroundPos);
             float fleeSpeed = ths.Speed * speedMultiplier;
             int playerToFlee = 0;
 
@@ -475,13 +472,13 @@ namespace Frostbyte
 
                 if ((playerToFlee == 1) && (distToP1 < safeDistance * safeDistance))
                 {
-                    ths.Direction = P1Coord - ths.CenterPos;
-                    ths.Pos -= ths.Direction * fleeSpeed;
+                    ths.Direction = P1Coord - ths.GroundPos;
+                    ths.GroundPos -= ths.Direction * fleeSpeed;
                 }
                 else if ((playerToFlee == 2) && (distToP2 < safeDistance * safeDistance))
                 {
-                    ths.Direction = P2Coord - ths.CenterPos;
-                    ths.Pos -= ths.Direction * fleeSpeed;
+                    ths.Direction = P2Coord - ths.GroundPos;
+                    ths.GroundPos -= ths.Direction * fleeSpeed;
                 }
 
             }
@@ -515,7 +512,6 @@ namespace Frostbyte
 
         /// <summary>
         /// Wander around for x seconds or until within a certain distance from a target
-        /// 
         /// </summary>
         internal static bool wander(this Enemy ths, List<Sprite> targets, TimeSpan duration, float safeDistance, float arcAngle)
         {
@@ -530,7 +526,7 @@ namespace Frostbyte
                 double angle = Math.Atan2(ths.Direction.Y, ths.Direction.X) + (2 * RNG.NextDouble() - 1) * arcAngle;
                 ths.Direction = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
 
-                ths.Pos += ths.Direction * ths.Speed / 4;  // Wandering should be *slow*
+                ths.GroundPos += ths.Direction * ths.Speed / 4;  // Wandering should be *slow*
             }
             return false;
         }
@@ -557,7 +553,7 @@ namespace Frostbyte
             //           RNG.Next(0, (int)(target.Pos.Y))
             //    );
 
-            //    ths.Direction = nextHoverPoint - ths.CenterPos;
+            //    ths.Direction = nextHoverPoint - ths.GroundPos;
             //}
 
             
@@ -584,11 +580,11 @@ namespace Frostbyte
             if (ths.Personality.Status != EnemyStatus.Charge)
             {
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)target.CenterPos.X - flyRadius, (int)target.CenterPos.X + flyRadius),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)target.CenterPos.Y - flyRadius, (int)target.CenterPos.Y + flyRadius)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
+                        RNG.Next((int)target.GroundPos.X - flyRadius, (int)target.GroundPos.X + flyRadius),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)target.GroundPos.Y - flyRadius, (int)target.GroundPos.Y + flyRadius)  //(int)(ths.Pos.Y + Vector2.Distance(target.Pos, ths.Pos)))
                 );
 
-                ths.Direction = -(ths.Pos - nextHoverPoint);// -ths.CenterPos;
+                ths.Direction = -(ths.GroundPos - nextHoverPoint);// -ths.GroundPos;
                 ths.Direction.Normalize();
                 ths.Personality.Status = EnemyStatus.Charge;
                 dartTimeout = new TimeSpan(0, 0, 0, 0, 300);
@@ -597,20 +593,20 @@ namespace Frostbyte
 
             
             //if we choose a nextHoverPoint thats beyond a wall, we get stuck...
-            else if (Vector2.Distance(ths.Pos , nextHoverPoint) > 3f && nextHoverPoint != Vector2.Zero && This.gameTime.TotalGameTime < ths.movementStartTime + dartTimeout)
+            else if (Vector2.Distance(ths.GroundPos, nextHoverPoint) > 3f && nextHoverPoint != Vector2.Zero && This.gameTime.TotalGameTime < ths.movementStartTime + dartTimeout)
             {
-                ths.Pos += ths.Direction * dartSpeed;
+                ths.GroundPos += ths.Direction * dartSpeed;
             }
 
             else 
             {
                 ths.Personality.Status = EnemyStatus.Wander;
                 nextHoverPoint = new Vector2(
-                        RNG.Next((int)target.CenterPos.X - flyRadius, (int)target.CenterPos.X + flyRadius),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
-                        RNG.Next((int)target.CenterPos.Y - flyRadius, (int)target.CenterPos.Y + flyRadius)
+                        RNG.Next((int)target.GroundPos.X - flyRadius, (int)target.GroundPos.X + flyRadius),  //(int)(ths.Pos.X + Vector2.Distance(target.Pos, ths.Pos))),
+                        RNG.Next((int)target.GroundPos.Y - flyRadius, (int)target.GroundPos.Y + flyRadius)
                 );
 
-                ths.Direction = (ths.Pos - nextHoverPoint);// -ths.CenterPos;
+                ths.Direction = (ths.GroundPos - nextHoverPoint);// -ths.GroundPos;
                 ths.Direction.Normalize();
                 dartTimeout = new TimeSpan(0, 0, 0, 0, 300);
                 ths.movementStartTime = This.gameTime.TotalGameTime;
