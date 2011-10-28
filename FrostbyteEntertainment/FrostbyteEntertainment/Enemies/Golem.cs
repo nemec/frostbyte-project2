@@ -40,8 +40,9 @@ namespace Frostbyte.Enemies
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new DontGetNearMePersonality(this);
             ElementType = Element.Normal;
-            Pos = initialPos;
+            GroundPos = initialPos;
         }
+
 
         protected override void updateMovement()
         {
