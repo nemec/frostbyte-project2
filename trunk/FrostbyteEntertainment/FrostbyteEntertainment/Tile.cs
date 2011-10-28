@@ -206,8 +206,6 @@ namespace Frostbyte
             }
             #endregion setup
 
-            //BitmapImage image = new BitmapImage(new Uri(file, UriKind.RelativeOrAbsolute));
-            //Texture2D image = This.Game.Content.Load<Texture2D>("corner");
             if (GridCell != null && Image != null)
             {
                 This.Game.spriteBatch.Draw(

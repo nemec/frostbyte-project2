@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using System.Xml.Linq;
+using Microsoft.Xna.Framework.Audio;
 
 namespace Frostbyte
 {
@@ -20,6 +21,7 @@ namespace Frostbyte
 
         //protected EnemyStatus Status = EnemyStatus.Wander;
         internal IPersonality Personality;
+        internal SoundEffectInstance MovementAudio = null;
         protected Vector2 mDirection = new Vector2();
         protected bool isAttacking;
         protected IEnumerator<bool> mAttack;

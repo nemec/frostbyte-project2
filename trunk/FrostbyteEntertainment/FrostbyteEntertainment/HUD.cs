@@ -81,7 +81,7 @@ namespace Frostbyte
 
                 #region HealthBar
                 healthBar = new ProgressBar("Health_" + p.Name, p.MaxHealth,
-                    Color.MidnightBlue, Color.Blue, Color.Black, barSize);
+                    Color.DarkRed, Color.Firebrick, Color.Black, barSize);
                 healthBar.Pos = new Vector2(xOffset, name.Pos.Y + name.GetAnimation().Height);
                 healthBar.Static = true;
                 healthBar.Value = p.MaxHealth;
@@ -94,7 +94,7 @@ namespace Frostbyte
 
                 #region ManaBar
                 manaBar = new ProgressBar("Mana_" + p.Name, p.MaxMana,
-                    Color.DarkRed, Color.Firebrick, Color.Black, barSize);
+                    Color.MidnightBlue, Color.Blue, Color.Black, barSize);
                 manaBar.Pos = new Vector2(xOffset,
                     healthBar.Pos.Y + barSize.Y + barSpacing.Y);
                 manaBar.Static = true;

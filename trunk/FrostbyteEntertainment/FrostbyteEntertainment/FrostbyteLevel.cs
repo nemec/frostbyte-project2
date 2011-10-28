@@ -66,6 +66,7 @@ namespace Frostbyte
         internal TileList TileMap = new TileList();
 
         private Polygon viewportPolygon = null;
+        internal bool AutoZoom = true;
 
         internal HUD HUD = new HUD();
 
@@ -173,20 +174,27 @@ namespace Frostbyte
                 }
                 #endregion
 
-                #region Calculate Zoom Factor
                 Viewport viewport = This.Game.GraphicsDevice.Viewport;
                 float zoom = This.Game.CurrentLevel.Camera.Zoom;
-                Vector2 span = max - min;
-                float scaleX = (viewport.Width - 2 * BORDER_WIDTH) / span.X;
-                float scaleY = (viewport.Height - 2 * BORDER_HEIGHT) / span.Y;
-                zoom = Math.Min(scaleX, scaleY);
+                float scaleX = float.PositiveInfinity;
+                float scaleY = float.PositiveInfinity;
 
-                // Normalize values if necessary
-                zoom = zoom > MAX_ZOOM ? MAX_ZOOM : zoom;
-                zoom = zoom < MIN_ZOOM ? MIN_ZOOM : zoom;
-                #endregion
+                if (AutoZoom)
+                {
+                    #region Calculate Zoom Factor
+                    Vector2 span = max - min;
+                    scaleX = (viewport.Width - 2 * BORDER_WIDTH) / span.X;
+                    scaleY = (viewport.Height - 2 * BORDER_HEIGHT) / span.Y;
+                    zoom = Math.Min(scaleX, scaleY);
+
+                    // Normalize values if necessary
+                    zoom = zoom > MAX_ZOOM ? MAX_ZOOM : zoom;
+                    zoom = zoom < MIN_ZOOM ? MIN_ZOOM : zoom;
+                    #endregion
+                }
 
                 Vector2 cameraPos = This.Game.CurrentLevel.Camera.Pos;
+
                 #region Shift Viewport
                 Vector2 topLeftCorner = min - cameraPos;
                 Vector2 bottomRightCorner = max - cameraPos;
