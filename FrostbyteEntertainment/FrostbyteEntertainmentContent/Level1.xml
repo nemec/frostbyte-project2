@@ -4869,7 +4869,6 @@
   <Tile Type="Floor" Collision="false" Theme="Earth" Orientation="Left" GridCell="263,256" />
   <Tile Type="Floor" Collision="false" Theme="Earth" Orientation="Left" GridCell="264,256" />
   <Tile Type="SideWall" Collision="true" Theme="Earth" Orientation="Up_Left" GridCell="265,256" />
-  <Tile Type="Floor" Collision="false" Theme="Earth" Orientation="Left" GridCell="272,256" />
   <Tile Type="SideWall" Collision="false" Theme="Earth" Orientation="Down" GridCell="275,256" />
   <Tile Type="Floor" Collision="false" Theme="Earth" Orientation="Left" GridCell="276,256" />
   <Tile Type="Floor" Collision="false" Theme="Earth" Orientation="Left" GridCell="277,256" />
