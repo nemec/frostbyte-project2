@@ -73,6 +73,21 @@ namespace Frostbyte
             }
         }
 
+        internal SoundEffectInstance PlayLoopingSoundEffect(string name, float volume)
+        {
+            SoundEffect se;
+            if (soundEffects.TryGetValue(name, out se))
+            {
+                var sound = se.CreateInstance();
+                sound.Volume = volume;
+                sound.IsLooped = true;
+                sound.Play();
+
+                return sound;
+            }
+            return null;
+        }
+
         internal void Pause()
         {
             if (MediaPlayer.State == MediaState.Playing)
