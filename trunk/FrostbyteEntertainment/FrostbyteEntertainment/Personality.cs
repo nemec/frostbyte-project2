@@ -130,17 +130,25 @@ namespace Frostbyte
         public IEnumerable States()
         {
             List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
+            Vector2 guardPosition = master.GroundPos;
             while (true)
             {
-                if ( !master.charge(targets, 200.0f, 3.0f) )
+                if ( !master.charge(targets, 50.0f, 3.0f) )
                 {
                     yield return null;
+                }
+                else if ( !master.charge(targets, 100.0f, 0.5f) ) 
+                {
+                    yield return null;
+                }
+                else if (Vector2.DistanceSquared(guardPosition, master.GroundPos) > 20 * 20)
+                    master.charge(guardPosition, 3.0f);
+                else if (Vector2.DistanceSquared(guardPosition, master.GroundPos) <= 20 * 20)
+                {
+                    master.State = SpriteState.Idle;
                 }
 
-                if ( !master.charge(targets, float.PositiveInfinity, 0.5f) ) 
-                {
-                    yield return null;
-                }
+                
 
                 master.isAttackingAllowed = true;
 
@@ -248,12 +256,17 @@ namespace Frostbyte
                 return true;
             }
 
+            charge(ths, min.GroundPos, speedMultiplier);
+
+            return false;
+        }
+
+        internal static void charge(this Enemy ths, Vector2 targetPos, float speedMultiplier = 1)
+        {
             float chargeSpeed = ths.Speed * speedMultiplier;
             ths.GroundPos += ths.Direction * chargeSpeed;
             //This must be set after because determining the animation is dependent on the new position ( I know it's not optimal but I'm not sure where to put it)
-            ths.Direction = min.GroundPos - ths.GroundPos;
-
-            return false;
+            ths.Direction = targetPos - ths.GroundPos;
         }
 
         /// <summary>

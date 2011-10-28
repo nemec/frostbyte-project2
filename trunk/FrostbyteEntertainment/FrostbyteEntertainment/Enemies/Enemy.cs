@@ -37,7 +37,8 @@ namespace Frostbyte
                 State = PreviousPos == Pos ? SpriteState.Idle : SpriteState.Moving;
 
                 mDirection = value;
-                mDirection.Normalize();
+                if (mDirection != Vector2.Zero)
+                    mDirection.Normalize();
                 double angle = Math.Atan2(mDirection.Y, mDirection.X);
                 if (-Math.PI / 8 < angle && angle < Math.PI / 8)
                 {
