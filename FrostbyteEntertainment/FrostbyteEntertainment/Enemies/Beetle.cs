@@ -44,7 +44,7 @@ namespace Frostbyte.Enemies
             GroundPos = initialPos;
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new CowardlyPersonality(this);
-            AttackRange = 30; //in pixels
+            AttackRange = 20; //in pixels
         }
 
         protected override void updateMovement()
@@ -75,7 +75,7 @@ namespace Frostbyte.Enemies
                     {
                         isAttacking = true;
                         isAttackingAllowed = false;
-                        mAttack = Attacks.Melee(target, this, 5, 15).GetEnumerator();
+                        mAttack = Attacks.Melee(target, this, 5, 18).GetEnumerator();
                     }
                 }
             }
