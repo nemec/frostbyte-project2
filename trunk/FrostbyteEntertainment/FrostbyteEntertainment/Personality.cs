@@ -142,6 +142,8 @@ namespace Frostbyte
                     yield return null;
                 }
 
+                master.isAttackingAllowed = true;
+
                 yield return null;
             }
         }
