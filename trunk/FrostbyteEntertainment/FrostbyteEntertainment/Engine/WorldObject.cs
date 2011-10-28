@@ -138,6 +138,10 @@ namespace Frostbyte
             {
                 return Pos + Center;
             }
+            set
+            {
+                Pos = value - Center;
+            }
         }
 
         /// <summary>

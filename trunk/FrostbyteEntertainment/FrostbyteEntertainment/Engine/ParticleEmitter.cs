@@ -89,6 +89,8 @@ namespace Frostbyte
                     m_effectTechnique = value;
                 else if (value == "ChangePicAndFadeAtPercent")
                     m_effectTechnique = value;
+                else if (value == "NoSpecialEffect")
+                    m_effectTechnique = value;    
                 else
                     m_effectTechnique = "FadeAtXPercent";
             }
@@ -128,6 +130,13 @@ namespace Frostbyte
             }
         }
         internal Behavior deathEffect = () => { };
+        internal int ActiveParticleCount
+        {
+            get
+            {
+                return numOfActiveParticles;
+            }
+        }
 
         #endregion internal Properties
 

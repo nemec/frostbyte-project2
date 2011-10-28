@@ -44,7 +44,21 @@ namespace Frostbyte
         /// <summary>
         ///     changes to the specified frame of the animation beginning at 0
         /// </summary>
-        internal int Frame { get; set; }
+        internal int Frame
+        {
+            get
+            {
+                return mActor.Frame;
+            }
+        }
+
+        /// <summary>
+        /// Returns the total number of frames in a particular animation
+        /// </summary>
+        internal int FrameCount(int AnimationIndex)
+        {
+            return mActor.Animations[AnimationIndex].NumFrames;
+        }
 
         /// <summary>
         ///     the sprite's speed
@@ -54,7 +68,9 @@ namespace Frostbyte
         /// <summary>
         /// State for moving, idling, or attacking.
         /// </summary>
-        protected SpriteState State = SpriteState.Idle;
+        internal SpriteState State = SpriteState.Idle;
+
+        internal ParticleEmitter particleEmitter = null;
 
         #endregion Properties
 
@@ -239,6 +255,9 @@ namespace Frostbyte
                         ,
                         0
                     );
+
+                if (particleEmitter != null)
+                    particleEmitter.Draw(This.gameTime);
             }
         }
         #endregion Draw

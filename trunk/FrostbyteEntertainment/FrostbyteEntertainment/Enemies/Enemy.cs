@@ -21,6 +21,7 @@ namespace Frostbyte
         //protected EnemyStatus Status = EnemyStatus.Wander;
         internal IPersonality Personality;
         protected Vector2 mDirection = new Vector2();
+        protected bool isAttacking;
         #endregion Variables
 
         #region Properties
@@ -94,49 +95,50 @@ namespace Frostbyte
             if(this.CollidesWithBackground)
                 previousFootPos = this.GroundPos;
 
-            //(This.Game.CurrentLevel as FrostbyteLevel).TileMap
-            updateMovement();
-
-            //perform collision detection with background
-            if (this.CollidesWithBackground)
-                checkBackgroundCollisions();
-
-            //update animation facing direction
-            switch (Orientation)
+            if (isMovingAllowed)
             {
-                case Orientations.Down:
-                    SetAnimation(0 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Down_Right:
-                    Hflip = false;
-                    SetAnimation(1 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Down_Left:
-                    Hflip = true;
-                    SetAnimation(1 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Right:
-                    Hflip = false;
-                    SetAnimation(2 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Left:
-                    Hflip = true;
-                    SetAnimation(2 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Up_Right:
-                    Hflip = false;
-                    SetAnimation(3 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Up_Left:
-                    Hflip = true;
-                    SetAnimation(3 + 5 * State.GetHashCode());
-                    break;
-                case Orientations.Up:
-                    SetAnimation(4 + 5 * State.GetHashCode());
-                    break;
+                updateMovement();
+
+                //perform collision detection with background
+                if (this.CollidesWithBackground)
+                    checkBackgroundCollisions();
+
+                //update animation facing direction
+                switch (Orientation)
+                {
+                    case Orientations.Down:
+                        SetAnimation(0 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Down_Right:
+                        Hflip = false;
+                        SetAnimation(1 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Down_Left:
+                        Hflip = true;
+                        SetAnimation(1 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Right:
+                        Hflip = false;
+                        SetAnimation(2 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Left:
+                        Hflip = true;
+                        SetAnimation(2 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Up_Right:
+                        Hflip = false;
+                        SetAnimation(3 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Up_Left:
+                        Hflip = true;
+                        SetAnimation(3 + 5 * State.GetHashCode());
+                        break;
+                    case Orientations.Up:
+                        SetAnimation(4 + 5 * State.GetHashCode());
+                        break;
+                }
             }
 
-            //checkBackgroundCollisions();
             updateAttack();
         }
 
@@ -167,10 +169,10 @@ namespace Frostbyte
                     continue;
                 }
                 if (min == null ||
-                    Vector2.DistanceSquared(target.CenterPos, CenterPos) <
-                    Vector2.DistanceSquared(min.CenterPos, CenterPos))
+                    Vector2.DistanceSquared(target.GroundPos, GroundPos) <
+                    Vector2.DistanceSquared(min.GroundPos, GroundPos))
                 {
-                    if (Vector2.DistanceSquared(target.CenterPos, CenterPos) <= aggroDistance * aggroDistance)
+                    if (Vector2.DistanceSquared(target.GroundPos, GroundPos) <= aggroDistance * aggroDistance)
                     {
                         min = target;
                     }
