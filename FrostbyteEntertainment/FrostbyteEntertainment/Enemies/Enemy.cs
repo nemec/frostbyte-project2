@@ -22,6 +22,7 @@ namespace Frostbyte
         internal IPersonality Personality;
         protected Vector2 mDirection = new Vector2();
         protected bool isAttacking;
+        protected IEnumerator<bool> mAttack;
         #endregion Variables
 
         #region Properties

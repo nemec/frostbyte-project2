@@ -15,8 +15,6 @@ namespace Frostbyte.Enemies
         bool changeState = false;
         TimeSpan idleTime = new TimeSpan(0, 0, 2);
 
-        private IEnumerator<bool> mAttack;
-
         static List<Animation> Animations = new List<Animation>(){
             This.Game.CurrentLevel.GetAnimation("wasp-idle-down.anim"),
             This.Game.CurrentLevel.GetAnimation("wasp-idle-diagdown.anim"),

@@ -39,8 +39,10 @@ namespace Frostbyte.Enemies
         {
             movementStartTime = new TimeSpan(0, 0, 1);
             Personality = new DontGetNearMePersonality(this);
+            //Personality = new CowardlyPersonality(this);
             ElementType = Element.Normal;
             GroundPos = initialPos;
+            AttackRange = 50; //in pixels
         }
 
 
@@ -56,12 +58,25 @@ namespace Frostbyte.Enemies
 
         protected override void updateAttack()
         {
-            float range = 100.0f;
-            List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
-            Sprite target = GetClosestTarget(targets, range);
-            if (target != null)
+            if (isAttacking)
             {
-                // Attack!
+                mAttack.MoveNext();
+                isAttacking = !mAttack.Current;
+            }
+            else if (isAttackingAllowed)
+            {
+                float range = 250.0f;
+                List<Sprite> targets = This.Game.CurrentLevel.GetSpritesByType(typeof(Player));
+                Sprite target = GetClosestTarget(targets, range);
+                if (target != null)
+                {
+                    if (Vector2.DistanceSquared(target.GroundPos, this.GroundPos) < this.AttackRange * this.AttackRange)
+                    {
+                        isAttacking = true;
+                        isAttackingAllowed = false;
+                        mAttack = Attacks.Melee(target, this, 20, 18).GetEnumerator();
+                    }
+                }
             }
         }
     }
